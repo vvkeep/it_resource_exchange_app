@@ -19,17 +19,17 @@ class _ApplicationPageState extends State<ApplicationPage> with SingleTickerProv
     BottomNavigationBarItem(
       icon: Icon(Icons.home),
       title: Text('首页'),
-      backgroundColor: AppColors.colorPrimary,
+      backgroundColor: AppColors.PrimaryColor,
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.tune),
       title: Text('分类'),
-      backgroundColor: AppColors.colorPrimary,
+      backgroundColor: AppColors.PrimaryColor,
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.person),
       title: Text('我的'),
-      backgroundColor: AppColors.colorPrimary,
+      backgroundColor: AppColors.PrimaryColor,
     ),
   ];
 
@@ -48,7 +48,7 @@ class _ApplicationPageState extends State<ApplicationPage> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(primaryColor: AppColors.colorPrimary),
+      theme: ThemeData(primaryColor: AppColors.PrimaryColor),
       home: Scaffold(
         appBar: AppBar(
           title: Text(this.title),
@@ -70,7 +70,7 @@ class _ApplicationPageState extends State<ApplicationPage> with SingleTickerProv
        bottomNavigationBar: BottomNavigationBar(
          items: _bottomTabs,
          currentIndex: page,
-         fixedColor: AppColors.colorPrimary,
+         fixedColor: AppColors.PrimaryColor,
          type: BottomNavigationBarType.fixed,
          onTap: (int index) {
            onTap(index);

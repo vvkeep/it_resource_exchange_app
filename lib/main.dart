@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'IT资源交换',
       theme: ThemeData(
-        primarySwatch: AppColors.colorPrimary,
+        primarySwatch: AppColors.PrimaryColor,
       ),
       home: ApplicationPage(),
     );
