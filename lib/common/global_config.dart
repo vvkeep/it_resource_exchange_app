@@ -9,3 +9,7 @@ class AppColors {
 class AppSize {
   static const DividerWidth = 0.5;
 }
+
+class Constant {
+  static const CategoryTitles = ['全部', 'Android', 'iOS', 'App', 'Web', 'Java', 'Python', 'PHP', 'Lua','其他'];
+}

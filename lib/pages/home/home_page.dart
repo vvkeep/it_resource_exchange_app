@@ -11,7 +11,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-
     return ListView.builder(
       physics: AlwaysScrollableScrollPhysics(),
       padding: EdgeInsets.all(2.0),
