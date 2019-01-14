@@ -30,7 +30,7 @@ class FullWidthButton extends StatelessWidget {
         ),
         SizedBox(width: HORIZONTAL_PADDING),
         Expanded(
-          child: Text(title),
+          child: Text(title, style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal),),
         ),
         Icon(
             IconData(
