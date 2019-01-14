@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
         if (i == 0) {
           return SwiperBanner(200.0, Mock.homeBannerInfoList);
         }else {
-          return GoodsItemView();
+          return GoodsItemView(index: i-1);
         }
       },
     );

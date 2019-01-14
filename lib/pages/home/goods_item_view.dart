@@ -3,13 +3,20 @@ import 'package:it_resource_exchange_app/common/global_config.dart' show AppSize
 import 'package:cached_network_image/cached_network_image.dart';
 
 class GoodsItemView extends StatelessWidget {
+
+  const GoodsItemView({Key key, this.index})
+  : assert(index != null),
+  super(key: key);
+
+  final int index;
+
   @override
   Widget build(BuildContext context) {
     var titleRow = Row(
       children: <Widget>[
         Expanded(
           child: Text(
-            '按揭房咖啡机加咖啡机啊卡萨解放路的积分打开附件大可乐',
+            '$index按揭房咖啡机加咖啡机啊卡萨解放路的积分打开附件大可乐',
             style: TextStyle(fontSize: 15.0),
           ),
         ),

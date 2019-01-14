@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 class AppColors {
   static const PrimaryColor = Colors.red;
   static const DividerColor = 0xffd9d9d9;
+  static const ArrowNormalColor = 0xff999999;
+  static const BackgroundColor = 0xffebebeb;
+
 }
 
 class AppSize {
@@ -12,4 +15,5 @@ class AppSize {
 
 class Constant {
   static const CategoryTitles = ['全部', 'Android', 'iOS', 'App', 'Web', 'Java', 'Python', 'PHP', 'Lua','其他'];
+  static const IconFontFamily = "appIconFont";
 }

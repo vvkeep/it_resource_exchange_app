@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/global_config.dart' show Constant;
-
+import 'classify_list_view.dart';
 class ClassifyPage extends StatefulWidget {
   @override
   _ClassifyPageState createState() => _ClassifyPageState();
@@ -27,8 +27,37 @@ class _ClassifyPageState extends State<ClassifyPage> with SingleTickerProviderSt
   
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey,
+    return Column(
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).canvasColor,
+            border: Border(
+              bottom: BorderSide(
+                width: 0.0,
+                color: Theme.of(context).dividerColor,
+              )
+            )
+          ),
+          child: TabBar(
+            controller: _tabController,
+            isScrollable: true,
+            labelColor: Theme.of(context).primaryColor,
+            indicatorColor: Theme.of(context).primaryColor,
+            tabs: Constant.CategoryTitles.map<Widget>((title){
+              return Tab(text: title);
+            }).toList()
+          ),
+        ),
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: Constant.CategoryTitles.map<Widget>((String page) {
+              return ClassifyListView(page);
+            }).toList()
+          ),
+        )
+      ],
     );
   }
 }
