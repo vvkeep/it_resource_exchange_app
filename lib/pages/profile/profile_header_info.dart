@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/global_config.dart' show AppColors, Constant;
+import '../login/login_page.dart';
 
 class ProfileHeaderInfoView extends StatelessWidget {
   @override
@@ -9,7 +10,7 @@ class ProfileHeaderInfoView extends StatelessWidget {
       color: Colors.white,
       child: FlatButton(
         onPressed: () {
-          print("点击头部信息");
+          Navigator.push(context, new MaterialPageRoute(builder: (context) => LoginPage()));
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
