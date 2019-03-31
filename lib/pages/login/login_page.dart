@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/global_config.dart';
-
+import 'register_page.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -74,10 +74,10 @@ class _LoginPageState extends State<LoginPage> {
     return new Padding(
       padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
       child: new RaisedButton(
-        padding: new EdgeInsets.fromLTRB(130.0, 10.0, 130.0, 10.0),
+        padding: new EdgeInsets.fromLTRB(150.0, 15.0, 150.0, 15.0),
         color: AppColors.PrimaryColor,
         textColor: Colors.white,
-        disabledColor: Colors.blue[100],
+        disabledColor: Colors.red[100],
         onPressed: (_accountNum.isEmpty || _password.isEmpty)
             ? null
             : () {
@@ -91,7 +91,24 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildTips() {
+  Widget _buildRegisterBtn() {
+    return Padding(
+      padding: EdgeInsets.only(top: 0.0, bottom: 30.0),
+      child: OutlineButton(
+        padding: EdgeInsets.fromLTRB(150.0, 15.0, 150.0, 15.0),
+        borderSide: BorderSide(
+          color: AppColors.PrimaryColor,
+          width: 1,
+        ),
+        child: Text("注册", style:TextStyle(color:AppColors.PrimaryColor)),
+        onPressed: (){
+           Navigator.push(context, new MaterialPageRoute(builder: (context) => RegisterPage()));
+        },
+      ),
+    );
+  }
+
+  Widget _buildTipIcon() {
     return new Padding(
       padding: const EdgeInsets.only(
           left: 40.0, right: 40.0, top: 50.0, bottom: 50.0),
@@ -126,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-    @override
+  @override
   Widget build(BuildContext context) {
     return new Material(
       child: new Scaffold(
@@ -137,10 +154,11 @@ class _LoginPageState extends State<LoginPage> {
         ),
         body: Column(
           children: <Widget>[
-            _buildTips(),
+            _buildTipIcon(),
             _buldAccountEdit(),
             _bulidPasswordEdit(),
             _buildLoginBtn(),
+            _buildRegisterBtn()
           ],
         ),
       ),
