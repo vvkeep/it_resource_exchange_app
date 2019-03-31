@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './full_width_button.dart';
-import 'package:it_resource_exchange_app/common/global_config.dart' show AppColors, AppSize, Constant;
+import 'package:it_resource_exchange_app/common/constant.dart' show AppColors, AppSize, Constant;
 import './profile_header_info.dart';
 
 class ProfilePage extends StatefulWidget {

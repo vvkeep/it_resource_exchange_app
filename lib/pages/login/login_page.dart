@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:it_resource_exchange_app/common/global_config.dart';
+import 'package:it_resource_exchange_app/common/constant.dart';
 import 'register_page.dart';
 class LoginPage extends StatefulWidget {
   @override
@@ -77,15 +77,13 @@ class _LoginPageState extends State<LoginPage> {
         padding: new EdgeInsets.fromLTRB(150.0, 15.0, 150.0, 15.0),
         color: AppColors.PrimaryColor,
         textColor: Colors.white,
-        disabledColor: Colors.red[100],
+        disabledColor: AppColors.PrimaryColor[100],
         onPressed: (_accountNum.isEmpty || _password.isEmpty)
             ? null
             : () {
                 showTips();
               },
-        child: new Text(
-          '登 录',
-          style: new TextStyle(fontSize: 16.0, color: Colors.white),
+        child: new Text('登 录', style: new TextStyle(fontSize: 16.0, color: Colors.white),
         ),
       ),
     );
@@ -100,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
           color: AppColors.PrimaryColor,
           width: 1,
         ),
-        child: Text("注册", style:TextStyle(color:AppColors.PrimaryColor)),
+        child: Text("注册", style:TextStyle(fontSize: 16.0, color:AppColors.PrimaryColor)),
         onPressed: (){
            Navigator.push(context, new MaterialPageRoute(builder: (context) => RegisterPage()));
         },
@@ -141,7 +139,6 @@ class _LoginPageState extends State<LoginPage> {
         }
     );
   }
-
 
   @override
   Widget build(BuildContext context) {

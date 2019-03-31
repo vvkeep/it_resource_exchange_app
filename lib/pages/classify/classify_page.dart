@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:it_resource_exchange_app/common/global_config.dart' show Constant;
+import 'package:it_resource_exchange_app/common/constant.dart' show Constant;
 import 'classify_list_view.dart';
 class ClassifyPage extends StatefulWidget {
   @override

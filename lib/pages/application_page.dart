@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:it_resource_exchange_app/common/global_config.dart' show AppColors;
+import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
 import 'classify/classify_page.dart';
 import 'home/home_page.dart';
 import 'profile/profile_page.dart';

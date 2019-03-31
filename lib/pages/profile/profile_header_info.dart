@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:it_resource_exchange_app/common/global_config.dart' show AppColors, Constant;
+import 'package:it_resource_exchange_app/common/constant.dart' show AppColors, Constant;
 import '../login/login_page.dart';
 
 class ProfileHeaderInfoView extends StatelessWidget {

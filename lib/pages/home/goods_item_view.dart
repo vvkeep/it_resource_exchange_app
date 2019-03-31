@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:it_resource_exchange_app/common/global_config.dart' show AppSize, AppColors;
+import 'package:it_resource_exchange_app/common/constant.dart' show AppSize, AppColors;
 import 'package:cached_network_image/cached_network_image.dart';
 
 class GoodsItemView extends StatelessWidget {

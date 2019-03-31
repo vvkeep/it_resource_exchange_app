@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:it_resource_exchange_app/common/global_config.dart' show AppColors, AppSize, Constant;
+import 'package:it_resource_exchange_app/common/constant.dart' show AppColors, AppSize, Constant;
 
 class FullWidthButton extends StatelessWidget {
   static const HORIZONTAL_PADDING= 20.0;
