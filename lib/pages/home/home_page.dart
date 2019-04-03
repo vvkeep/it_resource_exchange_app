@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/widgets/swiper_banner.dart';
 import 'package:it_resource_exchange_app/common/mock.dart';
 import './goods_item_view.dart';
+import 'package:it_resource_exchange_app/pages/detail/goods_detail_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,7 +20,12 @@ class _HomePageState extends State<HomePage> {
         if (i == 0) {
           return SwiperBanner(200.0, Mock.homeBannerInfoList);
         }else {
-          return GoodsItemView(index: i-1);
+          return GoodsItemView(
+            index: i-1, 
+            onPressed: () {
+              Navigator.push(context, new MaterialPageRoute(builder: (context) => GoodsDetailPage()));
+            },
+          );
         }
       },
     );

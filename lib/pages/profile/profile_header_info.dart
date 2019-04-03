@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors, Constant;
-import '../login/login_page.dart';
 
 class ProfileHeaderInfoView extends StatelessWidget {
+  const ProfileHeaderInfoView({
+    this.onPressed
+  });
+
+  final VoidCallback onPressed;
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 80,
       color: Colors.white,
       child: FlatButton(
-        onPressed: () {
-          Navigator.push(context, new MaterialPageRoute(builder: (context) => LoginPage()));
-        },
+        onPressed: this.onPressed,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

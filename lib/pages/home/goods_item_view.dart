@@ -4,11 +4,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class GoodsItemView extends StatelessWidget {
 
-  const GoodsItemView({Key key, this.index})
-  : assert(index != null),
-  super(key: key);
+  const GoodsItemView({Key key, 
+    this.index,  
+    this.onPressed
+  }): assert(index != null),
+      super(key: key);
 
   final int index;
+  final VoidCallback onPressed;
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +108,9 @@ class GoodsItemView extends StatelessWidget {
       ],
     );
 
-    return Container(
+    return GestureDetector(
+      onTap: this.onPressed,
+      child: Container(
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -114,6 +120,7 @@ class GoodsItemView extends StatelessWidget {
         )
       ),
       child: row,
+    ),
     );
   }
 }

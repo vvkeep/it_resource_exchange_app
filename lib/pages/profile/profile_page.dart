@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './full_width_button.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors, AppSize, Constant;
 import './profile_header_info.dart';
+import '../login/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -18,7 +19,9 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: <Widget>[
             SizedBox(height: SEPARATE_SIZE),
-            ProfileHeaderInfoView(),
+            ProfileHeaderInfoView(onPressed: () {
+              Navigator.push(context, new MaterialPageRoute(builder: (context) => LoginPage()));
+            }),
             SizedBox(height: SEPARATE_SIZE),
             FullWidthButton(
               iconPath: 'assets/imgs/ic_cards_wallet.png',
