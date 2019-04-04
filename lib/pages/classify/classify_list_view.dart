@@ -78,7 +78,7 @@ class _ClassifyListViewState extends State<ClassifyListView> with AutomaticKeepA
   }
 
   void _getCategoryData({bool loadMore = false}) {
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 1), () {
       if (loadMore) {
         _refreshController.sendBack(false, RefreshStatus.idle);
         setState(() {
