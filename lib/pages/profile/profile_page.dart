@@ -13,38 +13,33 @@ class _ProfilePageState extends State<ProfilePage> {
   static const SEPARATE_SIZE = 20.0;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color(AppColors.BackgroundColor),
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: SEPARATE_SIZE),
-            ProfileHeaderInfoView(onPressed: () {
-              Navigator.push(context, new MaterialPageRoute(builder: (context) => LoginPage()));
-            }),
-            SizedBox(height: SEPARATE_SIZE),
-            FullWidthButton(
-              iconPath: 'assets/imgs/ic_cards_wallet.png',
-              title: '订单',
-              showDivider: true,
-              onPressed: () {},
-            ),
-            FullWidthButton(
-              iconPath: 'assets/imgs/ic_collections.png',
-              title: '收藏',
-              showDivider: true,
-              onPressed: () {},
-            ),
-            SizedBox(height: SEPARATE_SIZE),
-            FullWidthButton(
-              iconPath: 'assets/imgs/ic_settings.png',
-              title: '设置',
-              showDivider: false,
-              onPressed: () {},
-            ),
-          ],
+    return ListView(
+      children: <Widget>[
+        SizedBox(height: SEPARATE_SIZE),
+        ProfileHeaderInfoView(onPressed: () {
+          Navigator.push(context, new MaterialPageRoute(builder: (context) => LoginPage()));
+        }),
+        SizedBox(height: SEPARATE_SIZE),
+        FullWidthButton(
+          iconPath: 'assets/imgs/ic_cards_wallet.png',
+          title: '订单',
+          showDivider: true,
+          onPressed: () {},
         ),
-      ),
+        FullWidthButton(
+          iconPath: 'assets/imgs/ic_collections.png',
+          title: '收藏',
+          showDivider: true,
+          onPressed: () {},
+        ),
+        SizedBox(height: SEPARATE_SIZE),
+        FullWidthButton(
+          iconPath: 'assets/imgs/ic_settings.png',
+          title: '设置',
+          showDivider: false,
+          onPressed: () {},
+        ),
+          ]
     );
   }
 }
