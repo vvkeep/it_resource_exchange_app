@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
 import 'register_page.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -24,7 +25,8 @@ class _LoginPageState extends State<LoginPage> {
         decoration: InputDecoration(
           hintText: '请输入邮箱地址作为用户名',
           labelText: '账号',
-          hintStyle: TextStyle(fontSize: 12.0, color: Color(AppColors.ArrowNormalColor)),
+          hintStyle: TextStyle(
+              fontSize: 12.0, color: Color(AppColors.ArrowNormalColor)),
         ),
         maxLines: 1,
         maxLength: 15,
@@ -83,7 +85,9 @@ class _LoginPageState extends State<LoginPage> {
             : () {
                 showTips();
               },
-        child: new Text('登 录', style: new TextStyle(fontSize: 16.0, color: Colors.white),
+        child: new Text(
+          '登 录',
+          style: new TextStyle(fontSize: 16.0, color: Colors.white),
         ),
       ),
     );
@@ -98,9 +102,11 @@ class _LoginPageState extends State<LoginPage> {
           color: AppColors.PrimaryColor,
           width: 1,
         ),
-        child: Text("注册", style:TextStyle(fontSize: 16.0, color:AppColors.PrimaryColor)),
-        onPressed: (){
-           Navigator.push(context, new MaterialPageRoute(builder: (context) => RegisterPage()));
+        child: Text("注册",
+            style: TextStyle(fontSize: 16.0, color: AppColors.PrimaryColor)),
+        onPressed: () {
+          Navigator.push(context,
+              new MaterialPageRoute(builder: (context) => RegisterPage()));
         },
       ),
     );
@@ -123,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-   showTips() {
+  showTips() {
     showModalBottomSheet<void>(
         context: context,
         builder: (BuildContext context) {
@@ -132,33 +138,32 @@ class _LoginPageState extends State<LoginPage> {
                   padding: const EdgeInsets.all(32.0),
                   child: new Text('没有相关接口，这是一个纯UI界面，提供部分交互体验',
                       textAlign: TextAlign.center,
-                      style: new TextStyle(color: Theme.of(context).accentColor,fontSize: 24.0)
-                    )
-               )
-            );
-        }
-    );
+                      style: new TextStyle(
+                          color: Theme.of(context).accentColor,
+                          fontSize: 24.0))));
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return new Material(
       child: new Scaffold(
-        key: registKey,
-        backgroundColor: Colors.white,
-        appBar: new AppBar(
-          title: new Text('账号登录'),
-        ),
-        body: Column(
-          children: <Widget>[
-            _buildTipIcon(),
-            _buldAccountEdit(),
-            _bulidPasswordEdit(),
-            _buildLoginBtn(),
-            _buildRegisterBtn()
-          ],
-        ),
-      ),
+          key: registKey,
+          backgroundColor: Colors.white,
+          appBar: new AppBar(
+            title: new Text('账号登录'),
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                _buildTipIcon(),
+                _buldAccountEdit(),
+                _bulidPasswordEdit(),
+                _buildLoginBtn(),
+                _buildRegisterBtn()
+              ],
+            ),
+          )),
     );
   }
 }
