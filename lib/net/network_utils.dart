@@ -5,6 +5,7 @@ class NetworkUtils {
     static requestHomePageData() async {
        next() async {
          String url = APPNet.Server + "/home/index";
+         var res = await httpma
        }
     }
 }
