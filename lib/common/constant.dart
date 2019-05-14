@@ -16,3 +16,9 @@ class Constant {
   static const CategoryTitles = ['全部', 'Android', 'iOS', 'App', 'Web', 'Java', 'Python', 'PHP', 'Lua','其他'];
   static const IconFontFamily = "appIconFont";
 }
+
+class APPConfig {
+  static const DEBUG = true;
+  static const Server = "http://47.107.231.54:8090";
+  // static const APPServer = "http://localhost:8090";
+}
