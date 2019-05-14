@@ -4,8 +4,8 @@ import 'package:dio/dio.dart';
 class NetworkUtils {
     static requestHomePageData() async {
        next() async {
-         String url = APPNet.Server + "/home/index";
-         var res = await httpma
+        //  String url = APPNet.Server + "/home/index";
+        //  var res = await httpma
        }
     }
 }
