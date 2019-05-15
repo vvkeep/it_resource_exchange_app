@@ -2,6 +2,11 @@ import 'package:dio/dio.dart';
 import 'dart:collection';
 import 'interceptors/logs_interceptor.dart';
 import 'interceptors/error_interceptor.dart';
+import 'interceptors/response_Interceptor.dart';
+import 'package:it_resource_exchange_app/model/base_result.dart';
+import 'dart:convert';
+import './code.dart';
+
 class HttpManager {
   static const CONTENT_TYPE_JSON = "application/json";
   static const CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
@@ -11,9 +16,10 @@ class HttpManager {
   HttpManager() {
     _dio.interceptors.add(LogsInterceptor());
     _dio.interceptors.add(ErrorInterceptor(_dio));
+    _dio.interceptors.add(ResponseInterceptor());
   }
 
-  request(url, params, Map<String, dynamic> header, Options option, {isTip = false}) async {
+  resquest(url, params, Map<String, dynamic> header, Options option, {isTip = false}) async {
     Map<String, dynamic> headers = HashMap();
     if (header != null) {
       headers.addAll(header);
@@ -34,13 +40,16 @@ class HttpManager {
       if(e.response != null) {
         errorRespnse = e.response;
       }else {
-        errorRespnse = Response(statusCode: 666);
+        errorRespnse = Response(statusCode: 999);
       }
 
-      // if
-
+      if (e.type == DioErrorType.CONNECT_TIMEOUT || e.type == DioErrorType.RECEIVE_TIMEOUT) {
+        errorRespnse.statusCode = Code.NETWOEK_TIMEROUT;
+      }
     }
 
-
+    return response.data;
   }
 }
+
+final HttpManager httpManager = HttpManager();

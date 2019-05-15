@@ -25,6 +25,7 @@ dependencies:
   shared_preferences: ^0.4.2
   connectivity: ^0.4.2
   event_bus: ^1.1.0
+  json_annotation: ^2.0.0
 
 
 dev_dependencies:

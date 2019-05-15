@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:connectivity/connectivity.dart';
-import '../result_data.dart';
+import 'package:it_resource_exchange_app/model/base_result.dart';
 import '../code.dart';
 class ErrorInterceptor extends InterceptorsWrapper {
   final Dio _dio;
@@ -10,7 +10,7 @@ class ErrorInterceptor extends InterceptorsWrapper {
   onRequest(RequestOptions options) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
-      return _dio.resolve(ResultData(Code.errorHandle(Code.NETWORK_ERROR, "网络错误", false), Code.NETWORK_ERROR, "网络错误"));
+      return _dio.resolve(BaseResult(Code.NETWORK_ERROR, Code.NETWORK_ERROR, "网络错误"));
     }
     return super.onRequest(options);
   }
