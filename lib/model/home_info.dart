@@ -23,14 +23,26 @@ part 'home_info.g.dart';
 @JsonSerializable()
   class RecommendProductList extends Object {
 
+  @JsonKey(name: 'recommedId')
+  int recommedId;
+
   @JsonKey(name: 'productId')
   int productId;
 
   @JsonKey(name: 'cateId')
   String cateId;
 
+  @JsonKey(name: 'keywords')
+  String keywords;
+
   @JsonKey(name: 'imgUrls')
   String imgUrls;
+
+  @JsonKey(name: 'price')
+  double price;
+
+  @JsonKey(name: 'productTitle')
+  String productTitle;
 
   @JsonKey(name: 'productDesc')
   String productDesc;
@@ -41,7 +53,13 @@ part 'home_info.g.dart';
   @JsonKey(name: 'productAddressUrl')
   String productAddressUrl;
 
-  RecommendProductList(this.productId,this.cateId,this.imgUrls,this.productDesc,this.tradeCount,this.productAddressUrl,);
+  @JsonKey(name: 'createdTime')
+  String createdTime;
+
+  @JsonKey(name: 'productStatus')
+  int productStatus;
+
+  RecommendProductList(this.recommedId,this.productId,this.cateId,this.keywords,this.imgUrls,this.price,this.productTitle,this.productDesc,this.tradeCount,this.productAddressUrl,this.createdTime,this.productStatus);
 
   factory RecommendProductList.fromJson(Map<String, dynamic> srcJson) => _$RecommendProductListFromJson(srcJson);
 
@@ -68,7 +86,10 @@ part 'home_info.g.dart';
   @JsonKey(name: 'adProductId')
   String adProductId;
 
-  AdvertiseList(this.adId,this.adTitle,this.adCoverUrl,this.adType,this.adProductId,);
+  @JsonKey(name: 'adDetailUrl')
+  String adDetailUrl;
+
+  AdvertiseList(this.adId,this.adTitle,this.adCoverUrl,this.adType,this.adProductId,this.adDetailUrl);
 
   factory AdvertiseList.fromJson(Map<String, dynamic> srcJson) => _$AdvertiseListFromJson(srcJson);
 

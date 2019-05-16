@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppSize, AppColors;
 import 'package:cached_network_image/cached_network_image.dart';
-
+import '../../model/home_info.dart';
 class GoodsItemView extends StatelessWidget {
 
   const GoodsItemView({Key key, 
-    this.index,  
+    this.recomendProduct,  
     this.onPressed
-  }): assert(index != null),
+  }): assert(recomendProduct != null),
       super(key: key);
 
-  final int index;
+  final RecommendProductList recomendProduct;
+  
   final VoidCallback onPressed;
-
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class GoodsItemView extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Text(
-            '$index按揭房咖啡机加咖啡机啊卡萨解放路的积分打开附件大可乐',
+            recomendProduct.productTitle,
             style: TextStyle(fontSize: 15.0),
           ),
         ),
@@ -32,7 +32,7 @@ class GoodsItemView extends StatelessWidget {
         Padding(
           padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
           child: Text(
-            "2018-43-12",
+            recomendProduct.createdTime,
             style: TextStyle(
               color: Color(0xFFB5BDC0),
               fontSize: 12.0
@@ -65,7 +65,7 @@ class GoodsItemView extends StatelessWidget {
       width: 60.0,
       height: 60.0,
       child: CachedNetworkImage(
-        imageUrl: 'https://n.sinaimg.cn/sinacn03/140/w630h310/20180721/2a31-hfqtahh9989980.png',
+        imageUrl: recomendProduct.imgUrls,
         placeholder: Image.asset('./assets/imgs/img_default.png'),
         fit: BoxFit.cover,
         ),

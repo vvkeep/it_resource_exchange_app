@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   HomeInfo homeInfo;
   List<SwiperDataInfo> bannerInfoList = [];
 
@@ -20,6 +20,9 @@ class _HomePageState extends State<HomePage> {
     requestHomePageData();
   }
   
+    @override
+    bool get wantKeepAlive => true;
+  
   requestHomePageData() async {
     NetworkUtils.requestHomeAdvertisementsAndRecommendProductsData().then((res) {
       if (res.status == 200) {
@@ -27,7 +30,6 @@ class _HomePageState extends State<HomePage> {
         bannerInfoList = homeInfo.advertiseList.map((advertise) =>
           SwiperDataInfo(coverImgUrl: advertise.adCoverUrl,title: advertise.adTitle,id: advertise.adId)
         ).toList();
-
         setState(() {
         });
       }
@@ -47,13 +49,13 @@ class _HomePageState extends State<HomePage> {
     return ListView.builder(
       physics: AlwaysScrollableScrollPhysics(),
       padding: EdgeInsets.all(1.0),
-      itemCount: 10,
+      itemCount: 1 + (homeInfo == null ? 0 : homeInfo.recommendProductList.length),
       itemBuilder: (context, i) {
         if (i == 0) {
            return bannerInfoList.length > 0 ? SwiperBanner(200.0, bannerInfoList) : _buildSwiperBannerPlaceHolderView();
         }else {
           return GoodsItemView(
-            index: i-1, 
+            recomendProduct: homeInfo.recommendProductList[i-1], 
             onPressed: () {
               Navigator.push(context, new MaterialPageRoute(builder: (context) => GoodsDetailPage()));
             },

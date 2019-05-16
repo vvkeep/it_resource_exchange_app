@@ -50,7 +50,10 @@ class _ClassifyListViewState extends State<ClassifyListView> with AutomaticKeepA
               child: ListView.builder(
                 itemCount: _tempCount,
                 itemBuilder: (context, index) {
-                  return GoodsItemView(index: index);
+                  // return GoodsItemView(index: index);
+                  return Container(
+                    color: Color(0x776699),
+                  );
                 },
               ),  
             ),

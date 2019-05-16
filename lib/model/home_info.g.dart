@@ -27,23 +27,35 @@ Map<String, dynamic> _$HomeInfoToJson(HomeInfo instance) => <String, dynamic>{
 
 RecommendProductList _$RecommendProductListFromJson(Map<String, dynamic> json) {
   return RecommendProductList(
+      json['recommedId'] as int,
       json['productId'] as int,
       json['cateId'] as String,
+      json['keywords'] as String,
       json['imgUrls'] as String,
+      (json['price'] as num)?.toDouble(),
+      json['productTitle'] as String,
       json['productDesc'] as String,
       json['tradeCount'] as int,
-      json['productAddressUrl'] as String);
+      json['productAddressUrl'] as String,
+      json['createdTime'] as String,
+      json['productStatus'] as int);
 }
 
 Map<String, dynamic> _$RecommendProductListToJson(
         RecommendProductList instance) =>
     <String, dynamic>{
+      'recommedId': instance.recommedId,
       'productId': instance.productId,
       'cateId': instance.cateId,
+      'keywords': instance.keywords,
       'imgUrls': instance.imgUrls,
+      'price': instance.price,
+      'productTitle': instance.productTitle,
       'productDesc': instance.productDesc,
       'tradeCount': instance.tradeCount,
-      'productAddressUrl': instance.productAddressUrl
+      'productAddressUrl': instance.productAddressUrl,
+      'createdTime': instance.createdTime,
+      'productStatus': instance.productStatus
     };
 
 AdvertiseList _$AdvertiseListFromJson(Map<String, dynamic> json) {
@@ -52,7 +64,8 @@ AdvertiseList _$AdvertiseListFromJson(Map<String, dynamic> json) {
       json['adTitle'] as String,
       json['adCoverUrl'] as String,
       json['adType'] as int,
-      json['adProductId'] as String);
+      json['adProductId'] as String,
+      json['adDetailUrl'] as String);
 }
 
 Map<String, dynamic> _$AdvertiseListToJson(AdvertiseList instance) =>
@@ -61,5 +74,6 @@ Map<String, dynamic> _$AdvertiseListToJson(AdvertiseList instance) =>
       'adTitle': instance.adTitle,
       'adCoverUrl': instance.adCoverUrl,
       'adType': instance.adType,
-      'adProductId': instance.adProductId
+      'adProductId': instance.adProductId,
+      'adDetailUrl': instance.adDetailUrl
     };
