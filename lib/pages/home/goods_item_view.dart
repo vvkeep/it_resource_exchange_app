@@ -61,9 +61,6 @@ class GoodsItemView extends StatelessWidget {
 
     
    var thumbImg = Container(
-      margin: EdgeInsets.all(10.0),
-      width: 60.0,
-      height: 60.0,
       child: CachedNetworkImage(
         imageUrl: recomendProduct.imgUrls,
         placeholder: Image.asset('./assets/imgs/img_default.png'),
@@ -100,9 +97,7 @@ class GoodsItemView extends StatelessWidget {
             width: 100.0,
             height: 80.0,
             color: Color(0xFfECECEC),
-            child: Center(
-              child: thumbImg,
-            ),
+            child: thumbImg,
           ),
         )
       ],
