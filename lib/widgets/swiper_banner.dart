@@ -175,7 +175,7 @@ class _SwiperBannerState extends State<SwiperBanner> {
         },
         child: new CachedNetworkImage(
           imageUrl: item.coverImgUrl,
-          fit: BoxFit.fitWidth,
+          fit: BoxFit.cover,
         ),
       ),
     );
