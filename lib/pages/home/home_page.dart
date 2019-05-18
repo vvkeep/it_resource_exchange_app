@@ -5,15 +5,32 @@ import 'package:it_resource_exchange_app/pages/detail/goods_detail_page.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/home_info.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   HomeInfo homeInfo;
   List<SwiperDataInfo> bannerInfoList = [];
+
+  bool _showLoading = true;
+
+  final _loadingContainer = Container(
+    color:Colors.white,
+    constraints: BoxConstraints.expand(),
+    child: Center(
+        child: Opacity(
+            opacity: 0.9,
+            child: SpinKitRing(
+              color: AppColors.PrimaryColor,
+              size: 50.0,
+            ),
+        ),
+    )
+);
 
   void initState() {
     super.initState();
@@ -31,28 +48,20 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
           SwiperDataInfo(coverImgUrl: advertise.adCoverUrl,title: advertise.adTitle,id: advertise.adId)
         ).toList();
         setState(() {
+           _showLoading = false;
         });
       }
     });
   }
 
-  // banner 的占位图
-  Widget _buildSwiperBannerPlaceHolderView() {
-    return Container(
-      height: 200.0,
-      color: AppColors.PrimaryColor,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildListView() {
     return ListView.builder(
       physics: AlwaysScrollableScrollPhysics(),
       padding: EdgeInsets.all(1.0),
-      itemCount: 1 + (homeInfo == null ? 0 : homeInfo.recommendProductList.length),
+      itemCount: 1 +homeInfo.recommendProductList.length,
       itemBuilder: (context, i) {
         if (i == 0) {
-           return bannerInfoList.length > 0 ? SwiperBanner(200.0, bannerInfoList) : _buildSwiperBannerPlaceHolderView();
+           return SwiperBanner(200.0, bannerInfoList);
         }else {
           return GoodsItemView(
             recomendProduct: homeInfo.recommendProductList[i-1], 
@@ -63,5 +72,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
         }
       },
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _showLoading ? _loadingContainer : _buildListView();
   }
 }
