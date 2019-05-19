@@ -37,8 +37,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     requestHomePageData();
   }
   
-    @override
-    bool get wantKeepAlive => true;
+  @override
+  bool get wantKeepAlive => true;
   
   requestHomePageData() async {
     NetworkUtils.requestHomeAdvertisementsAndRecommendProductsData().then((res) {

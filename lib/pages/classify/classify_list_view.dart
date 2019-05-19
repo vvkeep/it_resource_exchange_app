@@ -3,11 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:it_resource_exchange_app/widgets/indicator_factory.dart';
 import 'package:it_resource_exchange_app/pages/home/goods_item_view.dart';
+import 'package:it_resource_exchange_app/model/cate_info.dart';
+import 'package:it_resource_exchange_app/net/network_utils.dart';
 class ClassifyListView extends StatefulWidget {
 
-  final String title;
+  final CateInfo cate;
 
-  ClassifyListView(this.title);
+  ClassifyListView(this.cate);
 
   @override
   _ClassifyListViewState createState() => _ClassifyListViewState();
@@ -19,7 +21,7 @@ class _ClassifyListViewState extends State<ClassifyListView> with AutomaticKeepA
   int _page = 1;
   int _tempCount = 10;
   RefreshController _refreshController;
-
+  
   @override
   void initState() {
     super.initState();
@@ -81,6 +83,11 @@ class _ClassifyListViewState extends State<ClassifyListView> with AutomaticKeepA
   }
 
   void _getCategoryData({bool loadMore = false}) {
+    NetworkUtils.requestProductListByCateId("4", 1).then((res){
+        if (res.status == 200) {
+          
+        }
+    });
     Future.delayed(Duration(seconds: 1), () {
       if (loadMore) {
         _refreshController.sendBack(false, RefreshStatus.idle);

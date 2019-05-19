@@ -10,4 +10,17 @@ class NetworkUtils {
       BaseResult result = await httpManager.resquest(url, null, null, null);
       return result;
     }
+
+    static requestCategoryListData() async {
+      String url = APPConfig.Server + "/category/list";
+      BaseResult result = await httpManager.resquest(url, null, null, null);
+      return result;
+    }
+
+    static requestProductListByCateId(String cateId, int currentPage) async {
+      String url = APPConfig.Server + "/product/pageListByCateId";
+      var params = {"cateId": cateId, "currentPage": currentPage};
+      BaseResult result = await httpManager.resquest(url, params, null, null);
+      return result;
+    }
 }
