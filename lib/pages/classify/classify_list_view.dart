@@ -5,6 +5,9 @@ import 'package:it_resource_exchange_app/widgets/indicator_factory.dart';
 import 'package:it_resource_exchange_app/pages/home/goods_item_view.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
+import 'package:it_resource_exchange_app/model/page_result.dart';
+import "package:it_resource_exchange_app/model/home_info.dart";
+
 class ClassifyListView extends StatefulWidget {
 
   final CateInfo cate;
@@ -18,9 +21,11 @@ class ClassifyListView extends StatefulWidget {
 class _ClassifyListViewState extends State<ClassifyListView> with AutomaticKeepAliveClientMixin {
 
   bool _isLoading = true;
-  int _page = 1;
-  int _tempCount = 10;
   RefreshController _refreshController;
+
+  PageResult pageResult;
+  List<RecommendProductList> productList = [];
+
   
   @override
   void initState() {
@@ -32,76 +37,66 @@ class _ClassifyListViewState extends State<ClassifyListView> with AutomaticKeepA
   @override
   bool get wantKeepAlive => true;
 
+  SmartRefresher _buildRefreshListView() {
+    return SmartRefresher(
+      controller: _refreshController,
+      enablePullUp: true,
+      enablePullDown: true,
+      header: buildDefaultHeader(),
+      footer: buildDefaultFooter(),
+      onRefresh: () {
+        _getCategoryData(loadMore: true);
+      },
+      onLoading: () {
+       _getCategoryData(loadMore: false);
+      },
+      child: ListView.builder(
+        itemCount: productList.length,
+        itemBuilder: (context, index) {
+          return GoodsItemView(recomendProduct: productList[index],);
+        },
+      ),  
+    );
+  }
+
+  Center _buildListLoadingView() {
+    return Center(
+        child: CupertinoActivityIndicator(),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: Stack(
-        children: <Widget>[
-          Offstage(
-            offstage: _isLoading,
-            child: SmartRefresher(
-              controller: _refreshController,
-              headerBuilder: buildDefaultHeader,
-              footerBuilder: (context, mode) =>
-                  buildDefaultFooter(context, mode, () {
-                    _refreshController.sendBack(false, RefreshStatus.refreshing);
-                  }),
-              onRefresh: _onRefresh,
-              enablePullUp: true,
-              child: ListView.builder(
-                itemCount: _tempCount,
-                itemBuilder: (context, index) {
-                  // return GoodsItemView(index: index);
-                  return Container(
-                    color: Color(0x776699),
-                  );
-                },
-              ),  
-            ),
-          ),
-          Offstage(
-            offstage: !_isLoading,
-            child: Center(
-              child: CupertinoActivityIndicator(),
-            ),
-          )
-        ],
-      ),
+      child: _isLoading ? _buildListLoadingView() : _buildRefreshListView(),
     );
   }
 
-
-  void _onRefresh(bool up) {
-    if (!up) {
-      _page++;
-      _getCategoryData(loadMore: true);
-    }else {
-      _page = 1;
-      _getCategoryData(loadMore: false);
-    }
-  }
-
   void _getCategoryData({bool loadMore = false}) {
-    NetworkUtils.requestProductListByCateId("4", 1).then((res){
+    NetworkUtils.requestProductListByCateId(4, 1).then((res){
         if (res.status == 200) {
+          pageResult = PageResult.fromJson(res.data);
+
+         if (loadMore) {
+           if (pageResult.items.length > 0) {
+            var tempList = pageResult.items.map((m) => RecommendProductList.fromJson(m)).toList();
+            productList.addAll(tempList);
+          }
+          _refreshController.loadComplete();
+         }else {
+            productList = pageResult.items.map((m) => RecommendProductList.fromJson(m)).toList();
+            _refreshController.refreshCompleted();
+         }
           
+          setState(() {
+             _isLoading = false;
+          });
+        }else {
+          if (!loadMore) {
+             _refreshController.refreshFailed();
+          }
         }
-    });
-    Future.delayed(Duration(seconds: 1), () {
-      if (loadMore) {
-        _refreshController.sendBack(false, RefreshStatus.idle);
-        setState(() {
-          _tempCount += 10;
-          _isLoading = false;
-         });
-      }else {
-         _refreshController.sendBack(true, RefreshStatus.completed);
-         setState(() {
-          _tempCount = 10;
-          _isLoading = false;
-         });
-      }
     });
   }
 }

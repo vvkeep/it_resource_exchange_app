@@ -7,6 +7,10 @@ import 'package:it_resource_exchange_app/model/base_result.dart';
 import 'dart:convert';
 import './code.dart';
 
+enum HttpMethod {
+  GET, POST
+}
+
 class HttpManager {
   static const CONTENT_TYPE_JSON = "application/json";
   static const CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
@@ -28,13 +32,13 @@ class HttpManager {
     if (option != null) {
       option.headers = headers;
     }else {
-      option = Options(method: "get");
+      option = Options(method: "GET");
       option.headers = headers;
     }
 
     Response response;
     try {
-      response = await _dio.request(url, data:params, options: option);
+      response = await _dio.request(url, data:params, queryParameters: params, options: option);
     } on DioError catch (e) {
       Response errorRespnse;
       if(e.response != null) {

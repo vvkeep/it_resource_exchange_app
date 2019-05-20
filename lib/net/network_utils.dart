@@ -17,9 +17,9 @@ class NetworkUtils {
       return result;
     }
 
-    static requestProductListByCateId(String cateId, int currentPage) async {
+    static requestProductListByCateId(int cateId, int currentPage) async {
       String url = APPConfig.Server + "/product/pageListByCateId";
-      var params = {"cateId": cateId, "currentPage": currentPage};
+      var params = {"cateId": cateId, "currentPage": currentPage, "pageSize": 20};
       BaseResult result = await httpManager.resquest(url, params, null, null);
       return result;
     }

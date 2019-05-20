@@ -60,7 +60,7 @@ class GoodsItemView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            Text('12',
+                            Text('0',
                               style: TextStyle(color: AppColors.LightTextColor, fontSize: 12.0),
                             ),
                             SizedBox(width: 5.0),
