@@ -9,7 +9,6 @@ import 'package:it_resource_exchange_app/model/page_result.dart';
 import "package:it_resource_exchange_app/model/home_info.dart";
 
 class ClassifyListView extends StatefulWidget {
-
   final CateInfo cate;
 
   ClassifyListView(this.cate);
@@ -18,15 +17,14 @@ class ClassifyListView extends StatefulWidget {
   _ClassifyListViewState createState() => _ClassifyListViewState();
 }
 
-class _ClassifyListViewState extends State<ClassifyListView> with AutomaticKeepAliveClientMixin {
-
+class _ClassifyListViewState extends State<ClassifyListView>
+    with AutomaticKeepAliveClientMixin {
   bool _isLoading = true;
   RefreshController _refreshController;
 
   PageResult pageResult;
   List<RecommendProductList> productList = [];
 
-  
   @override
   void initState() {
     super.initState();
@@ -45,24 +43,26 @@ class _ClassifyListViewState extends State<ClassifyListView> with AutomaticKeepA
       header: buildDefaultHeader(),
       footer: buildDefaultFooter(),
       onRefresh: () {
-        _getCategoryData(loadMore: true);
+        _getCategoryData(loadMore: false);
       },
       onLoading: () {
-       _getCategoryData(loadMore: false);
+        _getCategoryData(loadMore: true);
       },
       child: ListView.builder(
         itemCount: productList.length,
         itemBuilder: (context, index) {
-          return GoodsItemView(recomendProduct: productList[index],);
+          return GoodsItemView(
+            recomendProduct: productList[index],
+          );
         },
-      ),  
+      ),
     );
   }
 
   Center _buildListLoadingView() {
     return Center(
-        child: CupertinoActivityIndicator(),
-      );
+      child: CupertinoActivityIndicator(),
+    );
   }
 
   @override
@@ -74,29 +74,33 @@ class _ClassifyListViewState extends State<ClassifyListView> with AutomaticKeepA
   }
 
   void _getCategoryData({bool loadMore = false}) {
-    NetworkUtils.requestProductListByCateId(4, 1).then((res){
-        if (res.status == 200) {
-          pageResult = PageResult.fromJson(res.data);
-
-         if (loadMore) {
-           if (pageResult.items.length > 0) {
-            var tempList = pageResult.items.map((m) => RecommendProductList.fromJson(m)).toList();
+    int page = (pageResult == null || loadMore == false) ? 1 : pageResult.currentPage + 1;
+    NetworkUtils.requestProductListByCateId(this.widget.cate.cateId, page).then((res) {
+      if (res.status == 200) {
+        pageResult = PageResult.fromJson(res.data);
+        if (loadMore) {
+          if (pageResult.items.length > 0) {
+            var tempList = pageResult.items
+                .map((m) => RecommendProductList.fromJson(m))
+                .toList();
             productList.addAll(tempList);
           }
-          _refreshController.loadComplete();
-         }else {
-            productList = pageResult.items.map((m) => RecommendProductList.fromJson(m)).toList();
-            _refreshController.refreshCompleted();
-         }
-          
-          setState(() {
-             _isLoading = false;
-          });
-        }else {
-          if (!loadMore) {
-             _refreshController.refreshFailed();
-          }
+        } else {
+          productList = pageResult.items
+              .map((m) => RecommendProductList.fromJson(m))
+              .toList();
         }
+
+        if (loadMore) {
+          _refreshController.loadComplete();
+        } else {
+          _refreshController.refreshCompleted();
+        }
+
+        setState(() {
+          _isLoading = false;
+        });
+      }
     });
   }
 }

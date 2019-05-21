@@ -20,5 +20,5 @@ class Constant {
 class APPConfig {
   static const DEBUG = true;
   static const Server = "http://47.107.231.54:8090";
-  // static const APPServer = "http://localhost:8090";
+  // static const Server = "http://localhost:8090";
 }
