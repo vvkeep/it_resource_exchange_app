@@ -51,7 +51,7 @@ class _ApplicationPageState extends State<ApplicationPage> with SingleTickerProv
       theme: ThemeData(primaryColor: AppColors.PrimaryColor),
       home: Scaffold(
         appBar: AppBar(
-          title: Text(this.title),
+          title: Text(this.title, style: TextStyle(color: Colors.white),),
           elevation: 0.0,
         ),
         body: PageView(
