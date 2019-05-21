@@ -74,8 +74,11 @@ class _ClassifyListViewState extends State<ClassifyListView>
   }
 
   void _getCategoryData({bool loadMore = false}) {
-    int page = (pageResult == null || loadMore == false) ? 1 : pageResult.currentPage + 1;
-    NetworkUtils.requestProductListByCateId(this.widget.cate.cateId, page).then((res) {
+    int page = (pageResult == null || loadMore == false)
+        ? 1
+        : pageResult.currentPage + 1;
+    NetworkUtils.requestProductListByCateId(this.widget.cate.cateId, page)
+        .then((res) {
       if (res.status == 200) {
         pageResult = PageResult.fromJson(res.data);
         if (loadMore) {
@@ -84,23 +87,28 @@ class _ClassifyListViewState extends State<ClassifyListView>
                 .map((m) => RecommendProductList.fromJson(m))
                 .toList();
             productList.addAll(tempList);
+            _refreshController.loadComplete();
+          } else {
+            _refreshController.loadNoData();
           }
         } else {
           productList = pageResult.items
               .map((m) => RecommendProductList.fromJson(m))
               .toList();
+          _refreshController.refreshCompleted();
         }
-
+      } else {
+        //请求失败
         if (loadMore) {
           _refreshController.loadComplete();
         } else {
-          _refreshController.refreshCompleted();
+          _refreshController.refreshFailed();
         }
-
-        setState(() {
-          _isLoading = false;
-        });
       }
+
+      setState(() {
+        _isLoading = false;
+      });
     });
   }
 }
