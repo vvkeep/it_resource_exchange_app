@@ -23,4 +23,11 @@ class NetworkUtils {
       BaseResult result = await httpManager.resquest(url, params, null, null);
       return result;
     }
+
+    static requestProductDetailByProductId(int productId) async {
+      String url = APPConfig.Server + "/product/detail";
+      var params = {"productId": productId};
+      BaseResult result = await httpManager.resquest(url, params, null, null);
+      return result;
+    }
 }

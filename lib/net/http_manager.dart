@@ -4,7 +4,6 @@ import 'interceptors/logs_interceptor.dart';
 import 'interceptors/error_interceptor.dart';
 import 'interceptors/response_Interceptor.dart';
 import 'package:it_resource_exchange_app/model/base_result.dart';
-import 'dart:convert';
 import './code.dart';
 
 enum HttpMethod {
