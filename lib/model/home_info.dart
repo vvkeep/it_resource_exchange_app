@@ -35,6 +35,9 @@ part 'home_info.g.dart';
   @JsonKey(name: 'keywords')
   String keywords;
 
+  @JsonKey(name: 'coverUrl')
+  String coverUrl;
+
   @JsonKey(name: 'imgUrls')
   String imgUrls;
 
@@ -59,7 +62,7 @@ part 'home_info.g.dart';
   @JsonKey(name: 'productStatus')
   int productStatus;
 
-  RecommendProductList(this.recommedId,this.productId,this.cateId,this.keywords,this.imgUrls,this.price,this.productTitle,this.productDesc,this.tradeCount,this.productAddressUrl,this.createdTime,this.productStatus);
+  RecommendProductList(this.recommedId,this.productId,this.cateId,this.keywords,this.coverUrl,this.imgUrls,this.price,this.productTitle,this.productDesc,this.tradeCount,this.productAddressUrl,this.createdTime,this.productStatus);
 
   factory RecommendProductList.fromJson(Map<String, dynamic> srcJson) => _$RecommendProductListFromJson(srcJson);
 
