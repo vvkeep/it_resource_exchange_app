@@ -163,16 +163,28 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
   }
 
   Widget _buildResourceItemView(String title, String value) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(title, style: TextStyle(color: Colors.black, fontSize: 16)),
-          Text(value,
-              style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold)),
-        ]);
+    var descWidget =
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+      Text(title, style: TextStyle(color: Colors.black, fontSize: 16)),
+      Text(value,
+          style: TextStyle(
+              color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold)),
+    ]);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Expanded(child: descWidget),
+        SizedBox(width: 12),
+        IconButton(
+          icon: Icon(IconData(
+            0xe6e6,
+            fontFamily: Constant.IconFontFamily,
+          )),
+          onPressed: () {},
+        )
+      ],
+    );
   }
 
   Widget _buildResourceView() {
