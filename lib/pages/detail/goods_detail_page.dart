@@ -92,10 +92,13 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
   }
 
   Widget _buildTopInfoView() {
-    var format = new DateFormat('yyyy-MM-dd HH:mm');
-    int timeStamp = int.parse(productDetail.createdTime);
-    var date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
-    var createDateStr = format.format(date);
+    var createDateStr = "未知";
+    if (productDetail.createdTime != null && productDetail.createdTime.isNotEmpty) {
+        var format = new DateFormat('yyyy-MM-dd HH:mm');
+        int timeStamp = int.parse(productDetail.createdTime);
+        var date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
+        createDateStr = format.format(date);
+    }
 
     return Container(
       padding: EdgeInsets.fromLTRB(8, 16, 8, 4),
@@ -196,7 +199,9 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
           Divider(color: Color(AppColors.DividerColor)),
           _buildResourceItemView("资源地址:", productDetail.productAddressUrl),
           SizedBox(height: 6),
-          _buildResourceItemView("资源密码:", productDetail.productAddressPassword) ?? "此资源无需密码",
+          _buildResourceItemView(
+                  "资源密码:", productDetail.productAddressPassword) ??
+              "此资源无需密码",
         ],
       ),
     );
@@ -235,33 +240,31 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_showLoading) {
-      return _loadingContainer;
-    } else {
-      return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(
-            "教程详情",
-            style: TextStyle(color: Colors.white),
-          ),
-          elevation: 0.0,
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
+    Widget contentBody = SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          _buildTopInfoView(),
+          _buildGoodsDescTextView(),
+          _buildImgsView(),
+          _buildResourceView()
+        ],
+      ),
+    );
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(
+          "教程详情",
+          style: TextStyle(color: Colors.white),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              _buildTopInfoView(),
-              _buildGoodsDescTextView(),
-              _buildImgsView(),
-              _buildResourceView()
-            ],
-          ),
+        elevation: 0.0,
+        iconTheme: IconThemeData(
+          color: Colors.white,
         ),
-        bottomNavigationBar: _buildBottomBar(),
-      );
-    }
+      ),
+      body: _showLoading ? _loadingContainer : contentBody,
+      bottomNavigationBar: _buildBottomBar(),
+    );
   }
 }
