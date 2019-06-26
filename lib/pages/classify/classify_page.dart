@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:it_resource_exchange_app/common/constant.dart' show Constant;
 import 'classify_list_view.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
@@ -100,6 +99,7 @@ class _ClassifyPageState extends State<ClassifyPage> with SingleTickerProviderSt
   
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return _showLoading ? _loadingContainer : _buildTabPageView();
   }
 }

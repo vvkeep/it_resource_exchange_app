@@ -71,6 +71,7 @@ class _ClassifyListViewState extends State<ClassifyListView>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       color: Colors.white,
       child: _isLoading ? _buildListLoadingView() : _buildRefreshListView(),

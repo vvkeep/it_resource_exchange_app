@@ -1,13 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart' as prefix0;
+import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import '../../model/product_detail.dart';
 import 'package:intl/intl.dart';
+import 'package:oktoast/oktoast.dart';
 
 class GoodsDetailPage extends StatefulWidget {
   GoodsDetailPage({Key key, this.productId}) : super(key: key);
@@ -93,11 +92,12 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
 
   Widget _buildTopInfoView() {
     var createDateStr = "未知";
-    if (productDetail.createdTime != null && productDetail.createdTime.isNotEmpty) {
-        var format = new DateFormat('yyyy-MM-dd HH:mm');
-        int timeStamp = int.parse(productDetail.createdTime);
-        var date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
-        createDateStr = format.format(date);
+    if (productDetail.createdTime != null &&
+        productDetail.createdTime.isNotEmpty) {
+      var format = new DateFormat('yyyy-MM-dd HH:mm');
+      int timeStamp = int.parse(productDetail.createdTime);
+      var date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
+      createDateStr = format.format(date);
     }
 
     return Container(
@@ -184,7 +184,10 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
             0xe6e6,
             fontFamily: Constant.IconFontFamily,
           )),
-          onPressed: () {},
+          onPressed: () {
+            Clipboard.setData(ClipboardData(text: value));
+            showToast("已复制到系统剪贴板");
+          },
         )
       ],
     );
@@ -240,16 +243,21 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget contentBody = SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          _buildTopInfoView(),
-          _buildGoodsDescTextView(),
-          _buildImgsView(),
-          _buildResourceView()
-        ],
-      ),
-    );
+    Widget contentBody;
+    if (_showLoading) {
+      contentBody = _loadingContainer;
+    } else {
+      contentBody = SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            _buildTopInfoView(),
+            _buildGoodsDescTextView(),
+            _buildImgsView(),
+            _buildResourceView()
+          ],
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -263,7 +271,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
           color: Colors.white,
         ),
       ),
-      body: _showLoading ? _loadingContainer : contentBody,
+      body: contentBody,
       bottomNavigationBar: _buildBottomBar(),
     );
   }
