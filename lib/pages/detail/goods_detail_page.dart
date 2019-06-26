@@ -169,7 +169,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
     var descWidget =
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       Text(title, style: TextStyle(color: Colors.black, fontSize: 16)),
-      Text(value,
+      Text(value ?? "",
           style: TextStyle(
               color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold)),
     ]);
@@ -194,18 +194,26 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
   }
 
   Widget _buildResourceView() {
+    List<Widget> itemWidgets = [Divider(color: Color(AppColors.DividerColor))];
+    if (productDetail.productAddressUrl != null &&
+        productDetail.productAddressUrl.isNotEmpty) {
+      itemWidgets.add(
+          _buildResourceItemView("资源地址:", productDetail.productAddressUrl));
+      itemWidgets.add(SizedBox(height: 6));
+    }
+
+    if (productDetail.productAddressPassword != null &&
+        productDetail.productAddressPassword.isNotEmpty) {
+      itemWidgets.add(_buildResourceItemView(
+          "资源密码:", productDetail.productAddressPassword));
+      itemWidgets.add(SizedBox(height: 6));
+    }
+
     return Container(
       margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Divider(color: Color(AppColors.DividerColor)),
-          _buildResourceItemView("资源地址:", productDetail.productAddressUrl),
-          SizedBox(height: 6),
-          _buildResourceItemView(
-                  "资源密码:", productDetail.productAddressPassword) ??
-              "此资源无需密码",
-        ],
+        children: itemWidgets,
       ),
     );
   }
