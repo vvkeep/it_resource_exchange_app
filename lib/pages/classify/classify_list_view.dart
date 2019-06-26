@@ -7,7 +7,7 @@ import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/page_result.dart';
 import "package:it_resource_exchange_app/model/home_info.dart";
-
+import '../detail/goods_detail_page.dart';
 class ClassifyListView extends StatefulWidget {
   final CateInfo cate;
 
@@ -53,6 +53,10 @@ class _ClassifyListViewState extends State<ClassifyListView>
         itemBuilder: (context, index) {
           return GoodsItemView(
             recomendProduct: productList[index],
+            onPressed: () {
+              int productId = productList[index].productId;
+              Navigator.push(context, new MaterialPageRoute(builder: (context) => GoodsDetailPage(productId: productId)));
+            },
           );
         },
       ),
