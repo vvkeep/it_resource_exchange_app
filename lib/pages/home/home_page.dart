@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
             ),
         ),
     )
-);
+  );
 
   void initState() {
     super.initState();
@@ -66,7 +66,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
           return GoodsItemView(
             recomendProduct: homeInfo.recommendProductList[i-1], 
             onPressed: () {
-              Navigator.push(context, new MaterialPageRoute(builder: (context) => GoodsDetailPage()));
+              int productId = homeInfo.recommendProductList[i-1].productId;
+              Navigator.push(context, new MaterialPageRoute(builder: (context) => GoodsDetailPage(productId: productId)));
             },
           );
         }
