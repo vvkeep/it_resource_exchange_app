@@ -163,8 +163,11 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            title: Text("账号注册"),
-          ),
+              title: Text("账号注册", style: TextStyle(color: Colors.white)),
+              elevation: 0.0,
+              iconTheme: IconThemeData(
+                color: Colors.white,
+              )),
           body: SingleChildScrollView(
             child: Column(
               children: <Widget>[

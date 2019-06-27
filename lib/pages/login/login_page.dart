@@ -131,39 +131,47 @@ class _LoginPageState extends State<LoginPage> {
 
   showTips() {
     showModalBottomSheet<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return new Container(
-              child: new Padding(
-                  padding: const EdgeInsets.all(32.0),
-                  child: new Text('没有相关接口，这是一个纯UI界面，提供部分交互体验',
-                      textAlign: TextAlign.center,
-                      style: new TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontSize: 24.0))));
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return new Container(
+          child: new Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: new Text(
+              '没有相关接口，这是一个纯UI界面，提供部分交互体验',
+              textAlign: TextAlign.center,
+              style: new TextStyle(
+                  color: Theme.of(context).accentColor, fontSize: 24.0),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return new Material(
       child: new Scaffold(
-          key: registKey,
-          backgroundColor: Colors.white,
-          appBar: new AppBar(
-            title: new Text('账号登录'),
+        key: registKey,
+        backgroundColor: Colors.white,
+        appBar: new AppBar(
+            title: new Text('账号登录', style: TextStyle(color: Colors.white)),
+            elevation: 0.0,
+            iconTheme: IconThemeData(
+              color: Colors.white,
+            )),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              _buildTipIcon(),
+              _buldAccountEdit(),
+              _bulidPasswordEdit(),
+              _buildLoginBtn(),
+              _buildRegisterBtn()
+            ],
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                _buildTipIcon(),
-                _buldAccountEdit(),
-                _bulidPasswordEdit(),
-                _buildLoginBtn(),
-                _buildRegisterBtn()
-              ],
-            ),
-          )),
+        ),
+      ),
     );
   }
 }

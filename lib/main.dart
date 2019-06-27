@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
 import './pages/application_page.dart';
 import 'package:oktoast/oktoast.dart';
+import './utils/user_utils.dart';
+import './pages/login/login_page.dart';
+import './utils/local_storage_utils.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  await LocalStorage.getInstance();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -17,7 +23,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: AppColors.PrimaryColor,
         ),
-        home: ApplicationPage(),
+        home: UserUtils.isLogin() ? ApplicationPage() : LoginPage(),
       ),
     );
   }
