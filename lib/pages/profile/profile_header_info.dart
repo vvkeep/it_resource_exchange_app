@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:it_resource_exchange_app/common/constant.dart' show AppColors, Constant;
+import 'package:it_resource_exchange_app/common/constant.dart'
+    show AppColors, Constant;
+import 'package:it_resource_exchange_app/model/user_info.dart';
+import 'package:it_resource_exchange_app/utils/user_utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfileHeaderInfoView extends StatelessWidget {
-  const ProfileHeaderInfoView({
-    this.onPressed
-  });
+  const ProfileHeaderInfoView({this.onPressed});
 
   final VoidCallback onPressed;
   @override
   Widget build(BuildContext context) {
+    UserInfo userInfo = UserUtils.getUserInfo();
     return Container(
       height: 80,
       color: Colors.white,
@@ -19,42 +22,50 @@ class ProfileHeaderInfoView extends StatelessWidget {
           children: <Widget>[
             SizedBox(width: 20),
             Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  print("点击了头部登录");
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text('请先登录', style: Theme.of(context).textTheme.title.copyWith(fontSize: 20),),
-                    Padding(
-                      padding: EdgeInsets.only(top: 6.0),
-                      child: Text(
-                        '此人很懒，什么都没写~',
-                        style: Theme.of(context).textTheme.body1.copyWith(fontSize: 12, color: Color(0xff818181)),
-                      ),
-                    )
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    userInfo.account,
+                    style: Theme.of(context)
+                        .textTheme
+                        .title
+                        .copyWith(fontSize: 20),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 6.0),
+                    child: Text(
+                      userInfo.intro ?? '此人很懒，什么都没写~',
+                      style: Theme.of(context)
+                          .textTheme
+                          .body1
+                          .copyWith(fontSize: 12, color: Color(0xff818181)),
+                    ),
+                  )
+                ],
               ),
             ),
             Padding(
               padding: EdgeInsets.only(right: 20),
               child: ClipOval(
-                child: Icon(
-                  IconData(
-                    0xe642,
-                    fontFamily: Constant.IconFontFamily,
+                child: CachedNetworkImage(
+                  imageUrl: userInfo.avatar,
+                  placeholder: Icon(
+                    IconData(
+                      0xe642,
+                      fontFamily: Constant.IconFontFamily,
+                    ),
+                    size: 60.0,
+                    color: Color(AppColors.ArrowNormalColor),
                   ),
-                  size: 60.0, 
-                  color: Color(AppColors.ArrowNormalColor),
+                  fit: BoxFit.cover,
                 ),
               ),
             )
           ],
         ),
-      )
+      ),
     );
   }
 }

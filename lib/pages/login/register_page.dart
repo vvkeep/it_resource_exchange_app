@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
+import '../../net/network_utils.dart';
+import 'package:oktoast/oktoast.dart';
+import 'dart:async';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -11,6 +14,20 @@ class _RegisterPageState extends State<RegisterPage> {
   String _accountNum = '';
   String _password = '';
   String _password2 = '';
+
+  register() {
+    NetworkUtils.register(this._accountNum, this._password).then((res) {
+      if (res.status == 200) {
+        // 注册成功，跳转回登录页面
+        showToast("注册成功", duration: Duration(milliseconds: 1500));
+        Future.delayed(Duration(milliseconds: 1500), (){
+          Navigator.pop(this.context);
+        });
+      } else {
+        showToast(res.message, duration: Duration(milliseconds: 1500));
+      }
+    });
+  }
 
   Widget _buildTipIcon() {
     return new Padding(
@@ -129,32 +146,22 @@ class _RegisterPageState extends State<RegisterPage> {
         color: AppColors.PrimaryColor,
         textColor: Colors.white,
         disabledColor: AppColors.PrimaryColor[100],
-        onPressed: (_accountNum.isEmpty || _password.isEmpty)
-            ? null
-            : () {
-                showTips();
-              },
+        onPressed:
+            (_accountNum.isEmpty || _password.isEmpty || _password2.isEmpty)
+                ? null
+                : () {
+                    if (_password != _password2) {
+                      showToast("密码输入不一致");
+                      return;
+                    }
+                    register();
+                  },
         child: new Text(
           '注册',
           style: new TextStyle(fontSize: 16.0, color: Colors.white),
         ),
       ),
     );
-  }
-
-  showTips() {
-    showModalBottomSheet<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return new Container(
-              child: new Padding(
-                  padding: const EdgeInsets.all(32.0),
-                  child: new Text('没有相关接口，这是一个纯UI界面，提供部分交互体验',
-                      textAlign: TextAlign.center,
-                      style: new TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontSize: 24.0))));
-        });
   }
 
   @override

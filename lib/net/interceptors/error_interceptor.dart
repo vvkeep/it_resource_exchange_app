@@ -10,7 +10,7 @@ class ErrorInterceptor extends InterceptorsWrapper {
   onRequest(RequestOptions options) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
-      return _dio.resolve(BaseResult(Code.NETWORK_ERROR, Code.NETWORK_ERROR, "网络错误"));
+      return _dio.resolve(BaseResult(null, Code.NETWORK_ERROR, "网络错误"));
     }
     return super.onRequest(options);
   }

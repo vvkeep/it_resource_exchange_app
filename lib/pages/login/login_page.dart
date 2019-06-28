@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
 import 'register_page.dart';
+import '../../net/network_utils.dart';
+import '../../model/user_info.dart';
+import '../../utils/user_utils.dart';
+import 'package:oktoast/oktoast.dart';
+import 'package:it_resource_exchange_app/pages/application_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -13,6 +18,19 @@ class _LoginPageState extends State<LoginPage> {
 
   String _accountNum = '';
   String _password = '';
+
+  login() {
+    NetworkUtils.login(this._accountNum, this._password).then((res) {
+      if (res.status == 200) {
+        UserInfo userInfo = UserInfo.fromJson(res.data);
+        UserUtils.saveUserInfo(userInfo);
+        // 保存成功，跳转到首页
+        Navigator.pushReplacement(this.context, MaterialPageRoute(builder: (context) => ApplicationPage()));
+      }else {
+        showToast(res.message, duration: Duration(milliseconds: 1500));
+      }
+    });
+  }
 
   Widget _buldAccountEdit() {
     var node = FocusNode();
@@ -29,8 +47,9 @@ class _LoginPageState extends State<LoginPage> {
               fontSize: 12.0, color: Color(AppColors.ArrowNormalColor)),
         ),
         maxLines: 1,
-        maxLength: 15,
+        maxLength: 25,
         keyboardType: TextInputType.emailAddress,
+        autofocus: true,
         onSubmitted: (value) {
           FocusScope.of(context).reparentIfNeeded(node);
         },
@@ -80,11 +99,13 @@ class _LoginPageState extends State<LoginPage> {
         color: AppColors.PrimaryColor,
         textColor: Colors.white,
         disabledColor: AppColors.PrimaryColor[100],
-        onPressed: (_accountNum.isEmpty || _password.isEmpty)
-            ? null
-            : () {
-                showTips();
-              },
+        onPressed: () {
+          if (_accountNum.isEmpty || _password.isEmpty) {
+            showToast("159请输入用户名和密码");
+          }else {
+            login();
+          }
+        },
         child: new Text(
           '登 录',
           style: new TextStyle(fontSize: 16.0, color: Colors.white),
@@ -126,25 +147,6 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ],
       ),
-    );
-  }
-
-  showTips() {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return new Container(
-          child: new Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: new Text(
-              '没有相关接口，这是一个纯UI界面，提供部分交互体验',
-              textAlign: TextAlign.center,
-              style: new TextStyle(
-                  color: Theme.of(context).accentColor, fontSize: 24.0),
-            ),
-          ),
-        );
-      },
     );
   }
 

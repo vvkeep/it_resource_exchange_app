@@ -1,17 +1,21 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
-import 'dart:collection';
+import 'package:it_resource_exchange_app/model/base_result.dart';
 import 'interceptors/logs_interceptor.dart';
 import 'interceptors/error_interceptor.dart';
 import 'interceptors/response_Interceptor.dart';
 import './code.dart';
+import 'package:oktoast/oktoast.dart';
 
 enum HttpMethod {
   GET, POST
 }
 
+const HTTPMethodValues = ['GET','POST'];
+const ContentTypeURLEncoded = 'application/x-www-form-urlencoded';
+
 class HttpManager {
-  static const CONTENT_TYPE_JSON = "application/json";
-  static const CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
 
   Dio _dio = Dio();
 
@@ -21,33 +25,34 @@ class HttpManager {
     _dio.interceptors.add(ResponseInterceptor());
   }
 
-  resquest(url, params, Map<String, dynamic> header, Options option, {isTip = false}) async {
-    Map<String, dynamic> headers = HashMap();
-    if (header != null) {
-      headers.addAll(header);
-    }
-
-    if (option != null) {
-      option.headers = headers;
+  request(HttpMethod method, String url, Map<String, dynamic> params, { ContentType contentType }) async {
+    Options _options;
+    var type = contentType == null ? ContentType.parse(ContentTypeURLEncoded) : contentType;
+    if (method == HttpMethod.GET) {
+      _options = Options(method: HTTPMethodValues[method.index], contentType: type);
     }else {
-      option = Options(method: "GET");
-      option.headers = headers;
+      _options = Options(method: HTTPMethodValues[method.index], contentType: type);
     }
 
     Response response;
     try {
-      response = await _dio.request(url, data:params, queryParameters: params, options: option);
+      if (method == HttpMethod.GET) {
+        response = await _dio.get(url, queryParameters: params, options: _options);
+      } else {
+        response = await _dio.post(url, data: params, options: _options);
+      }
     } on DioError catch (e) {
-      Response errorRespnse;
       if(e.response != null) {
-        errorRespnse = e.response;
+        response = e.response;
       }else {
-        errorRespnse = Response(statusCode: 999);
+        response = Response(statusCode: 999, statusMessage: "请求失败,稍后再试！");
       }
 
       if (e.type == DioErrorType.CONNECT_TIMEOUT || e.type == DioErrorType.RECEIVE_TIMEOUT) {
-        errorRespnse.statusCode = Code.NETWOEK_TIMEROUT;
+        response.statusCode = Code.NETWOEK_TIMEROUT;
+        response.statusMessage = "请求超时,请稍后再试!";
       }
+      response.data = BaseResult(null, response.statusCode, response.statusMessage);
     }
 
     return response.data;
