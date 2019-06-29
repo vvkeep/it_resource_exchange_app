@@ -6,7 +6,9 @@ class AppColors {
   static const DividerColor = 0xffd9d9d9;
   static const ArrowNormalColor = 0xff999999;
   static const BackgroundColor = 0xffebebeb;
-  static const LightTextColor = Color(0xFFB5BDC0);
+  static const DarkTextColor = Color(0xFF333333);
+  static const MidTextColor = Color(0xFF666666);
+  static const LightTextColor = Color(0xFF999999);
 }
 
 class AppSize {

@@ -43,7 +43,7 @@ class GoodsItemView extends StatelessWidget {
                       padding: EdgeInsets.only(top: 10.0),
                       child: Text(
                         recomendProduct.productTitle,
-                        style: TextStyle(fontSize: 15.0),
+                        style: TextStyle(fontSize: 15.0, color: AppColors.DarkTextColor),
                       ),
                     ),
                     Container(
