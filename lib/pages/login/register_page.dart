@@ -20,7 +20,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (res.status == 200) {
         // 注册成功，跳转回登录页面
         showToast("注册成功", duration: Duration(milliseconds: 1500));
-        Future.delayed(Duration(milliseconds: 1500), (){
+        Future.delayed(Duration(milliseconds: 1500), () {
           Navigator.pop(this.context);
         });
       } else {
@@ -61,8 +61,9 @@ class _RegisterPageState extends State<RegisterPage> {
               fontSize: 12.0, color: Color(AppColors.ArrowNormalColor)),
         ),
         maxLines: 1,
-        maxLength: 15,
+        maxLength: 30,
         keyboardType: TextInputType.emailAddress,
+        autofocus: true,
         onSubmitted: (value) {
           FocusScope.of(context).reparentIfNeeded(node);
         },
@@ -168,14 +169,19 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Material(
       child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-              title: Text("账号注册", style: TextStyle(color: Colors.white)),
-              elevation: 0.0,
-              iconTheme: IconThemeData(
-                color: Colors.white,
-              )),
-          body: SingleChildScrollView(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+            title: Text("账号注册", style: TextStyle(color: Colors.white)),
+            elevation: 0.0,
+            iconTheme: IconThemeData(
+              color: Colors.white,
+            )),
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent, //解决透明区域不响应事件
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
                 _buildTipIcon(),
@@ -185,7 +191,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 _buildSubmitBtn()
               ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

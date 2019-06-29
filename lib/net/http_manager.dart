@@ -6,7 +6,6 @@ import 'interceptors/logs_interceptor.dart';
 import 'interceptors/error_interceptor.dart';
 import 'interceptors/response_Interceptor.dart';
 import './code.dart';
-import 'package:oktoast/oktoast.dart';
 
 enum HttpMethod {
   GET, POST

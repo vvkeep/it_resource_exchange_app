@@ -22,3 +22,14 @@ class APPConfig {
   static const Server = "http://47.107.231.54:8090";
   // static const Server = "http://localhost:8090";
 }
+
+class APPIcons {
+  static const PlaceHolderAvatar = Icon(
+    IconData(
+      0xe642,
+      fontFamily: Constant.IconFontFamily,
+    ),
+    size: 60.0,
+    color: Color(AppColors.ArrowNormalColor),
+  );
+}

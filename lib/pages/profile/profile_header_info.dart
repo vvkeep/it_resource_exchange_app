@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
-    show AppColors, Constant;
+    show AppColors, Constant, APPIcons;
 import 'package:it_resource_exchange_app/model/user_info.dart';
 import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,6 +12,21 @@ class ProfileHeaderInfoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserInfo userInfo = UserUtils.getUserInfo();
+
+    Widget avatar;
+
+    if (userInfo.avatar != null) {
+      avatar = CachedNetworkImage(
+                  imageUrl: userInfo.avatar ?? '',
+                  placeholder: APPIcons.PlaceHolderAvatar,
+                  fit: BoxFit.cover,
+                );
+    }else {
+      avatar = APPIcons.PlaceHolderAvatar;
+    }
+
+
+
     return Container(
       height: 80,
       color: Colors.white,
@@ -49,18 +64,7 @@ class ProfileHeaderInfoView extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(right: 20),
               child: ClipOval(
-                child: CachedNetworkImage(
-                  imageUrl: userInfo.avatar,
-                  placeholder: Icon(
-                    IconData(
-                      0xe642,
-                      fontFamily: Constant.IconFontFamily,
-                    ),
-                    size: 60.0,
-                    color: Color(AppColors.ArrowNormalColor),
-                  ),
-                  fit: BoxFit.cover,
-                ),
+                child: avatar,
               ),
             )
           ],

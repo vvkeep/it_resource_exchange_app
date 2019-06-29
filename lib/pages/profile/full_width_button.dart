@@ -54,9 +54,7 @@ class FullWidthButton extends StatelessWidget {
     );
 
     return FlatButton(
-      onPressed: (){
-
-      },
+      onPressed: this.onPressed,
       padding: EdgeInsets.only(
         left: HORIZONTAL_PADDING, 
         right: HORIZONTAL_PADDING, 

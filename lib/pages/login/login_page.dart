@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
               fontSize: 12.0, color: Color(AppColors.ArrowNormalColor)),
         ),
         maxLines: 1,
-        maxLength: 25,
+        maxLength: 30,
         keyboardType: TextInputType.emailAddress,
         autofocus: true,
         onSubmitted: (value) {
@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
         disabledColor: AppColors.PrimaryColor[100],
         onPressed: () {
           if (_accountNum.isEmpty || _password.isEmpty) {
-            showToast("159请输入用户名和密码");
+            showToast("请输入用户名和密码");
           }else {
             login();
           }
@@ -162,7 +162,12 @@ class _LoginPageState extends State<LoginPage> {
             iconTheme: IconThemeData(
               color: Colors.white,
             )),
-        body: SingleChildScrollView(
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               _buildTipIcon(),
@@ -173,6 +178,7 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         ),
+        )
       ),
     );
   }
