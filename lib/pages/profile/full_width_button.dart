@@ -46,7 +46,7 @@ class FullWidthButton extends StatelessWidget {
     final borderButton = Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: Color(AppColors.DividerColor), width: AppSize.DividerWidth)
+          bottom: BorderSide(color: AppColors.DividerColor, width: AppSize.DividerWidth)
         ),
       ),
       padding: EdgeInsets.only(bottom: VERTICAL_PADDING),

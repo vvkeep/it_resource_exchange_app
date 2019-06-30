@@ -71,7 +71,7 @@ class _ClassifyPageState extends State<ClassifyPage> with SingleTickerProviderSt
             border: Border(
               bottom: BorderSide(
                 width: 0.0,
-                color: Color(AppColors.DividerColor),
+                color: AppColors.DividerColor,
               )
             )
           ),

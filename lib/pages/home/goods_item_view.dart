@@ -30,7 +30,7 @@ class GoodsItemView extends StatelessWidget {
               border: Border(
                   bottom: BorderSide(
             width: AppSize.DividerWidth,
-            color: Color(AppColors.DividerColor),
+            color: AppColors.DividerColor,
           ))),
           child: Row(
             children: <Widget>[

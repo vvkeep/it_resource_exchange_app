@@ -114,7 +114,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(color: Colors.grey, fontSize: 12)),
-          Divider(color: Color(AppColors.DividerColor)),
+          Divider(color: AppColors.DividerColor),
           _buildPriceView()
         ],
       ),
@@ -194,7 +194,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
   }
 
   Widget _buildResourceView() {
-    List<Widget> itemWidgets = [Divider(color: Color(AppColors.DividerColor))];
+    List<Widget> itemWidgets = [Divider(color: AppColors.DividerColor)];
     if (productDetail.productAddressUrl != null &&
         productDetail.productAddressUrl.isNotEmpty) {
       itemWidgets.add(

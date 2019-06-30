@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// 颜色
 class AppColors {
   static const PrimaryColor = Colors.cyan;
-  static const DividerColor = 0xffd9d9d9;
+  static const DividerColor = Color(0xffd9d9d9);
   static const ArrowNormalColor = 0xff999999;
   static const BackgroundColor = 0xffebebeb;
   static const DarkTextColor = Color(0xFF333333);
@@ -34,4 +34,10 @@ class APPIcons {
     size: 60.0,
     color: Color(AppColors.ArrowNormalColor),
   );
+
+  static const AddImgData = IconData(
+      0xe70a,
+      fontFamily: Constant.IconFontFamily,
+    );
+
 }

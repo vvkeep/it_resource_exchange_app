@@ -17,7 +17,7 @@ class ProfileHeaderInfoView extends StatelessWidget {
 
     if (userInfo.avatar != null) {
       avatar = CachedNetworkImage(
-                  imageUrl: userInfo.avatar ?? '',
+                  imageUrl: userInfo.avatar,
                   placeholder: APPIcons.PlaceHolderAvatar,
                   fit: BoxFit.cover,
                 );
