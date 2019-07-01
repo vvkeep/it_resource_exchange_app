@@ -38,6 +38,5 @@ class APPIcons {
   static const AddImgData = IconData(
       0xe70a,
       fontFamily: Constant.IconFontFamily,
-    );
-
+  );
 }

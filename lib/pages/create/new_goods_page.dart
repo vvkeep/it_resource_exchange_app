@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppSize, AppColors, APPIcons;
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class NewGoodsPage extends StatefulWidget {
   @override
@@ -11,6 +15,8 @@ class NewGoodsPage extends StatefulWidget {
 class _NewGoodsPageState extends State<NewGoodsPage> {
   List _fruits = ["Apple", "Banana", "Pineapple", "Mango", "Grapes"];
   String _selectedFruit;
+
+  File coverFile;
 
   @override
   void initState() {
@@ -34,10 +40,8 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
         ),
       ),
       child: TextField(
-        decoration: InputDecoration(
-          hintText: '请输入标题',
-          border: InputBorder.none
-        ),
+        decoration:
+            InputDecoration(hintText: '请输入标题', border: InputBorder.none),
         onChanged: (str) {},
       ),
     );
@@ -106,30 +110,46 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   Widget _buildDescField() {
     return TextField(
       decoration: InputDecoration(
-        hintText: '请输入产品描述',
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10)
+          hintText: '请输入产品描述',
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide(
+              color: AppColors.DividerColor,
+              width: AppSize.DividerWidth,
+            ),
           ),
-          borderSide: BorderSide(
-            color: AppColors.DividerColor,
-            width: AppSize.DividerWidth,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
             color: AppColors.PrimaryColor,
             width: AppSize.DividerWidth,
-          )
-        )
-      ),
+          ))),
       maxLines: 5,
     );
   }
 
   Widget _chooseCoverView() {
     Widget coverView;
-    coverView = Icon(APPIcons.AddImgData, size: 80, color: AppColors.PrimaryColor,);
+    if (this.coverFile != null) {
+      coverView = Image.file(coverFile, fit: BoxFit.cover);
+    }else {
+      coverView = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              APPIcons.AddImgData,
+              size: 80,
+              color: AppColors.PrimaryColor,
+              ),
+            SizedBox(height: 10),
+            Text(
+              '添加封面',
+              style: TextStyle(fontSize: 18, color: AppColors.DarkTextColor),
+            )
+          ],
+        ); 
+    }
+
+
     // coverView = CachedNetworkImage(
     //               imageUrl: '',
     //               placeholder: APPIcons.PlaceHolderAvatar,
@@ -137,26 +157,17 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     //             );
     return GestureDetector(
       onTap: () {
-
+        this.showChoosePhotoAlertSheet();
       },
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: AppColors.DividerColor,
-            width: AppSize.DividerWidth
-          ),
+              color: AppColors.DividerColor, width: AppSize.DividerWidth),
           borderRadius: BorderRadius.circular(10),
         ),
-        height: 300,
+        height: 220,
         width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            coverView,
-            SizedBox(height: 10),
-            Text('添加封面', style: TextStyle(fontSize: 18, color: AppColors.DarkTextColor),)
-          ],
-        ),
+        child: coverView,
       ),
     );
   }
@@ -176,7 +187,10 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text("请选择",style: TextStyle(fontSize: 17, color: AppColors.MidTextColor),),
+          Text(
+            "请选择",
+            style: TextStyle(fontSize: 17, color: AppColors.MidTextColor),
+          ),
           DropdownButton(
               hint: Text('产品分类'),
               iconSize: 35,
@@ -189,6 +203,78 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
               })
         ],
       ),
+    );
+  }
+
+  Widget _buildPreviewWidget() {
+    Widget addIcon = Icon(
+      APPIcons.AddImgData,
+      size: 80,
+      color: AppColors.PrimaryColor,
+    );
+
+    Widget addWidget = Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+            color: AppColors.DividerColor, width: AppSize.DividerWidth),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: addIcon,
+    );
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+            color: AppColors.DividerColor, width: AppSize.DividerWidth),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 10.0,  vertical: 10.0),
+      width: double.infinity,
+      height: 200,
+      child: Wrap(
+        spacing: 8.0,
+        runSpacing: 8.0,
+        children: <Widget>[addWidget],
+      ),
+    );
+  }
+
+  void showChoosePhotoAlertSheet() {
+    showModalBottomSheet(
+      context: this.context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: new Icon(Icons.photo_camera),
+              title: new Text("相机"),
+              onTap: () async {
+                Navigator.of(context).pop();
+                coverFile = await ImagePicker.pickImage(source: ImageSource.camera);
+              },
+            ),
+            Divider(),
+            ListTile(
+              leading: new Icon(Icons.photo_library),
+              title: new Text("相册"),
+              onTap: () async {
+                Navigator.of(context).pop();
+                coverFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+              },
+            ),
+            Divider(),
+            ListTile(
+              leading: new Icon(Icons.cancel),
+              title: new Text("取消"),
+              onTap: () async {
+                Navigator.of(context).pop();
+              },
+            ),
+            Divider(),
+          ],
+        );
+      }
     );
   }
 
@@ -206,26 +292,34 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
           color: Colors.white,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30),
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 5),
-              _buildChooseCategoryView(),
-              SizedBox(height: 5),
-              _buildTitleField(),
-              SizedBox(height: 5),
-              _buildPriceField(),
-              SizedBox(height: 5),
-              _buildResourceUrlField(),
-              SizedBox(height: 5),
-              _buildResourcePasswordField(),
-              SizedBox(height: 5),
-              _buildDescField(),
-              SizedBox(height: 5),
-              _chooseCoverView()
-            ],
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 5),
+                _chooseCoverView(),
+                SizedBox(height: 8),
+                _buildChooseCategoryView(),
+                SizedBox(height: 5),
+                _buildTitleField(),
+                SizedBox(height: 5),
+                _buildPriceField(),
+                SizedBox(height: 5),
+                _buildResourceUrlField(),
+                SizedBox(height: 5),
+                _buildResourcePasswordField(),
+                SizedBox(height: 5),
+                _buildDescField(),
+                SizedBox(height: 10),
+                _buildPreviewWidget(),
+                SizedBox(height: 50),
+              ],
+            ),
           ),
         ),
       ),

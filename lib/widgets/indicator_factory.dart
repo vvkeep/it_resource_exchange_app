@@ -23,10 +23,9 @@ Widget buildDefaultHeader() {
 }
 
 Widget buildDefaultFooter() {
-    return new ClassicFooter(
-        idleIcon: new Icon(Icons.arrow_upward, color: Colors.black),
-        loadingText: '正在加载中...',
-        idleText: '上拉加载',
-        noDataText: '没有更多数据'
-      );
+  return new ClassicFooter(
+      idleIcon: new Icon(Icons.arrow_upward, color: Colors.black),
+      loadingText: '正在加载中...',
+      idleText: '上拉加载',
+      noDataText: '没有更多数据');
 }
