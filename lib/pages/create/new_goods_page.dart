@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppSize, AppColors, APPIcons;
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,9 +19,34 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   File coverFile;
 
+  List<Widget> previewList = [];
+
   @override
   void initState() {
     super.initState();
+
+    Widget addWidget = GestureDetector(
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: AppColors.DividerColor, width: AppSize.DividerWidth),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(
+          APPIcons.AddImgData,
+          size: 80,
+          color: AppColors.PrimaryColor,
+        ),
+      ),
+      onTap: () {
+        addPrewImgs();
+      }
+    );
+
+    previewList.add(addWidget);
+    
+    setState(() {
+    });
   }
 
   List<DropdownMenuItem> _dropDownMenuItems() {
@@ -131,24 +157,23 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     Widget coverView;
     if (this.coverFile != null) {
       coverView = Image.file(coverFile, fit: BoxFit.cover);
-    }else {
+    } else {
       coverView = Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(
-              APPIcons.AddImgData,
-              size: 80,
-              color: AppColors.PrimaryColor,
-              ),
-            SizedBox(height: 10),
-            Text(
-              '添加封面',
-              style: TextStyle(fontSize: 18, color: AppColors.DarkTextColor),
-            )
-          ],
-        ); 
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(
+            APPIcons.AddImgData,
+            size: 80,
+            color: AppColors.PrimaryColor,
+          ),
+          SizedBox(height: 10),
+          Text(
+            '添加封面',
+            style: TextStyle(fontSize: 18, color: AppColors.DarkTextColor),
+          )
+        ],
+      );
     }
-
 
     // coverView = CachedNetworkImage(
     //               imageUrl: '',
@@ -207,75 +232,81 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   }
 
   Widget _buildPreviewWidget() {
-    Widget addIcon = Icon(
-      APPIcons.AddImgData,
-      size: 80,
-      color: AppColors.PrimaryColor,
-    );
-
-    Widget addWidget = Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: AppColors.DividerColor, width: AppSize.DividerWidth),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: addIcon,
-    );
-
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
             color: AppColors.DividerColor, width: AppSize.DividerWidth),
         borderRadius: BorderRadius.circular(10),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 10.0,  vertical: 10.0),
+      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       width: double.infinity,
       height: 200,
       child: Wrap(
         spacing: 8.0,
         runSpacing: 8.0,
-        children: <Widget>[addWidget],
+        children: this.previewList,
       ),
     );
   }
 
+  void addPrewImgs() async {
+    List<Asset> resultList;
+    String error;
+
+    try {
+      resultList = await MultiImagePicker.pickImages(maxImages: 4);
+    } on PlatformException catch (e) {
+      error = e.message;
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      var list = resultList.map((asset) {
+        return AssetThumb(asset: asset, width: 80, height: 80);
+      }).toList();
+      this.previewList.addAll(list);
+    });
+  }
+
   void showChoosePhotoAlertSheet() {
     showModalBottomSheet(
-      context: this.context,
-      builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: new Icon(Icons.photo_camera),
-              title: new Text("相机"),
-              onTap: () async {
-                Navigator.of(context).pop();
-                coverFile = await ImagePicker.pickImage(source: ImageSource.camera);
-              },
-            ),
-            Divider(),
-            ListTile(
-              leading: new Icon(Icons.photo_library),
-              title: new Text("相册"),
-              onTap: () async {
-                Navigator.of(context).pop();
-                coverFile = await ImagePicker.pickImage(source: ImageSource.gallery);
-              },
-            ),
-            Divider(),
-            ListTile(
-              leading: new Icon(Icons.cancel),
-              title: new Text("取消"),
-              onTap: () async {
-                Navigator.of(context).pop();
-              },
-            ),
-            Divider(),
-          ],
-        );
-      }
-    );
+        context: this.context,
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: new Icon(Icons.photo_camera),
+                title: new Text("相机"),
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  coverFile =
+                      await ImagePicker.pickImage(source: ImageSource.camera);
+                },
+              ),
+              Divider(),
+              ListTile(
+                leading: new Icon(Icons.photo_library),
+                title: new Text("相册"),
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  coverFile =
+                      await ImagePicker.pickImage(source: ImageSource.gallery);
+                },
+              ),
+              Divider(),
+              ListTile(
+                leading: new Icon(Icons.cancel),
+                title: new Text("取消"),
+                onTap: () async {
+                  Navigator.of(context).pop();
+                },
+              ),
+              Divider(),
+            ],
+          );
+        });
   }
 
   @override
