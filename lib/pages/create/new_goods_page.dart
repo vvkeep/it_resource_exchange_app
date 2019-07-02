@@ -161,6 +161,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
       coverView = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          SizedBox(height: 5),
           Icon(
             APPIcons.AddImgData,
             size: 80,
@@ -332,7 +333,6 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Column(
               children: <Widget>[
-                SizedBox(height: 5),
                 _chooseCoverView(),
                 SizedBox(height: 8),
                 _buildChooseCategoryView(),

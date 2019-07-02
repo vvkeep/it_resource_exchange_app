@@ -25,8 +25,6 @@ class ProfileHeaderInfoView extends StatelessWidget {
       avatar = APPIcons.PlaceHolderAvatar;
     }
 
-
-
     return Container(
       height: 80,
       color: Colors.white,

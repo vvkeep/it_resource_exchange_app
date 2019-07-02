@@ -1,0 +1,3 @@
+class ImgDataChannel extends Object {
+  
+}
