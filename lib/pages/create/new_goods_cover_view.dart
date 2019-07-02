@@ -39,9 +39,12 @@ class NewGoodsCoverView extends StatefulWidget {
 class _NewGoodsCoverViewState extends State<NewGoodsCoverView> {
   @override
   Widget build(BuildContext context) {
-    Widget coverView;
+    Widget coverWidget;
+
     if (this.widget.localImg != null) {
-      coverView = localImg;
+      coverView = Card(
+        
+      );
     } else {
       coverView = Column(
         mainAxisAlignment: MainAxisAlignment.center,
