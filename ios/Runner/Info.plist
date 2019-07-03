@@ -45,6 +45,11 @@
 	<string>创建新产品的时候需要使用相机拍摄封面和预览图</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>创建新产品的时候需要使用相机拍摄封面和预览图</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppColors, Constant, APPIcons;
@@ -20,6 +22,7 @@ class ProfileHeaderInfoView extends StatelessWidget {
                   imageUrl: userInfo.avatar,
                   placeholder: APPIcons.PlaceHolderAvatar,
                   fit: BoxFit.cover,
+                  errorWidget: Icon(Icons.error)
                 );
     }else {
       avatar = APPIcons.PlaceHolderAvatar;

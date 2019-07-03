@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppSize, AppColors, APPIcons;
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'new_goods_cover_view.dart';
 
 class NewGoodsPage extends StatefulWidget {
   @override
@@ -17,7 +17,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   List _fruits = ["Apple", "Banana", "Pineapple", "Mango", "Grapes"];
   String _selectedFruit;
 
-  File coverFile;
+  Image coverImg;
 
   List<Widget> previewList = [];
 
@@ -26,27 +26,25 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     super.initState();
 
     Widget addWidget = GestureDetector(
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-              color: AppColors.DividerColor, width: AppSize.DividerWidth),
-          borderRadius: BorderRadius.circular(10),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: AppColors.DividerColor, width: AppSize.DividerWidth),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(
+            APPIcons.AddImgData,
+            size: 80,
+            color: AppColors.PrimaryColor,
+          ),
         ),
-        child: Icon(
-          APPIcons.AddImgData,
-          size: 80,
-          color: AppColors.PrimaryColor,
-        ),
-      ),
-      onTap: () {
-        addPrewImgs();
-      }
-    );
+        onTap: () {
+          addPrewImgs();
+        });
 
     previewList.add(addWidget);
-    
-    setState(() {
-    });
+
+    setState(() {});
   }
 
   List<DropdownMenuItem> _dropDownMenuItems() {
@@ -153,51 +151,6 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     );
   }
 
-  Widget _chooseCoverView() {
-    Widget coverView;
-    if (this.coverFile != null) {
-      coverView = Image.file(coverFile, fit: BoxFit.cover);
-    } else {
-      coverView = Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(height: 5),
-          Icon(
-            APPIcons.AddImgData,
-            size: 80,
-            color: AppColors.PrimaryColor,
-          ),
-          SizedBox(height: 10),
-          Text(
-            '添加封面',
-            style: TextStyle(fontSize: 18, color: AppColors.DarkTextColor),
-          )
-        ],
-      );
-    }
-
-    // coverView = CachedNetworkImage(
-    //               imageUrl: '',
-    //               placeholder: APPIcons.PlaceHolderAvatar,
-    //               fit: BoxFit.cover,
-    //             );
-    return GestureDetector(
-      onTap: () {
-        this.showChoosePhotoAlertSheet();
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-              color: AppColors.DividerColor, width: AppSize.DividerWidth),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        height: 220,
-        width: double.infinity,
-        child: coverView,
-      ),
-    );
-  }
-
   Widget _buildChooseCategoryView() {
     return Container(
       decoration: BoxDecoration(
@@ -282,8 +235,14 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
                 title: new Text("相机"),
                 onTap: () async {
                   Navigator.of(context).pop();
-                  coverFile =
+                  File coverFile =
                       await ImagePicker.pickImage(source: ImageSource.camera);
+                  setState(() {
+                    this.coverImg = Image.file(coverFile,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity);
+                  });
                 },
               ),
               Divider(),
@@ -292,8 +251,14 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
                 title: new Text("相册"),
                 onTap: () async {
                   Navigator.of(context).pop();
-                  coverFile =
+                  File coverFile =
                       await ImagePicker.pickImage(source: ImageSource.gallery);
+                  setState(() {
+                    this.coverImg = Image.file(coverFile,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity);
+                  });
                 },
               ),
               Divider(),
@@ -312,6 +277,18 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   @override
   Widget build(BuildContext context) {
+    var coverView = NewGoodsCoverView(
+        imgUrl: null,
+        localImg: coverImg,
+        onPressed: () {
+          showChoosePhotoAlertSheet();
+        },
+        removePressd: () {
+          setState(() {
+            this.coverImg = null;
+          });
+        });
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -333,7 +310,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Column(
               children: <Widget>[
-                _chooseCoverView(),
+                coverView,
                 SizedBox(height: 8),
                 _buildChooseCategoryView(),
                 SizedBox(height: 5),

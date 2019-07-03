@@ -5,9 +5,11 @@ import 'package:oktoast/oktoast.dart';
 import './utils/user_utils.dart';
 import './pages/login/login_page.dart';
 import './utils/local_storage_utils.dart';
+import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 
 void main() async {
   await LocalStorage.getInstance();
+  // debugPaintSizeEnabled = true;
   runApp(MyApp());
 }
 
