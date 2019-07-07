@@ -7,6 +7,7 @@ import 'package:it_resource_exchange_app/common/constant.dart'
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'new_goods_cover_view.dart';
+import 'new_goods_text_field.dart';
 
 class NewGoodsPage extends StatefulWidget {
   @override
@@ -54,80 +55,30 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   }
 
   Widget _buildTitleField() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            width: AppSize.DividerWidth,
-            color: AppColors.DividerColor,
-          ),
-        ),
-      ),
-      child: TextField(
-        decoration:
-            InputDecoration(hintText: '请输入标题', border: InputBorder.none),
-        onChanged: (str) {},
-      ),
+    return NewGoodsTextField(
+      hintText: "请输入标题",
+      onChanged: (string) {},
     );
   }
 
   Widget _buildPriceField() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            width: AppSize.DividerWidth,
-            color: AppColors.DividerColor,
-          ),
-        ),
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: '请输入价格',
-        ),
-        onChanged: (str) {},
-      ),
+    return NewGoodsTextField(
+      hintText: "请输入价格",
+      onChanged: (string) {},
     );
   }
 
   Widget _buildResourceUrlField() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            width: AppSize.DividerWidth,
-            color: AppColors.DividerColor,
-          ),
-        ),
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: '请输入资源地址',
-        ),
-        onChanged: (str) {},
-      ),
+    return NewGoodsTextField(
+      hintText: "请输入资源地址",
+      onChanged: (string) {},
     );
   }
 
   Widget _buildResourcePasswordField() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            width: AppSize.DividerWidth,
-            color: AppColors.DividerColor,
-          ),
-        ),
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: '请输入资源密码',
-        ),
-        onChanged: (str) {},
-      ),
+    return NewGoodsTextField(
+      hintText: "请输入资源密码",
+      onChanged: (string) {},
     );
   }
 
@@ -147,7 +98,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
             color: AppColors.PrimaryColor,
             width: AppSize.DividerWidth,
           ))),
-      maxLines: 5,
+      maxLines: 6,
     );
   }
 
@@ -313,13 +264,9 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
                 coverView,
                 SizedBox(height: 8),
                 _buildChooseCategoryView(),
-                SizedBox(height: 5),
                 _buildTitleField(),
-                SizedBox(height: 5),
                 _buildPriceField(),
-                SizedBox(height: 5),
                 _buildResourceUrlField(),
-                SizedBox(height: 5),
                 _buildResourcePasswordField(),
                 SizedBox(height: 5),
                 _buildDescField(),

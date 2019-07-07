@@ -65,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
         keyboardType: TextInputType.emailAddress,
         autofocus: true,
         onSubmitted: (value) {
-          FocusScope.of(context).reparentIfNeeded(node);
+          FocusScope.of(context).requestFocus(node);
         },
       ),
     );
@@ -91,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
         WhitelistingTextInputFormatter.digitsOnly,
       ],
       onSubmitted: (text) {
-        FocusScope.of(context).reparentIfNeeded(node);
+        FocusScope.of(context).requestFocus(node);
       },
     );
 
@@ -125,7 +125,7 @@ class _RegisterPageState extends State<RegisterPage> {
         WhitelistingTextInputFormatter.digitsOnly,
       ],
       onSubmitted: (text) {
-        FocusScope.of(context).reparentIfNeeded(node);
+        FocusScope.of(context).requestFocus(node);
       },
     );
 
