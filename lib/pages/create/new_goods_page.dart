@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'new_goods_cover_view.dart';
 import 'new_goods_text_field.dart';
+import 'new_goods_preview_widget.dart';
 
 class NewGoodsPage extends StatefulWidget {
   @override
@@ -20,32 +21,11 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   Image coverImg;
 
-  List<Widget> previewList = [];
+  List<Asset> assetList = [];
 
   @override
   void initState() {
     super.initState();
-
-    Widget addWidget = GestureDetector(
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-                color: AppColors.DividerColor, width: AppSize.DividerWidth),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Icon(
-            APPIcons.AddImgData,
-            size: 80,
-            color: AppColors.PrimaryColor,
-          ),
-        ),
-        onTap: () {
-          addPrewImgs();
-        });
-
-    previewList.add(addWidget);
-
-    setState(() {});
   }
 
   List<DropdownMenuItem> _dropDownMenuItems() {
@@ -137,29 +117,26 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   }
 
   Widget _buildPreviewWidget() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: AppColors.DividerColor, width: AppSize.DividerWidth),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-      width: double.infinity,
-      height: 200,
-      child: Wrap(
-        spacing: 8.0,
-        runSpacing: 8.0,
-        children: this.previewList,
-      ),
+    return NewGoodsPreviewWidget(
+      imgUrls: null,
+      assets: this.assetList,
+      onPressed: () {
+        this.addPrewImgs();
+      },
+      removePressd: () {
+
+      },
+      addPressd: () {
+
+      },
     );
   }
 
   void addPrewImgs() async {
-    List<Asset> resultList;
     String error;
 
     try {
-      resultList = await MultiImagePicker.pickImages(maxImages: 4);
+      assetList = await MultiImagePicker.pickImages(maxImages: 4 - this.assetList.length);
     } on PlatformException catch (e) {
       error = e.message;
     }
@@ -167,10 +144,6 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     if (!mounted) return;
 
     setState(() {
-      var list = resultList.map((asset) {
-        return AssetThumb(asset: asset, width: 80, height: 80);
-      }).toList();
-      this.previewList.addAll(list);
     });
   }
 
