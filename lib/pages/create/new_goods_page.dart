@@ -67,7 +67,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
       decoration: InputDecoration(
           hintText: '请输入产品描述',
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(
               color: AppColors.DividerColor,
               width: AppSize.DividerWidth,
@@ -120,14 +120,13 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     return NewGoodsPreviewWidget(
       imgUrls: null,
       assets: this.assetList,
-      onPressed: () {
-        this.addPrewImgs();
-      },
-      removePressd: () {
-
+      onPressed: () {},
+      removePressd: (index) {
+        assetList.removeAt(index);
+        setState(() {});
       },
       addPressd: () {
-
+        this.addPrewImgs();
       },
     );
   }
@@ -136,15 +135,17 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     String error;
 
     try {
-      assetList = await MultiImagePicker.pickImages(maxImages: 4 - this.assetList.length);
+      List<Asset> tempList = await MultiImagePicker.pickImages(
+          maxImages: 6 - this.assetList.length);
+      assetList.insertAll(0, tempList);
     } on PlatformException catch (e) {
       error = e.message;
+      print(error);
     }
 
     if (!mounted) return;
 
-    setState(() {
-    });
+    setState(() {});
   }
 
   void showChoosePhotoAlertSheet() {
@@ -241,7 +242,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
                 _buildPriceField(),
                 _buildResourceUrlField(),
                 _buildResourcePasswordField(),
-                SizedBox(height: 5),
+                SizedBox(height: 10),
                 _buildDescField(),
                 SizedBox(height: 10),
                 _buildPreviewWidget(),

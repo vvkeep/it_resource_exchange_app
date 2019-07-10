@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
-    show AppSize, AppColors, APPIcons;
+    show AppSize, AppColors, APPIcons, Constant;
 
 class NewGoodsPreviewWidget extends StatefulWidget {
   const NewGoodsPreviewWidget(
@@ -14,7 +14,7 @@ class NewGoodsPreviewWidget extends StatefulWidget {
   final List<Asset> imgUrls;
   final List<Asset> assets;
   final VoidCallback onPressed;
-  final VoidCallback removePressd;
+  final ValueChanged<int> removePressd;
   final VoidCallback addPressd;
 
   @override
@@ -29,18 +29,18 @@ class _NewGoodsPreviewWidgetState extends State<NewGoodsPreviewWidget> {
 
     var itemSpace = 8.0;
 
-    var itemWidth = ((ScreenWidth - 2 * 30.0) - 2 * itemSpace)/3.0;
+    var itemWidth = ((ScreenWidth - 2 * 30.0) - 4 * itemSpace)/3.0;
 
     Widget addWidget = GestureDetector(
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
               color: AppColors.DividerColor, width: AppSize.DividerWidth),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(itemSpace),
         ),
         child: Icon(
           APPIcons.AddImgData,
-          size: itemWidth,
+          size: itemWidth.toInt().toDouble() -  2 * AppSize.DividerWidth,
           color: AppColors.PrimaryColor,
         ),
       ),
@@ -49,11 +49,34 @@ class _NewGoodsPreviewWidgetState extends State<NewGoodsPreviewWidget> {
       },
     );
 
-
-    var previewList = [addWidget];
+    List<Widget> previewList = [];
+    if (this.widget.assets.length < 6) {
+      previewList.add(addWidget);
+    }
 
     var itemList = this.widget.assets.map((asset) {
-      return AssetThumb(asset: asset, width: itemWidth.toInt(), height: itemWidth.toInt());
+      Positioned removeBtn = Positioned(
+      right: -5,
+      top: -5,
+      child: IconButton(
+        icon: Icon(IconData(
+          0xe622,
+          fontFamily: Constant.IconFontFamily,
+        )),
+        onPressed: () {
+          int index = this.widget.assets.indexOf(asset);
+          this.widget.removePressd(index);
+        }
+      ),
+    );
+
+    return Stack(
+        overflow: Overflow.clip,
+        children: <Widget>[
+           AssetThumb(asset: asset, width: itemWidth.toInt(), height: itemWidth.toInt()),
+          removeBtn
+        ],
+      );
     }).toList();
 
     previewList.insertAll(0, itemList);
@@ -62,15 +85,16 @@ class _NewGoodsPreviewWidgetState extends State<NewGoodsPreviewWidget> {
       decoration: BoxDecoration(
         border: Border.all(
             color: AppColors.DividerColor, width: AppSize.DividerWidth),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(itemSpace),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(horizontal: itemSpace, vertical: itemSpace),
       width: double.infinity,
-      height: 200,
+      height: 3 * itemSpace + itemWidth * 2,
       child: Wrap(
         spacing: itemSpace,
         runSpacing: itemSpace,
-        children: previewList,
+        children: 
+        previewList,
       ),
     );
   }
