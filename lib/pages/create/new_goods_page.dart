@@ -9,6 +9,10 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'new_goods_cover_view.dart';
 import 'new_goods_text_field.dart';
 import 'new_goods_preview_widget.dart';
+// import 'package:sy_flutter_qiniu_storage/sy_flutter_qiniu_storage.dart';
+import 'package:it_resource_exchange_app/net/network_utils.dart';
+import 'package:it_resource_exchange_app/model/page_result.dart';
+import '../../widgets/choose_img_modal_sheet.dart';
 
 class NewGoodsPage extends StatefulWidget {
   @override
@@ -148,56 +152,25 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     setState(() {});
   }
 
+  void uploadImg(Asset asset) async {
+    NetworkUtils.uploadToken().then((res) {
+      if (res.status == 200) {
+        var pageResult = PageResult.fromJson(res.data);
+      }
+    });
+  }
+
   void showChoosePhotoAlertSheet() {
-    showModalBottomSheet(
-        context: this.context,
-        builder: (BuildContext context) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                leading: new Icon(Icons.photo_camera),
-                title: new Text("相机"),
-                onTap: () async {
-                  Navigator.of(context).pop();
-                  File coverFile =
-                      await ImagePicker.pickImage(source: ImageSource.camera);
-                  setState(() {
-                    this.coverImg = Image.file(coverFile,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity);
-                  });
-                },
-              ),
-              Divider(),
-              ListTile(
-                leading: new Icon(Icons.photo_library),
-                title: new Text("相册"),
-                onTap: () async {
-                  Navigator.of(context).pop();
-                  File coverFile =
-                      await ImagePicker.pickImage(source: ImageSource.gallery);
-                  setState(() {
-                    this.coverImg = Image.file(coverFile,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity);
-                  });
-                },
-              ),
-              Divider(),
-              ListTile(
-                leading: new Icon(Icons.cancel),
-                title: new Text("取消"),
-                onTap: () async {
-                  Navigator.of(context).pop();
-                },
-              ),
-              Divider(),
-            ],
-          );
+    showChooseImgModalSheet(context, ((file) {
+      if (file != null) {
+        setState(() {
+          this.coverImg = Image.file(file,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity);
         });
+      }
+    }));
   }
 
   @override

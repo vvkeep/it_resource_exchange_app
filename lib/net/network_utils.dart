@@ -51,4 +51,10 @@ class NetworkUtils {
       BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
       return result;
     }
+
+    static uploadToken() async {
+      String url = APPConfig.Server + "/upload/token";
+      BaseResult result = await httpManager.request(HttpMethod.POST, url, null);
+      return result;
+    }
 }
