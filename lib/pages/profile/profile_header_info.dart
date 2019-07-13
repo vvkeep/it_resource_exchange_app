@@ -20,9 +20,9 @@ class ProfileHeaderInfoView extends StatelessWidget {
     if (userInfo.avatar != null) {
       avatar = CachedNetworkImage(
                   imageUrl: userInfo.avatar,
-                  placeholder: APPIcons.PlaceHolderAvatar,
+                  placeholder: (context, url) =>  APPIcons.PlaceHolderAvatar,
                   fit: BoxFit.cover,
-                  errorWidget: Icon(Icons.error)
+                  errorWidget:(context, url, error) => Icon(Icons.error)
                 );
     }else {
       avatar = APPIcons.PlaceHolderAvatar;

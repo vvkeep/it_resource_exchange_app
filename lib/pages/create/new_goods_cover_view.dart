@@ -56,7 +56,7 @@ class _NewGoodsCoverViewState extends State<NewGoodsCoverView> {
         children: <Widget>[
           CachedNetworkImage(
             imageUrl: this.widget.imgUrl,
-            placeholder: APPIcons.PlaceHolderAvatar,
+            placeholder: (context, url) => APPIcons.PlaceHolderAvatar,
             fit: BoxFit.cover,
           ),
           removeBtn

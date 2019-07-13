@@ -151,9 +151,9 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
             child: CachedNetworkImage(
               width: MediaQuery.of(context).size.width,
               fit: BoxFit.fill,
-              placeholder: Image.asset('./assets/imgs/img_default.png'),
+              placeholder: (context, url) => Image.asset('./assets/imgs/img_default.png'),
               imageUrl: imgUrl,
-              errorWidget: Icon(Icons.error),
+              errorWidget:(context, url, error) => Icon(Icons.error),
             ),
           ),
         );

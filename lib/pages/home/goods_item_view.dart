@@ -81,7 +81,7 @@ class GoodsItemView extends StatelessWidget {
                 height: 80.0,
                 child: CachedNetworkImage(
                   imageUrl: recomendProduct.coverUrl,
-                  placeholder: Image.asset('./assets/imgs/img_default.png'),
+                  placeholder: (context, url) => Image.asset('./assets/imgs/img_default.png'),
                   fit: BoxFit.cover,
                 ),
               ),
