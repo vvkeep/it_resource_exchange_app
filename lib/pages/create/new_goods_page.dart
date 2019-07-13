@@ -1,18 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
-    show AppSize, AppColors, APPIcons;
-import 'package:image_picker/image_picker.dart';
+    show AppSize, AppColors;
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'new_goods_cover_view.dart';
 import 'new_goods_text_field.dart';
 import 'new_goods_preview_widget.dart';
-// import 'package:sy_flutter_qiniu_storage/sy_flutter_qiniu_storage.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/page_result.dart';
 import '../../widgets/choose_img_modal_sheet.dart';
+import 'package:it_resource_exchange_app/model/cate_info.dart';
 
 class NewGoodsPage extends StatefulWidget {
   @override
@@ -20,8 +17,10 @@ class NewGoodsPage extends StatefulWidget {
 }
 
 class _NewGoodsPageState extends State<NewGoodsPage> {
-  List _fruits = ["Apple", "Banana", "Pineapple", "Mango", "Grapes"];
-  String _selectedFruit;
+  List<CateInfo> cateList;
+  List<DropdownMenuItem> menuItemList = [];
+
+  CateInfo _selectedCateInfo;
 
   Image coverImg;
 
@@ -30,12 +29,21 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   @override
   void initState() {
     super.initState();
+    requsetCateListData();
   }
 
-  List<DropdownMenuItem> _dropDownMenuItems() {
-    return _fruits.map((fruit) {
-      return DropdownMenuItem(value: fruit, child: Text(fruit));
-    }).toList();
+  requsetCateListData() {
+    NetworkUtils.requestCategoryListData().then((res) {
+      if (res.status == 200) {
+        cateList = (res.data as List).map((m) => CateInfo.fromJson(m)).toList();
+        setState(() {
+          menuItemList = cateList.map((cateInfo) {
+            return DropdownMenuItem(
+                value: cateInfo, child: Text(cateInfo.cateTitle));
+          }).toList();
+        });
+      }
+    });
   }
 
   Widget _buildTitleField() {
@@ -108,11 +116,11 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
           DropdownButton(
               hint: Text('产品分类'),
               iconSize: 35,
-              value: _selectedFruit,
-              items: _dropDownMenuItems(),
-              onChanged: (selectedFruit) {
+              value: _selectedCateInfo,
+              items: menuItemList,
+              onChanged: (selectedCateInfo) {
                 setState(() {
-                  _selectedFruit = selectedFruit;
+                  _selectedCateInfo = selectedCateInfo;
                 });
               })
         ],
@@ -141,7 +149,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     try {
       List<Asset> tempList = await MultiImagePicker.pickImages(
           maxImages: 6 - this.assetList.length);
-      assetList.insertAll(0, tempList);
+      assetList.addAll(tempList);
     } on PlatformException catch (e) {
       error = e.message;
       print(error);

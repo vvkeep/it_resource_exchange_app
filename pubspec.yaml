@@ -31,7 +31,7 @@ dependencies:
   oktoast: ^2.1.9
   image_picker: ^0.6.0+10
   multi_image_picker: ^4.3.4
-  # sy_flutter_qiniu_storage: ^0.1.4
+  flutter_qiniu: ^0.0.3  
   
 dev_dependencies:
   build_runner: ^1.2.8
