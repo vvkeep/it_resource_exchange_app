@@ -58,7 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
           hintText: '请输入邮箱地址作为用户名',
           labelText: '账号',
           hintStyle: TextStyle(
-              fontSize: 12.0, color: Color(AppColors.ArrowNormalColor)),
+              fontSize: 12.0, color: AppColors.ArrowNormalColor),
         ),
         maxLines: 1,
         maxLength: 30,

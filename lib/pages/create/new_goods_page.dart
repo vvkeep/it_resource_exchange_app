@@ -3,13 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppSize, AppColors;
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'new_goods_cover_view.dart';
 import 'new_goods_text_field.dart';
 import 'new_goods_preview_widget.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/page_result.dart';
 import '../../widgets/choose_img_modal_sheet.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
+import 'package:it_resource_exchange_app/widgets/custom_alert_dialog.dart';
 
 class NewGoodsPage extends StatefulWidget {
   @override
@@ -168,45 +168,36 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     });
   }
 
-  void showChoosePhotoAlertSheet() {
-    showChooseImgModalSheet(context, ((file) {
-      if (file != null) {
-        setState(() {
-          this.coverImg = Image.file(file,
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity);
-        });
-      }
-    }));
-  }
-
   @override
   Widget build(BuildContext context) {
-    var coverView = NewGoodsCoverView(
-        imgUrl: null,
-        localImg: coverImg,
-        onPressed: () {
-          showChoosePhotoAlertSheet();
-        },
-        removePressd: () {
-          setState(() {
-            this.coverImg = null;
-          });
-        });
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(
-          "发布资源",
-          style: TextStyle(color: Colors.white),
-        ),
-        elevation: 0.0,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-      ),
+          title: Text(
+            "发布资源",
+            style: TextStyle(color: Colors.white),
+          ),
+          elevation: 0.0,
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.save),
+                onPressed: () {
+                  showDialog<Null>(
+                      context: context, //BuildContext对象
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return CustomAlertDialog(
+                          desc: '确定要保存此教程吗？',
+                          onChanged: (bool onChanged) {
+                            print('点击了$onChanged');
+                          },
+                        );
+                      });
+                }),
+          ]),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
@@ -216,7 +207,6 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Column(
               children: <Widget>[
-                coverView,
                 SizedBox(height: 8),
                 _buildChooseCategoryView(),
                 _buildTitleField(),

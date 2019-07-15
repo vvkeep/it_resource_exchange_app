@@ -38,7 +38,7 @@ class FullWidthButton extends StatelessWidget {
               fontFamily: Constant.IconFontFamily,
             ),
             size: 22.0, 
-            color: Color(AppColors.ArrowNormalColor),
+            color: AppColors.ArrowNormalColor,
           ),
       ],
     );

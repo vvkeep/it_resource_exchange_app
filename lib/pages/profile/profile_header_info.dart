@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:it_resource_exchange_app/common/constant.dart'
-    show AppColors, Constant, APPIcons;
+import 'package:it_resource_exchange_app/common/constant.dart' show APPIcons;
 import 'package:it_resource_exchange_app/model/user_info.dart';
 import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -22,7 +19,8 @@ class ProfileHeaderInfoView extends StatelessWidget {
                   imageUrl: userInfo.avatar,
                   placeholder: (context, url) =>  APPIcons.PlaceHolderAvatar,
                   fit: BoxFit.cover,
-                  errorWidget:(context, url, error) => Icon(Icons.error)
+                  errorWidget: (context, url, error) => new Icon(Icons.error),
+
                 );
     }else {
       avatar = APPIcons.PlaceHolderAvatar;

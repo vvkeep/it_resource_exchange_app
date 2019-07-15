@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class AppColors {
   static const PrimaryColor = Colors.cyan;
   static const DividerColor = Color(0xffd9d9d9);
-  static const ArrowNormalColor = 0xff999999;
-  static const BackgroundColor = 0xffebebeb;
+  static const ArrowNormalColor = Color(0xff999999);
+  static const BackgroundColor = Color(0xffebebeb);
   static const DarkTextColor = Color(0xFF333333);
   static const MidTextColor = Color(0xFF666666);
   static const LightTextColor = Color(0xFF999999);
@@ -32,7 +32,7 @@ class APPIcons {
       fontFamily: Constant.IconFontFamily,
     ),
     size: 60.0,
-    color: Color(AppColors.ArrowNormalColor),
+    color: AppColors.ArrowNormalColor,
   );
 
   static const AddImgData = IconData(
