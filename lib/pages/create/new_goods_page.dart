@@ -7,9 +7,9 @@ import 'new_goods_text_field.dart';
 import 'new_goods_preview_widget.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/page_result.dart';
-import '../../widgets/choose_img_modal_sheet.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:it_resource_exchange_app/widgets/custom_alert_dialog.dart';
+import 'package:oktoast/oktoast.dart';
 
 class NewGoodsPage extends StatefulWidget {
   @override
@@ -34,7 +34,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   requsetCateListData() {
     NetworkUtils.requestCategoryListData().then((res) {
-      if (res.status == 200) {
+      if (res.status == 200 && this.mounted) {
         cateList = (res.data as List).map((m) => CateInfo.fromJson(m)).toList();
         setState(() {
           menuItemList = cateList.map((cateInfo) {
@@ -168,6 +168,13 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     });
   }
 
+  void saveProductAction() {
+    if (this.assetList.length < 1) {
+      showToast('请添加教程预览图片', duration: Duration(milliseconds: 1500));
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,7 +199,9 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
                         return CustomAlertDialog(
                           desc: '确定要保存此教程吗？',
                           onChanged: (bool onChanged) {
-                            print('点击了$onChanged');
+                            if (onChanged) {
+                              saveProductAction();
+                            }
                           },
                         );
                       });
@@ -206,6 +215,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 8),
                 _buildChooseCategoryView(),
@@ -215,7 +225,9 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
                 _buildResourcePasswordField(),
                 SizedBox(height: 10),
                 _buildDescField(),
-                SizedBox(height: 10),
+                SizedBox(height: 18),
+                Text('提示:默认使用第一张图作为教程的封面'),
+                SizedBox(height: 5),
                 _buildPreviewWidget(),
                 SizedBox(height: 50),
               ],

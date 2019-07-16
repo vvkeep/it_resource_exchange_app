@@ -16,13 +16,14 @@ class ProfileHeaderInfoView extends StatelessWidget {
 
     if (userInfo.avatar != null) {
       avatar = CachedNetworkImage(
-                  imageUrl: userInfo.avatar,
-                  placeholder: (context, url) =>  APPIcons.PlaceHolderAvatar,
-                  fit: BoxFit.cover,
-                  errorWidget: (context, url, error) => new Icon(Icons.error),
-
-                );
-    }else {
+        imageUrl: userInfo.avatar,
+        placeholder: (context, url) => APPIcons.PlaceHolderAvatar,
+        fit: BoxFit.cover,
+        height: 60.0,
+        width: 60.0,
+        errorWidget: (context, url, error) => new Icon(Icons.error),
+      );
+    } else {
       avatar = APPIcons.PlaceHolderAvatar;
     }
 
