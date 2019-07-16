@@ -10,6 +10,7 @@ import 'package:it_resource_exchange_app/model/page_result.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:it_resource_exchange_app/widgets/custom_alert_dialog.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:it_resource_exchange_app/model/product_detail.dart';
 
 class NewGoodsPage extends StatefulWidget {
   @override
@@ -25,6 +26,12 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   Image coverImg;
 
   List<Asset> assetList = [];
+
+  String title;
+  String price;
+  String resourceUrl;
+  String resourcePassword;
+  String desc;
 
   @override
   void initState() {
@@ -49,48 +56,60 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   Widget _buildTitleField() {
     return NewGoodsTextField(
       hintText: "请输入标题",
-      onChanged: (string) {},
+      onChanged: (string) {
+        this.title = string;
+      },
     );
   }
 
   Widget _buildPriceField() {
     return NewGoodsTextField(
       hintText: "请输入价格",
-      onChanged: (string) {},
+      onChanged: (string) {
+        this.price = string;
+      },
     );
   }
 
   Widget _buildResourceUrlField() {
     return NewGoodsTextField(
       hintText: "请输入资源地址",
-      onChanged: (string) {},
+      onChanged: (string) {
+        this.resourceUrl = string;
+      },
     );
   }
 
   Widget _buildResourcePasswordField() {
     return NewGoodsTextField(
       hintText: "请输入资源密码",
-      onChanged: (string) {},
+      onChanged: (string) {
+        this.resourcePassword = string;
+      },
     );
   }
 
   Widget _buildDescField() {
     return TextField(
       decoration: InputDecoration(
-          hintText: '请输入产品描述',
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            borderSide: BorderSide(
-              color: AppColors.DividerColor,
-              width: AppSize.DividerWidth,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-            color: AppColors.PrimaryColor,
+        hintText: '请输入产品描述',
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderSide: BorderSide(
+            color: AppColors.DividerColor,
             width: AppSize.DividerWidth,
-          ))),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+          color: AppColors.PrimaryColor,
+          width: AppSize.DividerWidth,
+        )),
+      ),
       maxLines: 6,
+      onChanged: (string) {
+        this.desc = string;
+      },
     );
   }
 
@@ -173,6 +192,34 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
       showToast('请添加教程预览图片', duration: Duration(milliseconds: 1500));
       return;
     }
+
+    if (this._selectedCateInfo == null) {
+      showToast('请选择教程分类', duration: Duration(milliseconds: 1500));
+      return;
+    }
+
+    if (this.title == null) {
+      showToast('请输入标题', duration: Duration(milliseconds: 1500));
+      return;
+    }
+
+    if (this.price == null) {
+      showToast('请输入价格', duration: Duration(milliseconds: 1500));
+      return;
+    }
+
+    if (this.price == null) {
+      showToast('请输入资源地址', duration: Duration(milliseconds: 1500));
+      return;
+    }
+
+    if (this.desc == null) {
+      showToast('请输入资源详情描述', duration: Duration(milliseconds: 1500));
+      return;
+    }
+
+
+
   }
 
   @override
