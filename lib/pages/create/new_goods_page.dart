@@ -36,6 +36,9 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   String resourcePassword;
   String desc;
 
+  Function _callBackFunction;
+
+
   @override
   void initState() {
     super.initState();
@@ -225,8 +228,10 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   }
 
   _disMissCallBack(Function func) {
-    func();
-  }
+    _callBackFunction = () {
+      func();
+    };
+   }
 
   void uploadImgAction() {
     List<String> fileNameList = [];
@@ -244,7 +249,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
         }
       }).then((results) async {
         UploadInfo info = results[0];
-        Uint8List dataList = results[1];
+        List<int> dataList = results[1];
         bool isSuccess = await NetworkUtils.onUpload(dataList, info.fileName, info.token);
         return [isSuccess, info];    
       }).then((results) {
@@ -260,8 +265,8 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
           throw Exception('图片上传失败');
         }
       }).catchError((e) {
-        _disMissCallBack();
-        showToast(e.toString(), duration: Duration(milliseconds: 1500));
+        _callBackFunction();
+        showToast(e.toString(), duration: Duration(milliseconds: 2500));
       });
   }
 

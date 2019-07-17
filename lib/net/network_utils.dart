@@ -1,8 +1,8 @@
 import 'package:it_resource_exchange_app/common/constant.dart' show APPConfig;
 import 'http_manager.dart';
 import 'package:it_resource_exchange_app/model/base_result.dart';
-import 'dart:io';
-import 'package:flutter_qiniu/flutter_qiniu.dart';
+import 'package:sy_flutter_qiniu_storage/sy_flutter_qiniu_storage.dart';
+
 import 'dart:typed_data';
 class NetworkUtils {
     static requestHomeAdvertisementsAndRecommendProductsData() async {
@@ -61,8 +61,10 @@ class NetworkUtils {
     /// key: 保存在服务器上的资源唯一标识
   /// token: 服务器分配的 token
   static Future<bool> onUpload(Uint8List data, String key, String token) async {
-      final qiniu = FlutterQiniu(zone: QNFixedZone.zone2);
-      bool result = await qiniu.uploadData(data, key, token);
-      return result;
+      // final qiniu = FlutterQiniu(zone: QNFixedZone.zone2);
+      // SyFlutterQiniuStorage().upload(filepath, token, key)
+      // bool result = await qiniu.uploadData(data, key, token);
+      // return result;
+      return false;
   }
 }
