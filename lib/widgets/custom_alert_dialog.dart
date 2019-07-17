@@ -20,15 +20,15 @@ class CustomAlertDialog extends CupertinoAlertDialog {
         CupertinoDialogAction(
           child: Text('取消'),
           onPressed: () {
-            this.onChanged(false);
             Navigator.of(context).pop();
+            this.onChanged(false);
           },
         ),
         CupertinoDialogAction(
           child: Text('确定'),
           onPressed: () {
+            Navigator.of(context).pop();
             this.onChanged(true);
-             Navigator.of(context).pop();
 
           },
         ),

@@ -1,16 +1,19 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppSize, AppColors;
+import 'package:it_resource_exchange_app/model/base_result.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'new_goods_text_field.dart';
 import 'new_goods_preview_widget.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
-import 'package:it_resource_exchange_app/model/page_result.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:it_resource_exchange_app/widgets/custom_alert_dialog.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:it_resource_exchange_app/model/product_detail.dart';
+import 'package:it_resource_exchange_app/model/upload_info.dart';
+import 'package:it_resource_exchange_app/widgets/loadingDialog.dart';
 
 class NewGoodsPage extends StatefulWidget {
   @override
@@ -167,7 +170,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
     try {
       List<Asset> tempList = await MultiImagePicker.pickImages(
-          maxImages: 6 - this.assetList.length);
+          enableCamera: true, maxImages: 6 - this.assetList.length);
       assetList.addAll(tempList);
     } on PlatformException catch (e) {
       error = e.message;
@@ -179,15 +182,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     setState(() {});
   }
 
-  void uploadImg(Asset asset) async {
-    NetworkUtils.uploadToken().then((res) {
-      if (res.status == 200) {
-        var pageResult = PageResult.fromJson(res.data);
-      }
-    });
-  }
-
-  void saveProductAction() {
+  void checkParamsAction() async {
     if (this.assetList.length < 1) {
       showToast('请添加教程预览图片', duration: Duration(milliseconds: 1500));
       return;
@@ -218,8 +213,60 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
       return;
     }
 
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) {
+          return LoadingDialog(dismissDialog: _disMissCallBack,);
+        });
 
+        
+    this.uploadImgAction();
+  }
 
+  _disMissCallBack(Function func) {
+    func();
+  }
+
+  void uploadImgAction() {
+    List<String> fileNameList = [];
+    for (Asset asset in this.assetList)
+      Future.wait(
+              [NetworkUtils.uploadToken(), asset.requestOriginal(quality: 60)])
+          .then((results) {
+        BaseResult res = results[0];
+        ByteData data = results[1];
+        if (res.status == 200) {
+          UploadInfo info = UploadInfo.fromJson(res.data);
+          return [info, data.buffer.asUint8List()];
+        } else {
+          throw Exception(res.message);
+        }
+      }).then((results) async {
+        UploadInfo info = results[0];
+        Uint8List dataList = results[1];
+        bool isSuccess = await NetworkUtils.onUpload(dataList, info.fileName, info.token);
+        return [isSuccess, info];    
+      }).then((results) {
+        bool isSuccess = results[0];
+        UploadInfo info = results[1];
+        if (isSuccess) {
+          //上传成功
+          fileNameList.add(info.fileName);
+          if (fileNameList.length == this.assetList.length) {
+            this.saveProductAction(fileNameList);
+          }
+        }else {
+          throw Exception('图片上传失败');
+        }
+      }).catchError((e) {
+        _disMissCallBack();
+        showToast(e.toString(), duration: Duration(milliseconds: 1500));
+      });
+  }
+
+  void saveProductAction(List<String> fileNameList) {
+    print('$fileNameList');
   }
 
   @override
@@ -247,7 +294,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
                           desc: '确定要保存此教程吗？',
                           onChanged: (bool onChanged) {
                             if (onChanged) {
-                              saveProductAction();
+                              this.checkParamsAction();
                             }
                           },
                         );

@@ -3,7 +3,7 @@ import 'http_manager.dart';
 import 'package:it_resource_exchange_app/model/base_result.dart';
 import 'dart:io';
 import 'package:flutter_qiniu/flutter_qiniu.dart';
-
+import 'dart:typed_data';
 class NetworkUtils {
     static requestHomeAdvertisementsAndRecommendProductsData() async {
       String url = APPConfig.Server + "/home/index";
@@ -52,17 +52,17 @@ class NetworkUtils {
       return result;
     }
 
-    static uploadToken() async {
+    static Future<BaseResult> uploadToken() async {
       String url = APPConfig.Server + "/upload/token";
-      BaseResult result = await httpManager.request(HttpMethod.POST, url, null);
+      BaseResult result = await httpManager.request(HttpMethod.GET, url, null);
       return result;
     }
 
     /// key: 保存在服务器上的资源唯一标识
   /// token: 服务器分配的 token
-  Future<bool> onUpload(File file, String key, String token) async {
+  static Future<bool> onUpload(Uint8List data, String key, String token) async {
       final qiniu = FlutterQiniu(zone: QNFixedZone.zone2);
-      bool result = await qiniu.upload(file.path, key, token);
+      bool result = await qiniu.uploadData(data, key, token);
       return result;
   }
 }
