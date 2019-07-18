@@ -111,6 +111,8 @@ class _ClassifyListViewState extends State<ClassifyListView>
         }
       }
 
+      if (!mounted) return;
+
       setState(() {
         _isLoading = false;
       });

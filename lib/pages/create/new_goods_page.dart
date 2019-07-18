@@ -12,7 +12,6 @@ import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:it_resource_exchange_app/widgets/custom_alert_dialog.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:it_resource_exchange_app/model/upload_info.dart';
 import 'package:it_resource_exchange_app/widgets/loadingDialog.dart';
 
 class NewGoodsPage extends StatefulWidget {
@@ -37,7 +36,6 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   String desc;
 
   Function _callBackFunction;
-
 
   @override
   void initState() {
@@ -70,6 +68,10 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   Widget _buildPriceField() {
     return NewGoodsTextField(
+      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: <TextInputFormatter>[
+        LengthLimitingTextInputFormatter(5),
+      ],
       hintText: "请输入价格",
       onChanged: (string) {
         this.price = string;
@@ -79,6 +81,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   Widget _buildResourceUrlField() {
     return NewGoodsTextField(
+      keyboardType: TextInputType.url,
       hintText: "请输入资源地址",
       onChanged: (string) {
         this.resourceUrl = string;
@@ -220,10 +223,11 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
         context: context,
         barrierDismissible: false,
         builder: (_) {
-          return LoadingDialog(dismissDialog: _disMissCallBack,);
+          return LoadingDialog(
+            dismissDialog: _disMissCallBack,
+          );
         });
 
-        
     this.uploadImgAction();
   }
 
@@ -231,47 +235,57 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     _callBackFunction = () {
       func();
     };
-   }
+  }
 
   void uploadImgAction() {
     List<String> fileNameList = [];
-    for (Asset asset in this.assetList)
-      Future.wait(
-              [NetworkUtils.uploadToken(), asset.requestOriginal(quality: 60)])
-          .then((results) {
-        BaseResult res = results[0];
-        ByteData data = results[1];
-        if (res.status == 200) {
-          UploadInfo info = UploadInfo.fromJson(res.data);
-          return [info, data.buffer.asUint8List()];
-        } else {
-          throw Exception(res.message);
-        }
-      }).then((results) async {
-        UploadInfo info = results[0];
-        List<int> dataList = results[1];
-        bool isSuccess = await NetworkUtils.onUpload(dataList, info.fileName, info.token);
-        return [isSuccess, info];    
-      }).then((results) {
-        bool isSuccess = results[0];
-        UploadInfo info = results[1];
-        if (isSuccess) {
-          //上传成功
-          fileNameList.add(info.fileName);
+    for (Asset asset in this.assetList) {
+      asset.requestOriginal(quality: 50).then((ByteData data) {
+        return data.buffer.asUint8List();
+      }).then((List<int> data) async {
+        BaseResult result = await NetworkUtils.onUpload(data);
+        if (result.status == 200) {
+          var fileName = result.data['fileName'];
+          fileNameList.add(fileName);
           if (fileNameList.length == this.assetList.length) {
             this.saveProductAction(fileNameList);
           }
-        }else {
-          throw Exception('图片上传失败');
+        } else {
+          throw Exception(result.message);
         }
       }).catchError((e) {
         _callBackFunction();
         showToast(e.toString(), duration: Duration(milliseconds: 2500));
       });
+    }
   }
 
   void saveProductAction(List<String> fileNameList) {
-    print('$fileNameList');
+    var params = {
+      'cateId': this._selectedCateInfo.cateId,
+      'imgUrls': fileNameList.join(','),
+      'coverUrl': fileNameList.first,
+      'price': this.price,
+      'productTitle': this.title,
+      'productDesc': this.desc,
+      'productAddressUrl': this.resourceUrl
+    };
+
+    if (this.resourcePassword != null) {
+      params['productAddressPassword'] = this.resourcePassword;
+    }
+
+    NetworkUtils.submitProduct(params).then((res) {
+       _callBackFunction();
+      if (res.status == 200) {
+        showToast('发布成功,等待管理员审核', duration: Duration(seconds: 3));
+        Future.delayed(Duration(seconds: 3), (){
+          Navigator.of(context).pop();
+        });
+      }else {
+        showToast('发布失败,${res.message}', duration: Duration(seconds: 3));
+      }
+    });
   }
 
   @override
