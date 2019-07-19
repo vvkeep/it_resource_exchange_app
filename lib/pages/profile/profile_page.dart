@@ -10,6 +10,7 @@ import '../../model/user_info.dart';
 import '../../utils/user_utils.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:it_resource_exchange_app/pages/create/new_goods_page.dart';
+import '../../pages/myProductList/my_product_list_page.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -89,18 +90,22 @@ class _ProfilePageState extends State<ProfilePage> {
         //跳转到个人信息页面
       }),
       SizedBox(height: SEPARATE_SIZE),
-      // FullWidthButton(
-      //   iconPath: 'assets/imgs/ic_cards_wallet.png',
-      //   title: '资源列表',
-      //   showDivider: true,
-      //   onPressed: () {},
-      // ),
+      FullWidthButton(
+        iconPath: 'assets/imgs/ic_cards_wallet.png',
+        title: '资源列表',
+        showDivider: true,
+        onPressed: () {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => MyProductListPage()));
+        },
+      ),
       FullWidthButton(
         iconPath: 'assets/imgs/ic_collections.png',
         title: '发布资源',
         showDivider: false,
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewGoodsPage()));
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => NewGoodsPage()));
         },
       ),
       SizedBox(height: SEPARATE_SIZE),

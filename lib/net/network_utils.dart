@@ -71,4 +71,11 @@ class NetworkUtils {
     BaseResult result = await httpManager.request(HttpMethod.POST, url, params, contentType: ContentType.json);
     return result;
   }
+
+  static requestMyProductListData(int userId) async {
+    String url = APPConfig.Server + "/product/pageListByCreateUserId";
+    var params = {"userId": userId};
+    BaseResult result = await httpManager.request(HttpMethod.POST, url, params, contentType: ContentType.json);
+    return result;
+  }
 }

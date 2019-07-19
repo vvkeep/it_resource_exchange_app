@@ -14,7 +14,7 @@ class UserUtils {
     LocalStorage.remove(USER_INFO_KEY);
   }
 
-  static getUserInfo() {
+  static UserInfo getUserInfo() {
     Map userJson = LocalStorage.getObject(USER_INFO_KEY);
     return userJson == null ? null : UserInfo.fromJson(userJson);
   }

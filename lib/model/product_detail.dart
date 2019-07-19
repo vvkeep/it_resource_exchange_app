@@ -12,6 +12,9 @@ part 'product_detail.g.dart';
   @JsonKey(name: 'cateId')
   String cateId;
 
+  @JsonKey(name: 'cateTitle')
+  String cateTitle;
+
   @JsonKey(name: 'keywords')
   String keywords;
 
@@ -45,7 +48,7 @@ part 'product_detail.g.dart';
   @JsonKey(name: 'createdTime')
   String createdTime;
 
-  ProductDetail(this.productId,this.cateId,this.keywords,this.imgUrls,this.coverUrl,this.price,this.productTitle,this.productDesc,this.productStatus,this.tradeCount,this.productAddressUrl,this.productAddressPassword,this.createdTime,);
+  ProductDetail(this.productId,this.cateId,this.cateTitle, this.keywords,this.imgUrls,this.coverUrl,this.price,this.productTitle,this.productDesc,this.productStatus,this.tradeCount,this.productAddressUrl,this.productAddressPassword,this.createdTime,);
 
   factory ProductDetail.fromJson(Map<String, dynamic> srcJson) => _$ProductDetailFromJson(srcJson);
 

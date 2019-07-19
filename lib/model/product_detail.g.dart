@@ -10,6 +10,7 @@ ProductDetail _$ProductDetailFromJson(Map<String, dynamic> json) {
   return ProductDetail(
       json['productId'] as int,
       json['cateId'] as String,
+      json['cateTitle'] as String,
       json['keywords'] as String,
       json['imgUrls'] as String,
       json['coverUrl'] as String,
@@ -27,6 +28,7 @@ Map<String, dynamic> _$ProductDetailToJson(ProductDetail instance) =>
     <String, dynamic>{
       'productId': instance.productId,
       'cateId': instance.cateId,
+      'cateTitle': instance.cateTitle,
       'keywords': instance.keywords,
       'imgUrls': instance.imgUrls,
       'coverUrl': instance.coverUrl,

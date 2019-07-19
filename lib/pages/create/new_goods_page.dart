@@ -13,6 +13,7 @@ import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:it_resource_exchange_app/widgets/custom_alert_dialog.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:it_resource_exchange_app/widgets/loadingDialog.dart';
+import 'package:it_resource_exchange_app/utils/user_utils.dart';
 
 class NewGoodsPage extends StatefulWidget {
   @override
@@ -268,7 +269,8 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
       'price': this.price,
       'productTitle': this.title,
       'productDesc': this.desc,
-      'productAddressUrl': this.resourceUrl
+      'productAddressUrl': this.resourceUrl,
+      'createdBy': UserUtils.getUserInfo().userId
     };
 
     if (this.resourcePassword != null) {
