@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppSize, AppColors, APPIcons, Constant;
+import 'package:it_resource_exchange_app/vo/new_product_vo.dart' show NewProductImgVo;
 
 class NewGoodsPreviewWidget extends StatefulWidget {
   const NewGoodsPreviewWidget(
-      {Key key, this.imgUrls, this.assets, this.onPressed, this.removePressd, this.addPressd})
+      {Key key, this.imgVoList, this.onPressed, this.removePressd, this.addPressd})
       : super(key: key);
 
-  final List<Asset> imgUrls;
-  final List<Asset> assets;
+  final List<NewProductImgVo> imgVoList;
   final VoidCallback onPressed;
   final ValueChanged<int> removePressd;
   final VoidCallback addPressd;
@@ -48,11 +48,16 @@ class _NewGoodsPreviewWidgetState extends State<NewGoodsPreviewWidget> {
     );
 
     List<Widget> previewList = [];
-    if (this.widget.assets.length < 6) {
+    if (this.widget.imgVoList.length < 6) {
       previewList.add(addWidget);
     }
 
-    var itemList = this.widget.assets.map((asset) {
+  
+
+
+
+    var itemList = this.widget.imgVoList.map((imgVo) {
+      // 删除按钮
       Positioned removeBtn = Positioned(
       right: -5,
       top: -5,
@@ -62,11 +67,20 @@ class _NewGoodsPreviewWidgetState extends State<NewGoodsPreviewWidget> {
           fontFamily: Constant.IconFontFamily,
         )),
         onPressed: () {
-          int index = this.widget.assets.indexOf(asset);
+          int index = this.widget.imgVoList.indexOf(imgVo);
           this.widget.removePressd(index);
         }
       ),
     );
+
+
+    Widget imgWidget;
+    if (imgVo.url == null) {
+      imgWidget = AssetThumb(asset: imgVo.asset, width: itemWidth.toInt(), height: itemWidth.toInt());
+    }else {
+      
+    }
+
 
     return Stack(
         overflow: Overflow.clip,

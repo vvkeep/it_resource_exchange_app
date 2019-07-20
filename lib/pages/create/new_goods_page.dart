@@ -14,8 +14,13 @@ import 'package:it_resource_exchange_app/widgets/custom_alert_dialog.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:it_resource_exchange_app/widgets/loadingDialog.dart';
 import 'package:it_resource_exchange_app/utils/user_utils.dart';
+import 'package:it_resource_exchange_app/vo/new_product_vo.dart';
 
 class NewGoodsPage extends StatefulWidget {
+  NewGoodsPage({Key key, this.productVo}) : super(key: key);
+
+  NewProductVo productVo;
+
   @override
   _NewGoodsPageState createState() => _NewGoodsPageState();
 }
@@ -24,23 +29,15 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   List<CateInfo> cateList;
   List<DropdownMenuItem> menuItemList = [];
 
-  CateInfo _selectedCateInfo;
-
-  Image coverImg;
-
-  List<Asset> assetList = [];
-
-  String title;
-  String price;
-  String resourceUrl;
-  String resourcePassword;
-  String desc;
-
   Function _callBackFunction;
 
   @override
   void initState() {
     super.initState();
+    if (this.widget.productVo == null) {
+      this.widget.productVo = NewProductVo.init(cateId: null);
+    }
+
     requsetCateListData();
   }
 
@@ -53,6 +50,15 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
             return DropdownMenuItem(
                 value: cateInfo, child: Text(cateInfo.cateTitle));
           }).toList();
+
+          if (null != this.widget.productVo) {
+            for (CateInfo item in cateList) {
+              if (item.cateId == this.widget.productVo.cateInfo.cateId) {
+                this.widget.productVo.cateInfo = item;
+                break;
+              }
+            }
+          }
         });
       }
     });
@@ -60,47 +66,54 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   Widget _buildTitleField() {
     return NewGoodsTextField(
+      controller: TextEditingController(text: this.widget.productVo.title),
       hintText: "请输入标题",
       onChanged: (string) {
-        this.title = string;
+        this.widget.productVo.title = string;
       },
     );
   }
 
   Widget _buildPriceField() {
     return NewGoodsTextField(
+      controller: TextEditingController(text: this.widget.productVo.price),
       keyboardType: TextInputType.numberWithOptions(decimal: true),
       inputFormatters: <TextInputFormatter>[
         LengthLimitingTextInputFormatter(5),
       ],
       hintText: "请输入价格",
       onChanged: (string) {
-        this.price = string;
+        this.widget.productVo.price = string;
       },
     );
   }
 
   Widget _buildResourceUrlField() {
     return NewGoodsTextField(
+      controller:
+          TextEditingController(text: this.widget.productVo.resourceUrl),
       keyboardType: TextInputType.url,
       hintText: "请输入资源地址",
       onChanged: (string) {
-        this.resourceUrl = string;
+        this.widget.productVo.resourceUrl = string;
       },
     );
   }
 
   Widget _buildResourcePasswordField() {
     return NewGoodsTextField(
+      controller:
+          TextEditingController(text: this.widget.productVo.resourcePassword),
       hintText: "请输入资源密码",
       onChanged: (string) {
-        this.resourcePassword = string;
+        this.widget.productVo.resourcePassword = string;
       },
     );
   }
 
   Widget _buildDescField() {
     return TextField(
+      controller: TextEditingController(text: this.widget.productVo.desc),
       decoration: InputDecoration(
         hintText: '请输入产品描述',
         enabledBorder: OutlineInputBorder(
@@ -118,7 +131,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
       ),
       maxLines: 6,
       onChanged: (string) {
-        this.desc = string;
+        this.widget.productVo.desc = string;
       },
     );
   }
@@ -145,11 +158,11 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
           DropdownButton(
               hint: Text('产品分类'),
               iconSize: 35,
-              value: _selectedCateInfo,
+              value: this.widget.productVo.cateInfo,
               items: menuItemList,
               onChanged: (selectedCateInfo) {
                 setState(() {
-                  _selectedCateInfo = selectedCateInfo;
+                  this.widget.productVo.cateInfo = selectedCateInfo;
                 });
               })
         ],
@@ -278,13 +291,13 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     }
 
     NetworkUtils.submitProduct(params).then((res) {
-       _callBackFunction();
+      _callBackFunction();
       if (res.status == 200) {
         showToast('发布成功,等待管理员审核', duration: Duration(seconds: 3));
-        Future.delayed(Duration(seconds: 3), (){
+        Future.delayed(Duration(seconds: 3), () {
           Navigator.of(context).pop();
         });
-      }else {
+      } else {
         showToast('发布失败,${res.message}', duration: Duration(seconds: 3));
       }
     });

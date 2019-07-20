@@ -4,8 +4,10 @@ import 'package:it_resource_exchange_app/common/constant.dart'
 import 'package:flutter/services.dart';
 
 class NewGoodsTextField extends StatelessWidget {
-  const NewGoodsTextField({Key key,this.inputFormatters, this.keyboardType, this.hintText, this.onChanged})
+  const NewGoodsTextField({Key key, this.controller, this.inputFormatters, this.keyboardType, this.hintText, this.onChanged})
       : super(key: key);
+
+  final TextEditingController controller;
 
   final String hintText;
 
@@ -30,6 +32,7 @@ class NewGoodsTextField extends StatelessWidget {
         children: <Widget>[
           SizedBox(height: 5),
           TextField(
+            controller: controller,
             inputFormatters: inputFormatters,
             keyboardType: keyboardType,
             decoration:
