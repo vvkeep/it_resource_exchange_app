@@ -16,10 +16,13 @@ class SwiperDataInfo {
 }
 
 class SwiperBanner extends StatefulWidget {
-  final double _bannerHeight;
-  final List<SwiperDataInfo> infoList;
 
-  SwiperBanner(this._bannerHeight, this.infoList);
+
+  final double bannerHeight;
+  final List<SwiperDataInfo> infoList;
+  final ValueChanged<int> onClickCallback;
+
+  SwiperBanner({Key key, this.bannerHeight, this.infoList, this.onClickCallback}) :super(key: key);
 
   @override
   _SwiperBannerState createState() => _SwiperBannerState();
@@ -148,7 +151,7 @@ class _SwiperBannerState extends State<SwiperBanner> {
 
   Widget _buildBanner() {
     return new Container(
-      height: widget._bannerHeight,
+      height: widget.bannerHeight,
       //指示器覆盖在pagerview上，所以用Stack
       child: new Stack(
         children: <Widget>[
@@ -164,8 +167,7 @@ class _SwiperBannerState extends State<SwiperBanner> {
     return new GestureDetector(
       child: new GestureDetector(
         onTap: () {
-          // routePagerNavigator(context, new PhotoView(item: item));
-         print("=====>${item.title}");
+         this.widget.onClickCallback(index);
         },
         onTapDown: (down) {
           _isEndScroll = false;

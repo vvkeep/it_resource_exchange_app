@@ -4,9 +4,12 @@ import 'package:it_resource_exchange_app/model/cate_info.dart';
 class NewProductImgVo extends Object {
   String url;
   Asset asset;
+
+  NewProductImgVo({this.url, this.asset});
 }
 
 class NewProductVo extends Object {
+  String productId;
   String title;
   String price;
   String resourceUrl;
@@ -16,10 +19,13 @@ class NewProductVo extends Object {
 
   List<NewProductImgVo> imgVoList = [];
 
-  static NewProductVo init({int cateId}) {
-    CateInfo info = CateInfo(cateId, null, null, null);
-    return NewProductVo._(cateInfo: info);
+  static NewProductVo init({String productId, String cateId, String title, String price, String resourceUrl, String resourcePassword, String desc, List<String> imgUrlList}) {
+    CateInfo info = CateInfo(int.parse(cateId), null, null, null);
+    List<NewProductImgVo> imgVoList = imgUrlList.map((url) {
+      return NewProductImgVo(url: url);
+    }).toList();
+    return NewProductVo._(productId: productId, title: title, price: price, resourceUrl: resourceUrl, resourcePassword: resourcePassword, desc: desc, cateInfo: info, imgVoList: imgVoList);
   }
 
-  NewProductVo._({this.title, this.price, this.resourceUrl, this.resourcePassword, this.desc, this.cateInfo, this.imgVoList});
+  NewProductVo._({this.productId, this.title, this.price, this.resourceUrl, this.resourcePassword, this.desc, this.cateInfo, this.imgVoList});
 }

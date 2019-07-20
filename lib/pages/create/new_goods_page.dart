@@ -17,9 +17,11 @@ import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'package:it_resource_exchange_app/vo/new_product_vo.dart';
 
 class NewGoodsPage extends StatefulWidget {
-  NewGoodsPage({Key key, this.productVo}) : super(key: key);
+  NewGoodsPage({Key key, this.productVo, this.completeCallback}) : super(key: key);
 
   NewProductVo productVo;
+
+  VoidCallback completeCallback;
 
   @override
   _NewGoodsPageState createState() => _NewGoodsPageState();
@@ -172,11 +174,10 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   Widget _buildPreviewWidget() {
     return NewGoodsPreviewWidget(
-      imgUrls: null,
-      assets: this.assetList,
+      imgVoList: this.widget.productVo.imgVoList,
       onPressed: () {},
       removePressd: (index) {
-        assetList.removeAt(index);
+        this.widget.productVo.imgVoList.removeAt(index);
         setState(() {});
       },
       addPressd: () {
@@ -190,8 +191,13 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
     try {
       List<Asset> tempList = await MultiImagePicker.pickImages(
-          enableCamera: true, maxImages: 6 - this.assetList.length);
-      assetList.addAll(tempList);
+          enableCamera: true,
+          maxImages: 6 - this.widget.productVo.imgVoList.length);
+      List<NewProductImgVo> tempImgVoList = tempList.map((asset) {
+        return NewProductImgVo(asset: asset);
+      }).toList();
+
+      this.widget.productVo.imgVoList.addAll(tempImgVoList);
     } on PlatformException catch (e) {
       error = e.message;
       print(error);
@@ -203,32 +209,32 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   }
 
   void checkParamsAction() async {
-    if (this.assetList.length < 1) {
+    if (this.widget.productVo.imgVoList.length < 1) {
       showToast('请添加教程预览图片', duration: Duration(milliseconds: 1500));
       return;
     }
 
-    if (this._selectedCateInfo == null) {
+    if (null == this.widget.productVo.cateInfo.cateTitle) {
       showToast('请选择教程分类', duration: Duration(milliseconds: 1500));
       return;
     }
 
-    if (this.title == null) {
+    if (this.widget.productVo.title == null) {
       showToast('请输入标题', duration: Duration(milliseconds: 1500));
       return;
     }
 
-    if (this.price == null) {
+    if (this.widget.productVo.price == null) {
       showToast('请输入价格', duration: Duration(milliseconds: 1500));
       return;
     }
 
-    if (this.price == null) {
+    if (this.widget.productVo.price == null) {
       showToast('请输入资源地址', duration: Duration(milliseconds: 1500));
       return;
     }
 
-    if (this.desc == null) {
+    if (this.widget.productVo.desc == null) {
       showToast('请输入资源详情描述', duration: Duration(milliseconds: 1500));
       return;
     }
@@ -253,47 +259,60 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   void uploadImgAction() {
     List<String> fileNameList = [];
-    for (Asset asset in this.assetList) {
-      asset.requestOriginal(quality: 50).then((ByteData data) {
-        return data.buffer.asUint8List();
-      }).then((List<int> data) async {
-        BaseResult result = await NetworkUtils.onUpload(data);
-        if (result.status == 200) {
-          var fileName = result.data['fileName'];
-          fileNameList.add(fileName);
-          if (fileNameList.length == this.assetList.length) {
-            this.saveProductAction(fileNameList);
-          }
-        } else {
-          throw Exception(result.message);
+    for (NewProductImgVo imgVo in this.widget.productVo.imgVoList) {
+      if (imgVo.url != null) {
+        String fileName = imgVo.url.split("?").first.split('/').last;
+        fileNameList.add(fileName);
+        if (fileNameList.length == this.widget.productVo.imgVoList.length) {
+          this.saveProductAction(fileNameList);
         }
-      }).catchError((e) {
-        _callBackFunction();
-        showToast(e.toString(), duration: Duration(milliseconds: 2500));
-      });
+      } else {
+        imgVo.asset.requestOriginal(quality: 50).then((ByteData data) {
+          return data.buffer.asUint8List();
+        }).then((List<int> data) async {
+          BaseResult result = await NetworkUtils.onUpload(data);
+          if (result.status == 200) {
+            var fileName = result.data['fileName'];
+            fileNameList.add(fileName);
+            if (fileNameList.length == this.widget.productVo.imgVoList.length) {
+              this.saveProductAction(fileNameList);
+            }
+          } else {
+            throw Exception(result.message);
+          }
+        }).catchError((e) {
+          _callBackFunction();
+          showToast(e.toString(), duration: Duration(milliseconds: 2500));
+        });
+      }
     }
   }
 
   void saveProductAction(List<String> fileNameList) {
     var params = {
-      'cateId': this._selectedCateInfo.cateId,
+      'cateId': this.widget.productVo.cateInfo.cateId,
       'imgUrls': fileNameList.join(','),
       'coverUrl': fileNameList.first,
-      'price': this.price,
-      'productTitle': this.title,
-      'productDesc': this.desc,
-      'productAddressUrl': this.resourceUrl,
+      'price': this.widget.productVo.price,
+      'productTitle': this.widget.productVo.title,
+      'productDesc': this.widget.productVo.desc,
+      'productAddressUrl': this.widget.productVo.resourceUrl,
       'createdBy': UserUtils.getUserInfo().userId
     };
 
-    if (this.resourcePassword != null) {
-      params['productAddressPassword'] = this.resourcePassword;
+    if (null != this.widget.productVo.productId) {
+      params['productId'] = this.widget.productVo.productId;
+    }
+
+    if (null != this.widget.productVo.resourcePassword) {
+      params['productAddressPassword'] = this.widget.productVo.resourcePassword;
     }
 
     NetworkUtils.submitProduct(params).then((res) {
       _callBackFunction();
       if (res.status == 200) {
         showToast('发布成功,等待管理员审核', duration: Duration(seconds: 3));
+        this.widget.completeCallback();
         Future.delayed(Duration(seconds: 3), () {
           Navigator.of(context).pop();
         });

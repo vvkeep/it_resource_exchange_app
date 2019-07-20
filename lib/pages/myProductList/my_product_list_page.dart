@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
+import 'package:it_resource_exchange_app/pages/create/new_goods_page.dart';
 import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'package:it_resource_exchange_app/model/product_detail.dart';
 import './my_product_item_view.dart';
+import 'package:it_resource_exchange_app/vo/new_product_vo.dart';
 
 class MyProductListPage extends StatefulWidget {
   @override
@@ -54,7 +57,24 @@ class _MyProductListPageState extends State<MyProductListPage> {
         return MyProductItemView(
           product: productList[index],
           onPressed: () {
-            int productId = productList[index].productId;
+            ProductDetail product = productList[index];
+            NewProductVo productVo = NewProductVo.init(
+                productId: product.productId.toString(),
+                title: product.productTitle,
+                price: product.price.toString(),
+                resourceUrl: product.productAddressUrl,
+                resourcePassword: product.productAddressPassword,
+                desc: product.productDesc,
+                imgUrlList: product.imgUrls.split(','),
+                cateId: product.cateId);
+
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => NewGoodsPage(productVo: productVo, completeCallback: () {
+                  this.requsetMyProductListData();
+                  setState(() {
+                    this._showLoading = true;
+                  });
+                },)));
           },
         );
       },
@@ -64,8 +84,8 @@ class _MyProductListPageState extends State<MyProductListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
           title: Text(
             "我的资源",
             style: TextStyle(color: Colors.white),
@@ -74,8 +94,7 @@ class _MyProductListPageState extends State<MyProductListPage> {
           iconTheme: IconThemeData(
             color: Colors.white,
           ),
-          ),
-      body: _showLoading ? _loadingContainer : _buildListView()
-    );
+        ),
+        body: _showLoading ? _loadingContainer : _buildListView());
   }
 }
