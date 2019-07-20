@@ -63,6 +63,19 @@ class _MyProductListPageState extends State<MyProductListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _showLoading ? _loadingContainer : _buildListView();
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+          title: Text(
+            "我的资源",
+            style: TextStyle(color: Colors.white),
+          ),
+          elevation: 0.0,
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+          ),
+      body: _showLoading ? _loadingContainer : _buildListView()
+    );
   }
 }

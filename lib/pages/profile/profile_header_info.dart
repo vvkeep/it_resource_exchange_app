@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show APPIcons;
+import 'package:it_resource_exchange_app/common/constant.dart';
 import 'package:it_resource_exchange_app/model/user_info.dart';
 import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -28,25 +29,26 @@ class ProfileHeaderInfoView extends StatelessWidget {
     }
 
     return Container(
-      height: 80,
+      height: 150,
       color: Colors.white,
       child: FlatButton(
         onPressed: this.onPressed,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(width: 20),
+            SizedBox(height: 20),
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                   ClipOval(
+                      child: avatar,
+                    ),
+                    SizedBox(height: 5,),
                   Text(
                     userInfo.account,
-                    style: Theme.of(context)
-                        .textTheme
-                        .title
-                        .copyWith(fontSize: 20),
+                    style: TextStyle(color: AppColors.DarkTextColor, fontSize: 15),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 6.0),
@@ -59,12 +61,6 @@ class ProfileHeaderInfoView extends StatelessWidget {
                     ),
                   )
                 ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(right: 20),
-              child: ClipOval(
-                child: avatar,
               ),
             )
           ],

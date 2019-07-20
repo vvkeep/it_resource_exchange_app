@@ -7,15 +7,15 @@ class FullWidthButton extends StatelessWidget {
 
   const FullWidthButton({
     @required this.title,
-    @required this.iconPath,
+    @required this.iconData,
     @required this.onPressed,
     this.showDivider: false,
-  }) : assert(iconPath != null),
+  }) : assert(iconData != null),
        assert(title != null),
        assert(onPressed != null);
 
   final String title;
-  final String iconPath;
+  final IconData iconData;
   final bool showDivider;
   final VoidCallback onPressed;
   @override
@@ -23,10 +23,10 @@ class FullWidthButton extends StatelessWidget {
     final pureButton = Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Image.asset(
-          iconPath,
-          width: 24.0,
-          height: 24.0,
+        Icon(
+            iconData,
+            size: 24.0, 
+            color: AppColors.PrimaryColor,
         ),
         SizedBox(width: HORIZONTAL_PADDING),
         Expanded(
@@ -39,7 +39,7 @@ class FullWidthButton extends StatelessWidget {
             ),
             size: 22.0, 
             color: AppColors.ArrowNormalColor,
-          ),
+        ),
       ],
     );
 

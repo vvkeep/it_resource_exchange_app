@@ -36,7 +36,21 @@ class APPIcons {
   );
 
   static const AddImgData = IconData(
-      0xe70a,
-      fontFamily: Constant.IconFontFamily,
+    0xe70a,
+    fontFamily: Constant.IconFontFamily,
+  );
+
+  static const ProfileListImgData = IconData(
+    0xe64d,
+    fontFamily: Constant.IconFontFamily,
+  );
+
+  static const ProfileAddImgData = IconData(
+    0xe60c,
+    fontFamily: Constant.IconFontFamily,
+  );
+  static const ProfileSettingImgData = IconData(
+    0xe615,
+    fontFamily: Constant.IconFontFamily,
   );
 }

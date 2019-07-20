@@ -58,13 +58,13 @@ class GoodsItemView extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
-                              Text(
-                                '0',
-                                style: TextStyle(
-                                    color: AppColors.LightTextColor,
-                                    fontSize: 12.0),
-                              ),
-                              SizedBox(width: 5.0),
+                              // Text(
+                              //   '0',
+                              //   style: TextStyle(
+                              //       color: AppColors.LightTextColor,
+                              //       fontSize: 12.0),
+                              // ),
+                              // SizedBox(width: 5.0),
                               Image.asset('./assets/imgs/ic_comment.png',
                                   width: 16.0, height: 16.0),
                             ],

@@ -11,6 +11,7 @@ import '../../utils/user_utils.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:it_resource_exchange_app/pages/create/new_goods_page.dart';
 import '../../pages/myProductList/my_product_list_page.dart';
+import 'package:it_resource_exchange_app/common/constant.dart' show APPIcons;
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -85,13 +86,12 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return ListView(children: <Widget>[
-      SizedBox(height: SEPARATE_SIZE),
       ProfileHeaderInfoView(onPressed: () {
         //跳转到个人信息页面
       }),
       SizedBox(height: SEPARATE_SIZE),
       FullWidthButton(
-        iconPath: 'assets/imgs/ic_cards_wallet.png',
+        iconData: APPIcons.ProfileListImgData,
         title: '资源列表',
         showDivider: true,
         onPressed: () {
@@ -100,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
         },
       ),
       FullWidthButton(
-        iconPath: 'assets/imgs/ic_collections.png',
+        iconData: APPIcons.ProfileAddImgData,
         title: '发布资源',
         showDivider: false,
         onPressed: () {
@@ -110,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       SizedBox(height: SEPARATE_SIZE),
       FullWidthButton(
-        iconPath: 'assets/imgs/ic_settings.png',
+        iconData: APPIcons.ProfileSettingImgData,
         title: '设置',
         showDivider: false,
         onPressed: () {},

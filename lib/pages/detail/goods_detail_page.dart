@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:it_resource_exchange_app/common/constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import '../../model/product_detail.dart';
 import 'package:intl/intl.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:it_resource_exchange_app/common/constant.dart';
 
 class GoodsDetailPage extends StatefulWidget {
   GoodsDetailPage({Key key, this.productId}) : super(key: key);
@@ -151,9 +151,27 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
             child: CachedNetworkImage(
               width: MediaQuery.of(context).size.width,
               fit: BoxFit.fill,
-              placeholder: (context, url) => Image.asset('./assets/imgs/img_default.png'),
+              placeholder: (context, url) {
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: AppColors.BackgroundColor,
+                        width: AppSize.DividerWidth),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                  width: double.infinity,
+                  height: 250,
+                  child: Center(
+                    child: Icon(
+                      APPIcons.AddImgData,
+                      color: AppColors.PrimaryColor,
+                      size: 40,
+                    ),
+                  ),
+                );
+              },
               imageUrl: imgUrl,
-              errorWidget:(context, url, error) => Icon(Icons.error),
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
           ),
         );
@@ -199,7 +217,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
         productDetail.productAddressUrl.isNotEmpty) {
       itemWidgets.add(
           _buildResourceItemView("资源地址:", productDetail.productAddressUrl));
-      itemWidgets.add(SizedBox(height: 6));
+      itemWidgets.add(SizedBox(height: 10));
     }
 
     if (productDetail.productAddressPassword != null &&
@@ -261,7 +279,8 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
             _buildTopInfoView(),
             _buildGoodsDescTextView(),
             _buildImgsView(),
-            _buildResourceView()
+            _buildResourceView(),
+            SizedBox(height: MediaQuery.of(context).padding.bottom)
           ],
         ),
       );
@@ -280,7 +299,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
         ),
       ),
       body: contentBody,
-      bottomNavigationBar: _buildBottomBar(),
+      // bottomNavigationBar: _buildBottomBar(),
     );
   }
 }

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppSize, AppColors;
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import '../../model/product_detail.dart';
 import 'package:intl/intl.dart';
+import 'package:it_resource_exchange_app/utils/net_image_cache_manager.dart';
+
 
 class MyProductItemView extends StatelessWidget {
   const MyProductItemView({Key key, this.product, this.onPressed})
@@ -14,13 +17,53 @@ class MyProductItemView extends StatelessWidget {
 
   final VoidCallback onPressed;
 
+
+  String productStatusDesc(int status) {
+    var desc;
+    switch (status) {
+      case 1000:
+        desc = '待审核';
+        break;
+      case 1001:
+        desc = '已拒绝';
+        break;
+      case 1002:
+      case 2000:
+        desc = '已通过';
+        break;
+      case 2001:
+        desc = '已下架';
+        break;
+      default:
+         desc = '未知';
+    }
+    return desc;
+  }
+
+   Color productStatusColor(int status) {
+    var color;
+    switch (status) {
+      case 1000:
+        color = Colors.yellow;
+        break;
+      case 1001:
+        color = Colors.red;
+        break;
+      case 1002:
+      case 2000:
+        color = Colors.green;
+        break;
+      case 2001:
+         color = Colors.grey;
+        break;
+      default:
+         color = null;
+    }
+    return color;
+  }
+
   @override
   Widget build(BuildContext context) {
-    var format = new DateFormat('yyyy-MM-dd HH:mm');
-    int timeStamp = int.parse(product.createdTime);
-    var date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
-    var createDateStr = format.format(date);
-
     return GestureDetector(
       onTap: this.onPressed,
       child: Container(
@@ -51,24 +94,14 @@ class MyProductItemView extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(createDateStr,
+                          Text(product.cateTitle,
                               style: TextStyle(
                                   color: AppColors.LightTextColor,
-                                  fontSize: 12.0)),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              Text(
-                                '0',
-                                style: TextStyle(
-                                    color: AppColors.LightTextColor,
-                                    fontSize: 12.0),
-                              ),
-                              SizedBox(width: 5.0),
-                              Image.asset('./assets/imgs/ic_comment.png',
-                                  width: 16.0, height: 16.0),
-                            ],
-                          ),
+                                  fontSize: 14.0)),
+                          Text(productStatusDesc(product.productStatus),
+                              style: TextStyle(
+                                  color:  productStatusColor(product.productStatus),
+                                  fontSize: 14.0)),
                         ],
                       ),
                     )
