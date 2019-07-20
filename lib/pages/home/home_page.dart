@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:it_resource_exchange_app/widgets/swiper_banner.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import './goods_item_view.dart';
 import 'package:it_resource_exchange_app/pages/detail/goods_detail_page.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
@@ -7,6 +7,7 @@ import 'package:it_resource_exchange_app/model/home_info.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:it_resource_exchange_app/pages/web/webview_page.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   HomeInfo homeInfo;
-  List<SwiperDataInfo> bannerInfoList = [];
+  List<AdvertiseList> bannerInfoList = [];
 
   bool _showLoading = true;
 
@@ -46,12 +47,6 @@ class _HomePageState extends State<HomePage>
         .then((res) {
       if (res.status == 200) {
         homeInfo = HomeInfo.fromJson(res.data);
-        bannerInfoList = homeInfo.advertiseList
-            .map((advertise) => SwiperDataInfo(
-                coverImgUrl: advertise.adCoverUrl,
-                title: advertise.adTitle,
-                id: advertise.adId))
-            .toList();
         setState(() {
           _showLoading = false;
         });
@@ -66,14 +61,26 @@ class _HomePageState extends State<HomePage>
       itemCount: 1 + homeInfo.recommendProductList.length,
       itemBuilder: (context, i) {
         if (i == 0) {
-          return SwiperBanner(
-              bannerHeight: 200.0,
-              infoList: bannerInfoList,
-              onClickCallback: (index) {
+          return Container(
+            height: 220,
+            child: Swiper(
+            itemBuilder: (BuildContext context, int index) {
+              return CachedNetworkImage(
+                imageUrl: homeInfo.advertiseList[index].adCoverUrl,
+                fit: BoxFit.cover,
+              );
+            },
+            itemCount: 3,
+            pagination: new SwiperPagination(),
+            control: new SwiperControl(),
+            onTap: (index) {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => WebviewPage(
                         title: '广告标题', url: 'https://www.baidu.com/')));
-              });
+
+            },
+          ),
+          );
         } else {
           return GoodsItemView(
             recomendProduct: homeInfo.recommendProductList[i - 1],
