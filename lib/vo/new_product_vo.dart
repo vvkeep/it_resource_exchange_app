@@ -20,7 +20,11 @@ class NewProductVo extends Object {
   List<NewProductImgVo> imgVoList = [];
 
   static NewProductVo init({String productId, String cateId, String title, String price, String resourceUrl, String resourcePassword, String desc, List<String> imgUrlList}) {
-    CateInfo info = CateInfo(int.parse(cateId), null, null, null);
+    CateInfo info;
+    if (null != cateId) {
+      info = CateInfo(int.parse(cateId), null, null, null);
+    }
+    imgUrlList = imgUrlList == null ? [] : imgUrlList;
     List<NewProductImgVo> imgVoList = imgUrlList.map((url) {
       return NewProductImgVo(url: url);
     }).toList();

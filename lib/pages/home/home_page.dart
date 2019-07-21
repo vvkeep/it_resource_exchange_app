@@ -70,9 +70,10 @@ class _HomePageState extends State<HomePage>
                 fit: BoxFit.cover,
               );
             },
-            itemCount: 3,
-            pagination: new SwiperPagination(),
-            control: new SwiperControl(),
+            autoplay: true,
+            itemCount: homeInfo.advertiseList.length,
+            pagination: new SwiperPagination(builder: SwiperPagination.dots),
+            control: null,
             onTap: (index) {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => WebviewPage(

@@ -53,7 +53,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
                 value: cateInfo, child: Text(cateInfo.cateTitle));
           }).toList();
 
-          if (null != this.widget.productVo) {
+          if (null != this.widget.productVo.cateInfo) {
             for (CateInfo item in cateList) {
               if (item.cateId == this.widget.productVo.cateInfo.cateId) {
                 this.widget.productVo.cateInfo = item;
