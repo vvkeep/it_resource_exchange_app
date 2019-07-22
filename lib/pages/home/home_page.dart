@@ -64,33 +64,37 @@ class _HomePageState extends State<HomePage>
           return Container(
             height: 220,
             child: Swiper(
-            itemBuilder: (BuildContext context, int index) {
-              return CachedNetworkImage(
-                imageUrl: homeInfo.advertiseList[index].adCoverUrl,
-                fit: BoxFit.cover,
-              );
-            },
-            autoplay: true,
-            itemCount: homeInfo.advertiseList.length,
-            pagination: new SwiperPagination(builder: SwiperPagination.dots),
-            control: null,
-            onTap: (index) {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => WebviewPage(
-                        title: '广告标题', url: 'https://www.baidu.com/')));
-
-            },
-          ),
+              itemBuilder: (BuildContext context, int index) {
+                return CachedNetworkImage(
+                  imageUrl: homeInfo.advertiseList[index].adCoverUrl,
+                  fit: BoxFit.cover,
+                );
+              },
+              autoplay: true,
+              itemCount: homeInfo.advertiseList.length,
+              pagination: SwiperPagination(builder: SwiperPagination.dots),
+              control: null,
+              onTap: (index) {
+                AdvertiseList asvertise = homeInfo.advertiseList[index];
+                if (asvertise.adType == 1) {
+                String productId = homeInfo.advertiseList[i].adProductId;
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                          GoodsDetailPage(productId: int.parse(productId))));
+                } else {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => WebviewPage(
+                          title: asvertise.adTitle,
+                          url: asvertise.adDetailUrl)));
+                }
+              },
+            ),
           );
         } else {
           return GoodsItemView(
             recomendProduct: homeInfo.recommendProductList[i - 1],
             onPressed: () {
               int productId = homeInfo.recommendProductList[i - 1].productId;
-              Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) =>
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>
                           GoodsDetailPage(productId: productId)));
             },
           );
