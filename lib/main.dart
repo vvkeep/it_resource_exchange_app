@@ -19,9 +19,10 @@ class MyApp extends StatelessWidget {
       backgroundColor: Colors.black87,
       radius: 6.0,
       child: MaterialApp(
-        title: 'IT资源交换',
+        title: 'IT资源',
         theme: ThemeData(
           primarySwatch: AppColors.PrimaryColor,
+          backgroundColor: Colors.white
         ),
         home: UserUtils.isLogin() ? ApplicationPage() : LoginPage(),
       ),

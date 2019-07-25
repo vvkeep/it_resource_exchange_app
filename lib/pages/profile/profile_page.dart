@@ -10,7 +10,7 @@ import '../../model/user_info.dart';
 import '../../utils/user_utils.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:it_resource_exchange_app/pages/create/new_goods_page.dart';
-import '../../pages/myProductList/my_product_list_page.dart';
+import '../../pages/my_product_list/my_product_list_page.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show APPIcons;
 
 class ProfilePage extends StatefulWidget {
@@ -108,14 +108,14 @@ class _ProfilePageState extends State<ProfilePage> {
               .push(MaterialPageRoute(builder: (context) => NewGoodsPage()));
         },
       ),
-      SizedBox(height: SEPARATE_SIZE),
-      FullWidthButton(
-        iconData: APPIcons.ProfileSettingImgData,
-        title: '设置',
-        showDivider: false,
-        onPressed: () {},
-      ),
-      SizedBox(height: 50),
+      // SizedBox(height: SEPARATE_SIZE),
+      // FullWidthButton(
+      //   iconData: APPIcons.ProfileSettingImgData,
+      //   title: '设置',
+      //   showDivider: false,
+      //   onPressed: () {},
+      // ),
+      SizedBox(height: 100),
       _buildLogoutBtn()
     ]);
   }

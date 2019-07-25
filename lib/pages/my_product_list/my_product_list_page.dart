@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
