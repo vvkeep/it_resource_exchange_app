@@ -4,7 +4,7 @@ import './goods_item_view.dart';
 import 'package:it_resource_exchange_app/pages/detail/goods_detail_page.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/home_info.dart';
-import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
+import 'package:it_resource_exchange_app/common/constant.dart' show AppColors, AppSize, APPIcons;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:it_resource_exchange_app/pages/web/webview_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -67,6 +67,25 @@ class _HomePageState extends State<HomePage>
               itemBuilder: (BuildContext context, int index) {
                 return CachedNetworkImage(
                   imageUrl: homeInfo.advertiseList[index].adCoverUrl,
+                  placeholder: (context, url) {
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: AppColors.BackgroundColor,
+                        width: AppSize.DividerWidth),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Center(
+                    child: Icon(
+                      APPIcons.AddImgData,
+                      color: AppColors.PrimaryColor,
+                      size: 40,
+                    ),
+                  ),
+                );
+              },
                   fit: BoxFit.cover,
                 );
               },
