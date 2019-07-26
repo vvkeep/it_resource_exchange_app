@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppSize, AppColors;
 import 'package:it_resource_exchange_app/model/base_result.dart';
+import 'package:it_resource_exchange_app/model/product_detail.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'new_goods_text_field.dart';
 import 'new_goods_preview_widget.dart';
@@ -17,10 +18,10 @@ import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'package:it_resource_exchange_app/vo/new_product_vo.dart';
 
 class NewGoodsPage extends StatefulWidget {
-  NewGoodsPage({Key key, this.productVo, this.completeCallback}) : super(key: key);
+  NewGoodsPage({Key key, this.productId, this.completeCallback})
+      : super(key: key);
 
-  NewProductVo productVo;
-
+  int productId;
   VoidCallback completeCallback;
 
   @override
@@ -28,6 +29,8 @@ class NewGoodsPage extends StatefulWidget {
 }
 
 class _NewGoodsPageState extends State<NewGoodsPage> {
+  NewProductVo productVo = NewProductVo.init(cateId: null);
+
   List<CateInfo> cateList;
   List<DropdownMenuItem> menuItemList = [];
 
@@ -36,11 +39,32 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   @override
   void initState() {
     super.initState();
-    if (this.widget.productVo == null) {
-      this.widget.productVo = NewProductVo.init(cateId: null);
+    if (this.widget.productId != null) {
+      requestGoodsDetailData();
+    }else {
+      requsetCateListData();
     }
 
-    requsetCateListData();
+  }
+
+  requestGoodsDetailData() async {
+    NetworkUtils.requestProductDetailByProductId(this.widget.productId)
+        .then((res) {
+      if (res.status == 200) {
+        ProductDetail product = ProductDetail.fromJson(res.data);
+        this.productVo = NewProductVo.init(
+            productId: product.productId.toString(),
+            title: product.productTitle,
+            price: product.price.toString(),
+            resourceUrl: product.productAddressUrl,
+            resourcePassword: product.productAddressPassword,
+            desc: product.productDesc,
+            imgUrlList: product.imgUrls.split(','),
+            cateId: product.cateId);
+        setState(() {
+        });
+      }
+    });
   }
 
   requsetCateListData() {
@@ -53,10 +77,10 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
                 value: cateInfo, child: Text(cateInfo.cateTitle));
           }).toList();
 
-          if (null != this.widget.productVo.cateInfo) {
+          if (null != this.productVo.cateInfo) {
             for (CateInfo item in cateList) {
-              if (item.cateId == this.widget.productVo.cateInfo.cateId) {
-                this.widget.productVo.cateInfo = item;
+              if (item.cateId == this.productVo.cateInfo.cateId) {
+                this.productVo.cateInfo = item;
                 break;
               }
             }
@@ -68,24 +92,24 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   Widget _buildTitleField() {
     return NewGoodsTextField(
-      controller: TextEditingController(text: this.widget.productVo.title),
+      controller: TextEditingController(text: this.productVo.title),
       hintText: "请输入标题",
       onChanged: (string) {
-        this.widget.productVo.title = string;
+        this.productVo.title = string;
       },
     );
   }
 
   Widget _buildPriceField() {
     return NewGoodsTextField(
-      controller: TextEditingController(text: this.widget.productVo.price),
+      controller: TextEditingController(text: this.productVo.price),
       keyboardType: TextInputType.numberWithOptions(decimal: true),
       inputFormatters: <TextInputFormatter>[
         LengthLimitingTextInputFormatter(5),
       ],
       hintText: "请输入价格",
       onChanged: (string) {
-        this.widget.productVo.price = string;
+        this.productVo.price = string;
       },
     );
   }
@@ -93,11 +117,11 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   Widget _buildResourceUrlField() {
     return NewGoodsTextField(
       controller:
-          TextEditingController(text: this.widget.productVo.resourceUrl),
+          TextEditingController(text: this.productVo.resourceUrl),
       keyboardType: TextInputType.url,
       hintText: "请输入资源地址",
       onChanged: (string) {
-        this.widget.productVo.resourceUrl = string;
+        this.productVo.resourceUrl = string;
       },
     );
   }
@@ -105,17 +129,17 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   Widget _buildResourcePasswordField() {
     return NewGoodsTextField(
       controller:
-          TextEditingController(text: this.widget.productVo.resourcePassword),
+          TextEditingController(text: this.productVo.resourcePassword),
       hintText: "请输入资源密码",
       onChanged: (string) {
-        this.widget.productVo.resourcePassword = string;
+        this.productVo.resourcePassword = string;
       },
     );
   }
 
   Widget _buildDescField() {
     return TextField(
-      controller: TextEditingController(text: this.widget.productVo.desc),
+      controller: TextEditingController(text: this.productVo.desc),
       decoration: InputDecoration(
         hintText: '请输入产品描述',
         enabledBorder: OutlineInputBorder(
@@ -133,7 +157,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
       ),
       maxLines: 6,
       onChanged: (string) {
-        this.widget.productVo.desc = string;
+        this.productVo.desc = string;
       },
     );
   }
@@ -160,11 +184,11 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
           DropdownButton(
               hint: Text('产品分类'),
               iconSize: 35,
-              value: this.widget.productVo.cateInfo,
+              value: this.productVo.cateInfo,
               items: menuItemList,
               onChanged: (selectedCateInfo) {
                 setState(() {
-                  this.widget.productVo.cateInfo = selectedCateInfo;
+                  this.productVo.cateInfo = selectedCateInfo;
                 });
               })
         ],
@@ -174,10 +198,10 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   Widget _buildPreviewWidget() {
     return NewGoodsPreviewWidget(
-      imgVoList: this.widget.productVo.imgVoList,
+      imgVoList: this.productVo.imgVoList,
       onPressed: () {},
       removePressd: (index) {
-        this.widget.productVo.imgVoList.removeAt(index);
+        this.productVo.imgVoList.removeAt(index);
         setState(() {});
       },
       addPressd: () {
@@ -192,12 +216,12 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
     try {
       List<Asset> tempList = await MultiImagePicker.pickImages(
           enableCamera: true,
-          maxImages: 6 - this.widget.productVo.imgVoList.length);
+          maxImages: 6 - this.productVo.imgVoList.length);
       List<NewProductImgVo> tempImgVoList = tempList.map((asset) {
         return NewProductImgVo(asset: asset);
       }).toList();
 
-      this.widget.productVo.imgVoList.addAll(tempImgVoList);
+      this.productVo.imgVoList.addAll(tempImgVoList);
     } on PlatformException catch (e) {
       error = e.message;
       print(error);
@@ -209,32 +233,32 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   }
 
   void checkParamsAction() async {
-    if (this.widget.productVo.imgVoList.length < 1) {
+    if (this.productVo.imgVoList.length < 1) {
       showToast('请添加教程预览图片', duration: Duration(milliseconds: 1500));
       return;
     }
 
-    if (null == this.widget.productVo.cateInfo.cateTitle) {
+    if (null == this.productVo.cateInfo.cateTitle) {
       showToast('请选择教程分类', duration: Duration(milliseconds: 1500));
       return;
     }
 
-    if (this.widget.productVo.title == null) {
+    if (this.productVo.title == null) {
       showToast('请输入标题', duration: Duration(milliseconds: 1500));
       return;
     }
 
-    if (this.widget.productVo.price == null) {
+    if (this.productVo.price == null) {
       showToast('请输入价格', duration: Duration(milliseconds: 1500));
       return;
     }
 
-    if (this.widget.productVo.price == null) {
+    if (this.productVo.price == null) {
       showToast('请输入资源地址', duration: Duration(milliseconds: 1500));
       return;
     }
 
-    if (this.widget.productVo.desc == null) {
+    if (this.productVo.desc == null) {
       showToast('请输入资源详情描述', duration: Duration(milliseconds: 1500));
       return;
     }
@@ -259,11 +283,11 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   void uploadImgAction() {
     List<String> fileNameList = [];
-    for (NewProductImgVo imgVo in this.widget.productVo.imgVoList) {
+    for (NewProductImgVo imgVo in this.productVo.imgVoList) {
       if (imgVo.url != null) {
         String fileName = imgVo.url.split("?").first.split('/').last;
         fileNameList.add(fileName);
-        if (fileNameList.length == this.widget.productVo.imgVoList.length) {
+        if (fileNameList.length == this.productVo.imgVoList.length) {
           this.saveProductAction(fileNameList);
         }
       } else {
@@ -274,7 +298,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
           if (result.status == 200) {
             var fileName = result.data['fileName'];
             fileNameList.add(fileName);
-            if (fileNameList.length == this.widget.productVo.imgVoList.length) {
+            if (fileNameList.length == this.productVo.imgVoList.length) {
               this.saveProductAction(fileNameList);
             }
           } else {
@@ -290,22 +314,22 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   void saveProductAction(List<String> fileNameList) {
     var params = {
-      'cateId': this.widget.productVo.cateInfo.cateId,
+      'cateId': this.productVo.cateInfo.cateId,
       'imgUrls': fileNameList.join(','),
       'coverUrl': fileNameList.first,
-      'price': this.widget.productVo.price,
-      'productTitle': this.widget.productVo.title,
-      'productDesc': this.widget.productVo.desc,
-      'productAddressUrl': this.widget.productVo.resourceUrl,
+      'price': this.productVo.price,
+      'productTitle': this.productVo.title,
+      'productDesc': this.productVo.desc,
+      'productAddressUrl': this.productVo.resourceUrl,
       'createdBy': UserUtils.getUserInfo().userId
     };
 
-    if (null != this.widget.productVo.productId) {
-      params['productId'] = this.widget.productVo.productId;
+    if (null != this.productVo.productId) {
+      params['productId'] = this.productVo.productId;
     }
 
-    if (null != this.widget.productVo.resourcePassword) {
-      params['productAddressPassword'] = this.widget.productVo.resourcePassword;
+    if (null != this.productVo.resourcePassword) {
+      params['productAddressPassword'] = this.productVo.resourcePassword;
     }
 
     NetworkUtils.submitProduct(params).then((res) {

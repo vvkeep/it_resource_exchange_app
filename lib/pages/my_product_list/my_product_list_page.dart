@@ -57,18 +57,8 @@ class _MyProductListPageState extends State<MyProductListPage> {
           product: productList[index],
           onPressed: () {
             ProductDetail product = productList[index];
-            NewProductVo productVo = NewProductVo.init(
-                productId: product.productId.toString(),
-                title: product.productTitle,
-                price: product.price.toString(),
-                resourceUrl: product.productAddressUrl,
-                resourcePassword: product.productAddressPassword,
-                desc: product.productDesc,
-                imgUrlList: product.imgUrls.split(','),
-                cateId: product.cateId);
-
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => NewGoodsPage(productVo: productVo, completeCallback: () {
+                builder: (context) => NewGoodsPage(productId: product.productId, completeCallback: () {
                   this.requsetMyProductListData();
                   setState(() {
                     this._showLoading = true;
