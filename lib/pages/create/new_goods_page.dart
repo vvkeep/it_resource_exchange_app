@@ -16,6 +16,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:it_resource_exchange_app/widgets/loadingDialog.dart';
 import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'package:it_resource_exchange_app/vo/new_product_vo.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class NewGoodsPage extends StatefulWidget {
   NewGoodsPage({Key key, this.productId, this.completeCallback})
@@ -36,22 +37,44 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   Function _callBackFunction;
 
+
+  bool _showLoading = true;
+
+  final _loadingContainer = Container(
+      color: Colors.white,
+      constraints: BoxConstraints.expand(),
+      child: Center(
+        child: Opacity(
+          opacity: 0.9,
+          child: SpinKitRing(
+            color: AppColors.PrimaryColor,
+            size: 50.0,
+          ),
+        ),
+      ));
+
   @override
   void initState() {
     super.initState();
-    if (this.widget.productId != null) {
-      requestGoodsDetailData();
-    }else {
+    if (this.widget.productId == null) {
       requsetCateListData();
+    } else {
+      requestGoodsDetailData();
     }
-
   }
 
   requestGoodsDetailData() async {
-    NetworkUtils.requestProductDetailByProductId(this.widget.productId)
-        .then((res) {
-      if (res.status == 200) {
-        ProductDetail product = ProductDetail.fromJson(res.data);
+    Future.wait([
+      NetworkUtils.requestCategoryListData(),
+      NetworkUtils.requestProductDetailByProductId(this.widget.productId)
+    ]).then(((res) {
+      BaseResult cateListRes = res[0];
+      BaseResult productDetailRes = res[1];
+
+      if (cateListRes.status == 200 &&
+          productDetailRes.status == 200 &&
+          this.mounted) {
+        ProductDetail product = ProductDetail.fromJson(productDetailRes.data);
         this.productVo = NewProductVo.init(
             productId: product.productId.toString(),
             title: product.productTitle,
@@ -61,30 +84,42 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
             desc: product.productDesc,
             imgUrlList: product.imgUrls.split(','),
             cateId: product.cateId);
+
+        cateList = (cateListRes.data as List)
+            .map((m) => CateInfo.fromJson(m))
+            .toList();
+        menuItemList = cateList.map((cateInfo) {
+          return DropdownMenuItem(
+              value: cateInfo, child: Text(cateInfo.cateTitle));
+        }).toList();
+
+        if (null != this.productVo.cateInfo) {
+          for (CateInfo item in cateList) {
+            if (item.cateId == this.productVo.cateInfo.cateId) {
+              this.productVo.cateInfo = item;
+              break;
+            }
+          }
+        }
+
         setState(() {
+          this._showLoading = false;
         });
       }
-    });
+    }));
   }
 
   requsetCateListData() {
     NetworkUtils.requestCategoryListData().then((res) {
       if (res.status == 200 && this.mounted) {
         cateList = (res.data as List).map((m) => CateInfo.fromJson(m)).toList();
-        setState(() {
-          menuItemList = cateList.map((cateInfo) {
+        menuItemList = cateList.map((cateInfo) {
             return DropdownMenuItem(
                 value: cateInfo, child: Text(cateInfo.cateTitle));
           }).toList();
 
-          if (null != this.productVo.cateInfo) {
-            for (CateInfo item in cateList) {
-              if (item.cateId == this.productVo.cateInfo.cateId) {
-                this.productVo.cateInfo = item;
-                break;
-              }
-            }
-          }
+        setState(() {
+         this._showLoading = false;
         });
       }
     });
@@ -116,8 +151,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   Widget _buildResourceUrlField() {
     return NewGoodsTextField(
-      controller:
-          TextEditingController(text: this.productVo.resourceUrl),
+      controller: TextEditingController(text: this.productVo.resourceUrl),
       keyboardType: TextInputType.url,
       hintText: "请输入资源地址",
       onChanged: (string) {
@@ -128,8 +162,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   Widget _buildResourcePasswordField() {
     return NewGoodsTextField(
-      controller:
-          TextEditingController(text: this.productVo.resourcePassword),
+      controller: TextEditingController(text: this.productVo.resourcePassword),
       hintText: "请输入资源密码",
       onChanged: (string) {
         this.productVo.resourcePassword = string;
@@ -215,8 +248,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
     try {
       List<Asset> tempList = await MultiImagePicker.pickImages(
-          enableCamera: true,
-          maxImages: 6 - this.productVo.imgVoList.length);
+          enableCamera: true, maxImages: 6 - this.productVo.imgVoList.length);
       List<NewProductImgVo> tempImgVoList = tempList.map((asset) {
         return NewProductImgVo(asset: asset);
       }).toList();
@@ -263,16 +295,20 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
       return;
     }
 
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) {
-          return LoadingDialog(
-            dismissDialog: _disMissCallBack,
-          );
-        });
-
+    this.showLoading();
     this.uploadImgAction();
+  }
+
+  showLoading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return LoadingDialog(
+          dismissDialog: _disMissCallBack,
+        );
+      },
+    );
   }
 
   _disMissCallBack(Function func) {
@@ -348,6 +384,36 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   @override
   Widget build(BuildContext context) {
+    var body = GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: 8),
+                _buildChooseCategoryView(),
+                _buildTitleField(),
+                _buildPriceField(),
+                _buildResourceUrlField(),
+                _buildResourcePasswordField(),
+                SizedBox(height: 10),
+                _buildDescField(),
+                SizedBox(height: 18),
+                Text('提示:默认使用第一张图作为教程的封面'),
+                SizedBox(height: 5),
+                _buildPreviewWidget(),
+                SizedBox(height: 50),
+              ],
+            ),
+          ),
+        ),
+      );
+
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -378,34 +444,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
                       });
                 }),
           ]),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(height: 8),
-                _buildChooseCategoryView(),
-                _buildTitleField(),
-                _buildPriceField(),
-                _buildResourceUrlField(),
-                _buildResourcePasswordField(),
-                SizedBox(height: 10),
-                _buildDescField(),
-                SizedBox(height: 18),
-                Text('提示:默认使用第一张图作为教程的封面'),
-                SizedBox(height: 5),
-                _buildPreviewWidget(),
-                SizedBox(height: 50),
-              ],
-            ),
-          ),
-        ),
-      ),
+      body: _showLoading ? _loadingContainer : body
     );
   }
 }

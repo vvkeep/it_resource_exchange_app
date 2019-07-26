@@ -13,7 +13,7 @@ class NetworkUtils {
     return result;
   }
 
-  static requestCategoryListData() async {
+  static Future<BaseResult> requestCategoryListData() async {
     String url = APPConfig.Server + "/category/list";
     BaseResult result = await httpManager.request(HttpMethod.GET, url, null);
     return result;
@@ -26,7 +26,7 @@ class NetworkUtils {
     return result;
   }
 
-  static requestProductDetailByProductId(int productId) async {
+  static Future<BaseResult> requestProductDetailByProductId(int productId) async {
     String url = APPConfig.Server + "/product/detail";
     var params = {"productId": productId};
     BaseResult result = await httpManager.request(HttpMethod.GET, url, params);
