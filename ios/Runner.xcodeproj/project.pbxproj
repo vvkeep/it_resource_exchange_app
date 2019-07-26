@@ -556,7 +556,11 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.devyao.itresourceexchange;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+<<<<<<< HEAD
 				PROVISIONING_PROFILE_SPECIFIER = "";
+=======
+				PROVISIONING_PROFILE_SPECIFIER = it_resource_exchange_dev_profile;
+>>>>>>> 215c9705de84053377f7f93b17d6424153550882
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
