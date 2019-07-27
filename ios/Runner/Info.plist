@@ -35,8 +35,6 @@
 	<string>创建新产品的时候需要使用相机拍摄封面和预览图</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>创建新产品的时候需要从相册选择封面和预览图</string>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
