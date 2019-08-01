@@ -53,7 +53,7 @@ class _ClassifyPageState extends State<ClassifyPage> with SingleTickerProviderSt
       if (res.status == 200) {
        cateList = (res.data as List).map((m) =>CateInfo.fromJson(m)).toList();
       //添加全部分类
-      cateList.insert(0, CateInfo(-1, 0, "全部", 0));
+      cateList.insert(0, CateInfo(null, 0, "全部", 0));
        _tabController = TabController(vsync: this, length: cateList.length);
        setState(() {
           _showLoading = false;
