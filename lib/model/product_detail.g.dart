@@ -21,7 +21,7 @@ ProductDetail _$ProductDetailFromJson(Map<String, dynamic> json) {
       json['tradeCount'] as int,
       json['productAddressUrl'] as String,
       json['productAddressPassword'] as String,
-      json['createdTime'] as String);
+      json['createdTime'] as int);
 }
 
 Map<String, dynamic> _$ProductDetailToJson(ProductDetail instance) =>

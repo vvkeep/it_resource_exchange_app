@@ -1,103 +1,120 @@
-import 'package:json_annotation/json_annotation.dart'; 
-  
+import 'package:json_annotation/json_annotation.dart';
+
 part 'home_info.g.dart';
 
-
 @JsonSerializable()
-  class HomeInfo extends Object {
+class HomeInfo extends Object {
 
-  @JsonKey(name: 'recommendProductList')
-  List<RecommendProductList> recommendProductList;
+	@JsonKey(name: 'advertiseList')
+	List<AdvertiseList> advertiseList;
 
-  @JsonKey(name: 'advertiseList')
-  List<AdvertiseList> advertiseList;
+	@JsonKey(name: 'recommendProductList')
+	List<RecommendProductList> recommendProductList;
 
-  HomeInfo(this.recommendProductList,this.advertiseList,);
+	HomeInfo(this.advertiseList,this.recommendProductList,);
 
-  factory HomeInfo.fromJson(Map<String, dynamic> srcJson) => _$HomeInfoFromJson(srcJson);
+	factory HomeInfo.fromJson(Map<String, dynamic> srcJson) => _$HomeInfoFromJson(srcJson);
 
-  Map<String, dynamic> toJson() => _$HomeInfoToJson(this);
-
-}
-  
-@JsonSerializable()
-  class RecommendProductList extends Object {
-
-  @JsonKey(name: 'recommedId')
-  int recommedId;
-
-  @JsonKey(name: 'productId')
-  int productId;
-
-  @JsonKey(name: 'cateId')
-  String cateId;
-
-  @JsonKey(name: 'keywords')
-  String keywords;
-
-  @JsonKey(name: 'coverUrl')
-  String coverUrl;
-
-  @JsonKey(name: 'imgUrls')
-  String imgUrls;
-
-  @JsonKey(name: 'price')
-  double price;
-
-  @JsonKey(name: 'productTitle')
-  String productTitle;
-
-  @JsonKey(name: 'productDesc')
-  String productDesc;
-
-  @JsonKey(name: 'tradeCount')
-  int tradeCount;
-
-  @JsonKey(name: 'productAddressUrl')
-  String productAddressUrl;
-
-  @JsonKey(name: 'createdTime')
-  String createdTime;
-
-  @JsonKey(name: 'productStatus')
-  int productStatus;
-
-  RecommendProductList(this.recommedId,this.productId,this.cateId,this.keywords,this.coverUrl,this.imgUrls,this.price,this.productTitle,this.productDesc,this.tradeCount,this.productAddressUrl,this.createdTime,this.productStatus);
-
-  factory RecommendProductList.fromJson(Map<String, dynamic> srcJson) => _$RecommendProductListFromJson(srcJson);
-
-  Map<String, dynamic> toJson() => _$RecommendProductListToJson(this);
+	Map<String, dynamic> toJson() => _$HomeInfoToJson(this);
 
 }
 
-  
 @JsonSerializable()
-  class AdvertiseList extends Object {
+class AdvertiseList extends Object {
 
-  @JsonKey(name: 'adId')
-  int adId;
+	@JsonKey(name: 'adId')
+	int adId;
 
-  @JsonKey(name: 'adTitle')
-  String adTitle;
+	@JsonKey(name: 'adTitle')
+	String adTitle;
 
-  @JsonKey(name: 'adCoverUrl')
-  String adCoverUrl;
+	@JsonKey(name: 'adDetailUrl')
+	String adDetailUrl;
 
-  @JsonKey(name: 'adType')
-  int adType;
+	@JsonKey(name: 'adProductId')
+	String adProductId;
 
-  @JsonKey(name: 'adProductId')
-  String adProductId;
+	@JsonKey(name: 'adType')
+	int adType;
 
-  @JsonKey(name: 'adDetailUrl')
-  String adDetailUrl;
+	@JsonKey(name: 'adCoverUrl')
+	String adCoverUrl;
 
-  AdvertiseList(this.adId,this.adTitle,this.adCoverUrl,this.adType,this.adProductId,this.adDetailUrl);
+	AdvertiseList(this.adId,this.adTitle,this.adDetailUrl,this.adProductId,this.adType,this.adCoverUrl,);
 
-  factory AdvertiseList.fromJson(Map<String, dynamic> srcJson) => _$AdvertiseListFromJson(srcJson);
+	factory AdvertiseList.fromJson(Map<String, dynamic> srcJson) => _$AdvertiseListFromJson(srcJson);
 
-  Map<String, dynamic> toJson() => _$AdvertiseListToJson(this);
+	Map<String, dynamic> toJson() => _$AdvertiseListToJson(this);
 
 }
 
-  
+@JsonSerializable()
+class RecommendProductList extends Object {
+
+	@JsonKey(name: 'coverUrl')
+	String coverUrl;
+
+	@JsonKey(name: 'cateId')
+	String cateId;
+
+	@JsonKey(name: 'productAddressPassword')
+	String productAddressPassword;
+
+	@JsonKey(name: 'imgUrls')
+	String imgUrls;
+
+	@JsonKey(name: 'keywords')
+	String keywords;
+
+	@JsonKey(name: 'price')
+	double price;
+
+	@JsonKey(name: 'productTitle')
+	String productTitle;
+
+	@JsonKey(name: 'revision')
+	String revision;
+
+	@JsonKey(name: 'productStatus')
+	int productStatus;
+
+	@JsonKey(name: 'productDesc')
+	String productDesc;
+
+	@JsonKey(name: 'recommendId')
+	int recommendId;
+
+	@JsonKey(name: 'cateTitle')
+	String cateTitle;
+
+	@JsonKey(name: 'isDelete')
+	bool isDelete;
+
+	@JsonKey(name: 'productId')
+	int productId;
+
+	@JsonKey(name: 'productAddressUrl')
+	String productAddressUrl;
+
+	@JsonKey(name: 'updateBy')
+	String updateBy;
+
+	@JsonKey(name: 'updateTime')
+	int updateTime;
+
+	@JsonKey(name: 'tradeCount')
+	int tradeCount;
+
+	@JsonKey(name: 'createdBy')
+	String createdBy;
+
+	@JsonKey(name: 'createdTime')
+	int createdTime;
+
+	RecommendProductList(this.coverUrl,this.cateId,this.productAddressPassword,this.imgUrls,this.keywords,this.price,this.productTitle,this.revision,this.productStatus,this.productDesc,this.recommendId,this.cateTitle,this.isDelete,this.productId,this.productAddressUrl,this.updateBy,this.updateTime,this.tradeCount,this.createdBy,this.createdTime,);
+
+	factory RecommendProductList.fromJson(Map<String, dynamic> srcJson) => _$RecommendProductListFromJson(srcJson);
+
+	Map<String, dynamic> toJson() => _$RecommendProductListToJson(this);
+
+}

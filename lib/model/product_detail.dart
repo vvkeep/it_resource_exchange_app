@@ -46,7 +46,7 @@ part 'product_detail.g.dart';
   String productAddressPassword;
 
   @JsonKey(name: 'createdTime')
-  String createdTime;
+  int createdTime;
 
   ProductDetail(this.productId,this.cateId,this.cateTitle, this.keywords,this.imgUrls,this.coverUrl,this.price,this.productTitle,this.productDesc,this.productStatus,this.tradeCount,this.productAddressUrl,this.productAddressPassword,this.createdTime,);
 

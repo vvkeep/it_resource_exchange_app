@@ -92,11 +92,9 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
 
   Widget _buildTopInfoView() {
     var createDateStr = "未知";
-    if (productDetail.createdTime != null &&
-        productDetail.createdTime.isNotEmpty) {
+    if (productDetail.createdTime != null) {
       var format = new DateFormat('yyyy-MM-dd HH:mm');
-      int timeStamp = int.parse(productDetail.createdTime);
-      var date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
+      var date = DateTime.fromMillisecondsSinceEpoch(productDetail.createdTime);
       createDateStr = format.format(date);
     }
 

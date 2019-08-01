@@ -17,8 +17,7 @@ class GoodsItemView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var format = new DateFormat('yyyy-MM-dd HH:mm');
-    int timeStamp = int.parse(recomendProduct.createdTime);
-    var date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
+    var date = DateTime.fromMillisecondsSinceEpoch(recomendProduct.createdTime);
     var createDateStr = format.format(date);
 
     return GestureDetector(

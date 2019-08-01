@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       backgroundColor: Colors.black87,
       radius: 6.0,
       child: MaterialApp(
-        title: 'IT资源',
+        title: 'IT换换',
         theme: ThemeData(
           primarySwatch: AppColors.PrimaryColor,
           backgroundColor: Colors.white
