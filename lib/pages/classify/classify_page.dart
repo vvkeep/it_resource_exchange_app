@@ -4,6 +4,8 @@ import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
+import 'package:it_resource_exchange_app/pages/login/login_page.dart';
+import 'package:it_resource_exchange_app/pages/max_api_times_tip/max_api_times_tip_page.dart';
 
 class ClassifyPage extends StatefulWidget {
   @override
@@ -58,6 +60,12 @@ class _ClassifyPageState extends State<ClassifyPage> with SingleTickerProviderSt
        setState(() {
           _showLoading = false;
        });
+      }else if (res.status == 401) { // token 过期 重新登录
+                Navigator.pushReplacement(
+            this.context, MaterialPageRoute(builder: (context) => LoginPage()));
+      }else if (res.status == 403) { // 请求次数超过限制
+                        Navigator.pushReplacement(
+            this.context, MaterialPageRoute(builder: (context) => MaxApiTimesTipPage()));
       }
     });
   }

@@ -34,7 +34,6 @@ class _LoadingDialogState extends State<LoadingDialog> {
               size: 50.0,
             ),
           ),
-        ));
-    ;
+        ),);
   }
 }

@@ -7,6 +7,8 @@ import '../../model/product_detail.dart';
 import 'package:intl/intl.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
+import 'package:it_resource_exchange_app/pages/login/login_page.dart';
+import 'package:it_resource_exchange_app/pages/max_api_times_tip/max_api_times_tip_page.dart';
 
 class GoodsDetailPage extends StatefulWidget {
   GoodsDetailPage({Key key, this.productId}) : super(key: key);
@@ -33,6 +35,12 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
         setState(() {
           _showLoading = false;
         });
+      }else if (res.status == 401) { // token 过期 重新登录
+                Navigator.pushReplacement(
+            this.context, MaterialPageRoute(builder: (context) => LoginPage()));
+      }else if (res.status == 403) { // 请求次数超过限制
+                        Navigator.pushReplacement(
+            this.context, MaterialPageRoute(builder: (context) => MaxApiTimesTipPage()));
       }
     });
   }

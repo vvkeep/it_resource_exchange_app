@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:it_resource_exchange_app/model/base_result.dart';
+import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'interceptors/logs_interceptor.dart';
 import 'interceptors/error_interceptor.dart';
 import 'interceptors/response_Interceptor.dart';
@@ -28,12 +29,14 @@ class HttpManager {
     var type = contentType == null
         ? ContentType.parse(ContentTypeURLEncoded)
         : contentType;
+
+    Map<String, dynamic> header = {'token': UserUtils.getUserInfo().token};
     if (method == HttpMethod.GET) {
       _options =
-          Options(method: HTTPMethodValues[method.index], contentType: type);
+          Options(method: HTTPMethodValues[method.index], contentType: type, headers: header);
     } else {
       _options =
-          Options(method: HTTPMethodValues[method.index], contentType: type);
+          Options(method: HTTPMethodValues[method.index], contentType: type, headers: header);
     }
 
     Response response;
@@ -55,6 +58,15 @@ class HttpManager {
         response.statusCode = Code.NETWOEK_TIMEROUT;
         response.statusMessage = "请求超时,请稍后再试!";
       }
+
+      if (response.statusCode == 401) { // token 过期 重新登录
+        
+      }
+
+      if (response.statusCode == 403) { // 请求次数超过限制
+        
+      }
+
       response.data =
           BaseResult(null, response.statusCode, response.statusMessage);
     }

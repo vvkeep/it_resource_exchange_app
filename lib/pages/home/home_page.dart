@@ -4,10 +4,13 @@ import './goods_item_view.dart';
 import 'package:it_resource_exchange_app/pages/detail/goods_detail_page.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/home_info.dart';
-import 'package:it_resource_exchange_app/common/constant.dart' show AppColors, AppSize, APPIcons;
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:it_resource_exchange_app/common/constant.dart'
+    show AppColors, AppSize, APPIcons;
+import 'package:it_resource_exchange_app/widgets/loadingDialog.dart';
 import 'package:it_resource_exchange_app/pages/web/webview_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:it_resource_exchange_app/pages/login/login_page.dart';
+import 'package:it_resource_exchange_app/pages/max_api_times_tip/max_api_times_tip_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,19 +23,6 @@ class _HomePageState extends State<HomePage>
   List<AdvertiseList> bannerInfoList = [];
 
   bool _showLoading = true;
-
-  final _loadingContainer = Container(
-      color: Colors.white,
-      constraints: BoxConstraints.expand(),
-      child: Center(
-        child: Opacity(
-          opacity: 0.9,
-          child: SpinKitRing(
-            color: AppColors.PrimaryColor,
-            size: 50.0,
-          ),
-        ),
-      ));
 
   void initState() {
     super.initState();
@@ -50,6 +40,12 @@ class _HomePageState extends State<HomePage>
         setState(() {
           _showLoading = false;
         });
+      }else if (res.status == 401) { // token 过期 重新登录
+                Navigator.pushReplacement(
+            this.context, MaterialPageRoute(builder: (context) => LoginPage()));
+      }else if (res.status == 403) { // 请求次数超过限制
+                        Navigator.pushReplacement(
+            this.context, MaterialPageRoute(builder: (context) => MaxApiTimesTipPage()));
       }
     });
   }
@@ -68,24 +64,24 @@ class _HomePageState extends State<HomePage>
                 return CachedNetworkImage(
                   imageUrl: homeInfo.advertiseList[index].adCoverUrl,
                   placeholder: (context, url) {
-                return Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: AppColors.BackgroundColor,
-                        width: AppSize.DividerWidth),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: Center(
-                    child: Icon(
-                      APPIcons.AddImgData,
-                      color: AppColors.PrimaryColor,
-                      size: 40,
-                    ),
-                  ),
-                );
-              },
+                    return Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: AppColors.BackgroundColor,
+                            width: AppSize.DividerWidth),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: Center(
+                        child: Icon(
+                          APPIcons.AddImgData,
+                          color: AppColors.PrimaryColor,
+                          size: 40,
+                        ),
+                      ),
+                    );
+                  },
                   fit: BoxFit.cover,
                 );
               },
@@ -96,9 +92,12 @@ class _HomePageState extends State<HomePage>
               onTap: (index) {
                 AdvertiseList asvertise = homeInfo.advertiseList[index];
                 if (asvertise.adType == 1) {
-                String productId = homeInfo.advertiseList[i].adProductId;
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                          GoodsDetailPage(productId: int.parse(productId))));
+                  String productId = homeInfo.advertiseList[i].adProductId;
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GoodsDetailPage(
+                              productId: int.parse(productId))));
                 } else {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => WebviewPage(
@@ -113,7 +112,10 @@ class _HomePageState extends State<HomePage>
             recomendProduct: homeInfo.recommendProductList[i - 1],
             onPressed: () {
               int productId = homeInfo.recommendProductList[i - 1].productId;
-              Navigator.push(context, MaterialPageRoute(builder: (context) =>
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
                           GoodsDetailPage(productId: productId)));
             },
           );
@@ -125,6 +127,6 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return _showLoading ? _loadingContainer : _buildListView();
+    return _showLoading ? LoadingDialog() : _buildListView();
   }
 }
