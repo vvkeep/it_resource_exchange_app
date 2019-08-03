@@ -6,11 +6,10 @@ import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/home_info.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppColors, AppSize, APPIcons;
-import 'package:it_resource_exchange_app/widgets/loadingDialog.dart';
 import 'package:it_resource_exchange_app/pages/web/webview_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:it_resource_exchange_app/pages/login/login_page.dart';
-import 'package:it_resource_exchange_app/pages/max_api_times_tip/max_api_times_tip_page.dart';
+import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,30 +21,39 @@ class _HomePageState extends State<HomePage>
   HomeInfo homeInfo;
   List<AdvertiseList> bannerInfoList = [];
 
-  bool _showLoading = true;
+  //页面加载状态，默认为加载中
+  LoadState _layoutState = LoadState.State_Loading;
 
   void initState() {
     super.initState();
-    requestHomePageData();
+    loadData();
   }
 
   @override
   bool get wantKeepAlive => true;
 
-  requestHomePageData() async {
+  loadData() async {
     NetworkUtils.requestHomeAdvertisementsAndRecommendProductsData()
         .then((res) {
       if (res.status == 200) {
         homeInfo = HomeInfo.fromJson(res.data);
         setState(() {
-          _showLoading = false;
+          _layoutState = LoadState.State_Success;
         });
-      }else if (res.status == 401) { // token 过期 重新登录
-                Navigator.pushReplacement(
+      } else if (res.status == 401) {
+        // token 过期 重新登录
+        Navigator.pushReplacement(
             this.context, MaterialPageRoute(builder: (context) => LoginPage()));
-      }else if (res.status == 403) { // 请求次数超过限制
-                        Navigator.pushReplacement(
-            this.context, MaterialPageRoute(builder: (context) => MaxApiTimesTipPage()));
+      } else if (res.status == 403) {
+        setState(() {
+        // 请求次数超过限制
+        _layoutState = LoadState.State_Max_Api_Times;
+        });
+      }else if (res.status == -1) {
+         setState(() {
+        // 请求次数超过限制
+        _layoutState = LoadState.State_Error;
+        });
       }
     });
   }
@@ -54,7 +62,7 @@ class _HomePageState extends State<HomePage>
     return ListView.builder(
       physics: AlwaysScrollableScrollPhysics(),
       padding: EdgeInsets.all(1.0),
-      itemCount: 1 + homeInfo.recommendProductList.length,
+      itemCount: homeInfo == null ? 0 : (1 + homeInfo.recommendProductList.length),
       itemBuilder: (context, i) {
         if (i == 0) {
           return Container(
@@ -127,6 +135,15 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return _showLoading ? LoadingDialog() : _buildListView();
+    return LoadStateLayout(
+      state: _layoutState,
+      errorRetry: () {
+        setState(() {
+          _layoutState = LoadState.State_Loading;
+        });
+        this.loadData();
+      },
+      successWidget: _buildListView(),
+    );
   }
 }

@@ -13,7 +13,7 @@ import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:it_resource_exchange_app/widgets/custom_alert_dialog.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:it_resource_exchange_app/widgets/loadingDialog.dart';
+import 'package:it_resource_exchange_app/widgets/loading_dialog.dart';
 import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'package:it_resource_exchange_app/vo/new_product_vo.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

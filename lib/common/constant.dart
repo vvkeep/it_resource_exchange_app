@@ -49,8 +49,19 @@ class APPIcons {
     0xe60c,
     fontFamily: Constant.IconFontFamily,
   );
+
   static const ProfileSettingImgData = IconData(
     0xe615,
+    fontFamily: Constant.IconFontFamily,
+  );
+
+  static const EmptyData = IconData(
+    0xe643,
+    fontFamily: Constant.IconFontFamily,
+  );
+
+  static const NetworkErrorData = IconData(
+    0xe86e,
     fontFamily: Constant.IconFontFamily,
   );
 }

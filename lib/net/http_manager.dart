@@ -26,11 +26,15 @@ class HttpManager {
   request(HttpMethod method, String url, Map<String, dynamic> params,
       {ContentType contentType}) async {
     Options _options;
+    Map<String, dynamic> header;
+
     var type = contentType == null
         ? ContentType.parse(ContentTypeURLEncoded)
         : contentType;
-
-    Map<String, dynamic> header = {'token': UserUtils.getUserInfo().token};
+    if (UserUtils.isLogin()) {
+        header  = {'token': UserUtils.getUserInfo().token ?? ""};
+    }
+    
     if (method == HttpMethod.GET) {
       _options =
           Options(method: HTTPMethodValues[method.index], contentType: type, headers: header);
