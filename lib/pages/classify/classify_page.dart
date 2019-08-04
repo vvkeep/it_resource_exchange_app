@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'classify_list_view.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
-import 'package:it_resource_exchange_app/pages/login/login_page.dart';
-import 'package:it_resource_exchange_app/pages/max_api_times_tip/max_api_times_tip_page.dart';
+import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
 
 class ClassifyPage extends StatefulWidget {
   @override
@@ -16,29 +14,15 @@ class _ClassifyPageState extends State<ClassifyPage> with SingleTickerProviderSt
 
   TabController _tabController;
 
-  List<CateInfo> cateList;
+  List<CateInfo> cateList = [];
 
-  bool _showLoading = true;
-
-  final _loadingContainer = Container(
-    color:Colors.white,
-    constraints: BoxConstraints.expand(),
-    child: Center(
-        child: Opacity(
-            opacity: 0.9,
-            child: SpinKitRing(
-              color: AppColors.PrimaryColor,
-              size: 50.0,
-            ),
-        ),
-    )
-);
-
+  //页面加载状态，默认为加载中
+  LoadState _layoutState = LoadState.State_Loading;
 
   @override
   void initState() {
     super.initState();
-    requsetCateListData();
+    loadData();
   }
 
   @override
@@ -50,7 +34,7 @@ class _ClassifyPageState extends State<ClassifyPage> with SingleTickerProviderSt
   @override
   bool get wantKeepAlive => true;
 
-  requsetCateListData() {
+  loadData() {
     NetworkUtils.requestCategoryListData().then((res)  {
       if (res.status == 200) {
        cateList = (res.data as List).map((m) =>CateInfo.fromJson(m)).toList();
@@ -58,14 +42,12 @@ class _ClassifyPageState extends State<ClassifyPage> with SingleTickerProviderSt
       cateList.insert(0, CateInfo(null, 0, "全部", 0));
        _tabController = TabController(vsync: this, length: cateList.length);
        setState(() {
-          _showLoading = false;
+          _layoutState = LoadState.State_Success;
        });
-      }else if (res.status == 401) { // token 过期 重新登录
-                Navigator.pushReplacement(
-            this.context, MaterialPageRoute(builder: (context) => LoginPage()));
-      }else if (res.status == 403) { // 请求次数超过限制
-                        Navigator.pushReplacement(
-            this.context, MaterialPageRoute(builder: (context) => MaxApiTimesTipPage()));
+      }else {
+        setState(() {
+          _layoutState = loadStateByErrorCode(res.status);
+        });
       }
     });
   }
@@ -108,6 +90,15 @@ class _ClassifyPageState extends State<ClassifyPage> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return _showLoading ? _loadingContainer : _buildTabPageView();
+    return LoadStateLayout(
+      state: _layoutState,
+      errorRetry: () {
+        setState(() {
+          _layoutState = LoadState.State_Loading;
+        });
+        this.loadData();
+      },
+      successWidget: _buildTabPageView(),
+    );
   }
 }

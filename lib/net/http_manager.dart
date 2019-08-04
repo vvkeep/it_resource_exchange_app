@@ -62,15 +62,6 @@ class HttpManager {
         response.statusCode = Code.NETWOEK_TIMEROUT;
         response.statusMessage = "请求超时,请稍后再试!";
       }
-
-      if (response.statusCode == 401) { // token 过期 重新登录
-        
-      }
-
-      if (response.statusCode == 403) { // 请求次数超过限制
-        
-      }
-
       response.data =
           BaseResult(null, response.statusCode, response.statusMessage);
     }

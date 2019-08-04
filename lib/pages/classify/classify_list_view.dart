@@ -8,6 +8,8 @@ import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/page_result.dart';
 import "package:it_resource_exchange_app/model/home_info.dart";
 import '../detail/goods_detail_page.dart';
+import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
+
 class ClassifyListView extends StatefulWidget {
   final CateInfo cate;
 
@@ -19,7 +21,9 @@ class ClassifyListView extends StatefulWidget {
 
 class _ClassifyListViewState extends State<ClassifyListView>
     with AutomaticKeepAliveClientMixin {
-  bool _isLoading = true;
+  //页面加载状态，默认为加载中
+  LoadState _layoutState = LoadState.State_Loading;
+
   RefreshController _refreshController;
 
   PageResult pageResult;
@@ -29,7 +33,7 @@ class _ClassifyListViewState extends State<ClassifyListView>
   void initState() {
     super.initState();
     _refreshController = RefreshController();
-    _getCategoryData();
+    loadData();
   }
 
   @override
@@ -43,10 +47,10 @@ class _ClassifyListViewState extends State<ClassifyListView>
       header: buildDefaultHeader(),
       footer: buildDefaultFooter(),
       onRefresh: () {
-        _getCategoryData(loadMore: false);
+        loadData(loadMore: false);
       },
       onLoading: () {
-        _getCategoryData(loadMore: true);
+        loadData(loadMore: true);
       },
       child: ListView.builder(
         itemCount: productList.length,
@@ -55,7 +59,11 @@ class _ClassifyListViewState extends State<ClassifyListView>
             recomendProduct: productList[index],
             onPressed: () {
               int productId = productList[index].productId;
-              Navigator.push(context, new MaterialPageRoute(builder: (context) => GoodsDetailPage(productId: productId)));
+              Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) =>
+                          GoodsDetailPage(productId: productId)));
             },
           );
         },
@@ -74,11 +82,20 @@ class _ClassifyListViewState extends State<ClassifyListView>
     super.build(context);
     return Container(
       color: Colors.white,
-      child: _isLoading ? _buildListLoadingView() : _buildRefreshListView(),
+      child: LoadStateLayout(
+        state: _layoutState,
+        errorRetry: () {
+          setState(() {
+            _layoutState = LoadState.State_Loading;
+          });
+          this.loadData();
+        },
+        successWidget: _buildRefreshListView(),
+      ),
     );
   }
 
-  void _getCategoryData({bool loadMore = false}) {
+  void loadData({bool loadMore = false}) {
     int page = (pageResult == null || loadMore == false)
         ? 1
         : pageResult.currentPage + 1;
@@ -96,26 +113,34 @@ class _ClassifyListViewState extends State<ClassifyListView>
           } else {
             _refreshController.loadNoData();
           }
+          setState(() {});
         } else {
-          productList = pageResult.items
-              .map((m) => RecommendProductList.fromJson(m))
-              .toList();
-          _refreshController.refreshCompleted();
+          if (pageResult.items.length == 0) {
+            setState(() {
+              _layoutState = LoadState.State_Empty;
+            });
+          } else {
+            productList = pageResult.items
+                .map((m) => RecommendProductList.fromJson(m))
+                .toList();
+            _refreshController.refreshCompleted();
+            setState(() {
+              _layoutState = LoadState.State_Success;
+            });
+          }
         }
       } else {
         //请求失败
         if (loadMore) {
           _refreshController.loadComplete();
+          setState(() {});
         } else {
           _refreshController.refreshFailed();
+          setState(() {
+            _layoutState = loadStateByErrorCode(res.status);
+          });
         }
       }
-
-      if (!mounted) return;
-
-      setState(() {
-        _isLoading = false;
-      });
     });
   }
 }

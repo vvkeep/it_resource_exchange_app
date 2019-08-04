@@ -2,9 +2,32 @@ import 'package:flutter/material.dart';
 import './loading_dialog.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppColors, APPIcons;
+import 'package:it_resource_exchange_app/pages/login/login_page.dart';
+
 
 //四种视图状态
-enum LoadState { State_Success, State_Error, State_Loading, State_Empty, State_Max_Api_Times }
+enum LoadState { State_Success, State_Error, State_Loading, State_Empty, State_Max_Api_Times, State_Token_Exprie }
+
+LoadState loadStateByErrorCode(int code) {
+  LoadState state;
+
+  switch (code) {
+    case 401:
+      state = LoadState.State_Token_Exprie;
+      break;
+    case 403:
+      state = LoadState.State_Max_Api_Times;
+      break;
+    case -1: //网络错误
+    case -2:
+      state = LoadState.State_Error;
+      break;
+    default:
+      assert(false,"网络请求返回未知错误状态$code");
+      break;
+  }
+  return state;
+}
 
 ///根据不同状态来展示不同的视图
 class LoadStateLayout extends StatefulWidget {
@@ -49,10 +72,12 @@ class _LoadStateLayoutState extends State<LoadStateLayout> {
       case LoadState.State_Empty:
         return _emptyView;
         break;
-      case LoadState.State_Empty:
+      case LoadState.State_Max_Api_Times:
         return _maxApiTimesView;
         break;
-
+      case LoadState.State_Token_Exprie:
+        return _tokenExpireView;
+        break;
       default:
         return null;
     }
@@ -85,6 +110,35 @@ class _LoadStateLayoutState extends State<LoadStateLayout> {
     );
   }
 
+  ///toekn 过期视图
+  Widget get _tokenExpireView {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(
+            APPIcons.NetworkErrorData,
+            color: AppColors.PrimaryColor,
+            size: 100,
+          ),
+          Text("用户登录凭证过期, 点击重新登录"),
+          RaisedButton(
+            color: Color(0xffbc2929),
+            onPressed: () {
+              // token 过期 重新登录
+              Navigator.pushReplacement(this.context, MaterialPageRoute(builder: (context) => LoginPage()));
+            },
+            child: Text(
+              '登录',
+              style: TextStyle(color: Colors.white),
+            ),
+          )
+        ],
+      ),
+    );
+  }
   ///数据为空的视图
   Widget get _emptyView {
     return Container(

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
 import 'package:it_resource_exchange_app/pages/create/new_goods_page.dart';
 import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'package:it_resource_exchange_app/model/product_detail.dart';
 import './my_product_item_view.dart';
-import 'package:it_resource_exchange_app/vo/new_product_vo.dart';
+import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
 
 class MyProductListPage extends StatefulWidget {
   @override
@@ -14,36 +12,27 @@ class MyProductListPage extends StatefulWidget {
 }
 
 class _MyProductListPageState extends State<MyProductListPage> {
-  bool _showLoading = true;
-
-  final _loadingContainer = Container(
-      color: Colors.white,
-      constraints: BoxConstraints.expand(),
-      child: Center(
-        child: Opacity(
-          opacity: 0.9,
-          child: SpinKitRing(
-            color: AppColors.PrimaryColor,
-            size: 50.0,
-          ),
-        ),
-      ));
-
+  //页面加载状态，默认为加载中
+  LoadState _layoutState = LoadState.State_Loading;
   List<ProductDetail> productList = [];
 
   void initState() {
     super.initState();
-    requsetMyProductListData();
+    loadData();
   }
 
-  requsetMyProductListData() {
+  loadData() {
     var userId = UserUtils.getUserInfo().userId;
     NetworkUtils.requestMyProductListData(userId).then((res) {
       if (res.status == 200) {
         productList =
             (res.data as List).map((m) => ProductDetail.fromJson(m)).toList();
         setState(() {
-          _showLoading = false;
+          _layoutState = LoadState.State_Success;
+        });
+      } else {
+        setState(() {
+          _layoutState = loadStateByErrorCode(res.status);
         });
       }
     });
@@ -57,13 +46,19 @@ class _MyProductListPageState extends State<MyProductListPage> {
           product: productList[index],
           onPressed: () {
             ProductDetail product = productList[index];
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => NewGoodsPage(productId: product.productId, completeCallback: () {
-                  this.requsetMyProductListData();
-                  setState(() {
-                    this._showLoading = true;
-                  });
-                },)));
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => NewGoodsPage(
+                  productId: product.productId,
+                  completeCallback: () {
+                    this.loadData();
+                    setState(() {
+                      _layoutState = LoadState.State_Loading;
+                    });
+                  },
+                ),
+              ),
+            );
           },
         );
       },
@@ -73,17 +68,27 @@ class _MyProductListPageState extends State<MyProductListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(
-            "我的资源",
-            style: TextStyle(color: Colors.white),
-          ),
-          elevation: 0.0,
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(
+          "我的资源",
+          style: TextStyle(color: Colors.white),
         ),
-        body: _showLoading ? _loadingContainer : _buildListView());
+        elevation: 0.0,
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+      ),
+      body: LoadStateLayout(
+        state: _layoutState,
+        errorRetry: () {
+          setState(() {
+            _layoutState = LoadState.State_Loading;
+          });
+          this.loadData();
+        },
+        successWidget: _buildListView(),
+      ),
+    );
   }
 }

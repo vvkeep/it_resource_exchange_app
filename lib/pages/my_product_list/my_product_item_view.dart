@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppSize, AppColors;
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import '../../model/product_detail.dart';
-import 'package:intl/intl.dart';
-import 'package:it_resource_exchange_app/utils/net_image_cache_manager.dart';
 
 
 class MyProductItemView extends StatelessWidget {

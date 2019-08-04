@@ -16,7 +16,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:it_resource_exchange_app/widgets/loading_dialog.dart';
 import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'package:it_resource_exchange_app/vo/new_product_vo.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
 
 class NewGoodsPage extends StatefulWidget {
   NewGoodsPage({Key key, this.productId, this.completeCallback})
@@ -37,25 +37,16 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
 
   Function _callBackFunction;
 
-
-  bool _showLoading = true;
-
-  final _loadingContainer = Container(
-      color: Colors.white,
-      constraints: BoxConstraints.expand(),
-      child: Center(
-        child: Opacity(
-          opacity: 0.9,
-          child: SpinKitRing(
-            color: AppColors.PrimaryColor,
-            size: 50.0,
-          ),
-        ),
-      ));
+  //页面加载状态，默认为加载中
+  LoadState _layoutState = LoadState.State_Loading;
 
   @override
   void initState() {
     super.initState();
+    loadData();
+  }
+
+  loadData() {
     if (this.widget.productId == null) {
       requsetCateListData();
     } else {
@@ -103,7 +94,11 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
         }
 
         setState(() {
-          this._showLoading = false;
+          _layoutState = LoadState.State_Success;
+        });
+      } else {
+        setState(() {
+          _layoutState = loadStateByErrorCode(productDetailRes.status);
         });
       }
     }));
@@ -114,12 +109,16 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
       if (res.status == 200 && this.mounted) {
         cateList = (res.data as List).map((m) => CateInfo.fromJson(m)).toList();
         menuItemList = cateList.map((cateInfo) {
-            return DropdownMenuItem(
-                value: cateInfo, child: Text(cateInfo.cateTitle));
-          }).toList();
+          return DropdownMenuItem(
+              value: cateInfo, child: Text(cateInfo.cateTitle));
+        }).toList();
 
         setState(() {
-         this._showLoading = false;
+          _layoutState = LoadState.State_Success;
+        });
+      } else {
+        setState(() {
+          _layoutState = loadStateByErrorCode(res.status);
         });
       }
     });
@@ -385,34 +384,33 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
   @override
   Widget build(BuildContext context) {
     var body = GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(height: 8),
-                _buildChooseCategoryView(),
-                _buildTitleField(),
-                _buildPriceField(),
-                _buildResourceUrlField(),
-                _buildResourcePasswordField(),
-                SizedBox(height: 10),
-                _buildDescField(),
-                SizedBox(height: 18),
-                Text('提示:默认使用第一张图作为教程的封面'),
-                SizedBox(height: 5),
-                _buildPreviewWidget(),
-                SizedBox(height: 50),
-              ],
-            ),
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 8),
+              _buildChooseCategoryView(),
+              _buildTitleField(),
+              _buildPriceField(),
+              _buildResourceUrlField(),
+              _buildResourcePasswordField(),
+              SizedBox(height: 10),
+              _buildDescField(),
+              SizedBox(height: 18),
+              Text('提示:默认使用第一张图作为教程的封面'),
+              SizedBox(height: 5),
+              _buildPreviewWidget(),
+              SizedBox(height: 50),
+            ],
           ),
         ),
-      );
-
+      ),
+    );
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -444,7 +442,16 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
                       });
                 }),
           ]),
-      body: _showLoading ? _loadingContainer : body
+      body: LoadStateLayout(
+        state: _layoutState,
+        errorRetry: () {
+          setState(() {
+            _layoutState = LoadState.State_Loading;
+          });
+          this.loadData();
+        },
+        successWidget: body,
+      ),
     );
   }
 }

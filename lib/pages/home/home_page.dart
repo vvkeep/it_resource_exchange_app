@@ -8,7 +8,6 @@ import 'package:it_resource_exchange_app/common/constant.dart'
     show AppColors, AppSize, APPIcons;
 import 'package:it_resource_exchange_app/pages/web/webview_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:it_resource_exchange_app/pages/login/login_page.dart';
 import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -40,19 +39,9 @@ class _HomePageState extends State<HomePage>
         setState(() {
           _layoutState = LoadState.State_Success;
         });
-      } else if (res.status == 401) {
-        // token 过期 重新登录
-        Navigator.pushReplacement(
-            this.context, MaterialPageRoute(builder: (context) => LoginPage()));
-      } else if (res.status == 403) {
-        setState(() {
-        // 请求次数超过限制
-        _layoutState = LoadState.State_Max_Api_Times;
-        });
-      }else if (res.status == -1) {
+      } else  {
          setState(() {
-        // 请求次数超过限制
-        _layoutState = LoadState.State_Error;
+          _layoutState = loadStateByErrorCode(res.status);
         });
       }
     });

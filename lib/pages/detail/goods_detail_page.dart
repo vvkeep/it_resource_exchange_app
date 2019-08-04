@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import '../../model/product_detail.dart';
 import 'package:intl/intl.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
-import 'package:it_resource_exchange_app/pages/login/login_page.dart';
-import 'package:it_resource_exchange_app/pages/max_api_times_tip/max_api_times_tip_page.dart';
+import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
 
 class GoodsDetailPage extends StatefulWidget {
   GoodsDetailPage({Key key, this.productId}) : super(key: key);
@@ -18,45 +16,31 @@ class GoodsDetailPage extends StatefulWidget {
 }
 
 class _GoodsDetailPageState extends State<GoodsDetailPage> {
-  bool _showLoading = true;
+  //页面加载状态，默认为加载中
+  LoadState _layoutState = LoadState.State_Loading;
 
   ProductDetail productDetail;
 
   void initState() {
     super.initState();
-    requestGoodsDetailData();
+    loadData();
   }
 
-  requestGoodsDetailData() async {
+  loadData() async {
     NetworkUtils.requestProductDetailByProductId(this.widget.productId)
         .then((res) {
       if (res.status == 200) {
         productDetail = ProductDetail.fromJson(res.data);
         setState(() {
-          _showLoading = false;
+          _layoutState = LoadState.State_Success;
         });
-      }else if (res.status == 401) { // token 过期 重新登录
-                Navigator.pushReplacement(
-            this.context, MaterialPageRoute(builder: (context) => LoginPage()));
-      }else if (res.status == 403) { // 请求次数超过限制
-                        Navigator.pushReplacement(
-            this.context, MaterialPageRoute(builder: (context) => MaxApiTimesTipPage()));
+      } else {
+        setState(() {
+          _layoutState = loadStateByErrorCode(res.status);
+        });
       }
     });
   }
-
-  final _loadingContainer = Container(
-      color: Colors.white,
-      constraints: BoxConstraints.expand(),
-      child: Center(
-        child: Opacity(
-          opacity: 0.9,
-          child: SpinKitRing(
-            color: AppColors.PrimaryColor,
-            size: 50.0,
-          ),
-        ),
-      ));
 
   Widget _buildTagView(String text) {
     return Container(
@@ -70,7 +54,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
 
   Widget _buildPriceView() {
     // 保留两位小数
-    String price = productDetail.price.toStringAsFixed(2);
+    String price = productDetail?.price?.toStringAsFixed(2) ?? "";
     Row priceRow = Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -84,7 +68,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
     );
 
     List<Widget> widgets = [priceRow];
-    if (productDetail.keywords != null && productDetail.keywords.isNotEmpty) {
+    if (productDetail?.keywords != null && productDetail.keywords.isNotEmpty) {
       List<String> tags = productDetail.keywords.split(',');
       List<Widget> tagWidgets = tags.map((tag) => _buildTagView(tag)).toList();
       widgets.addAll(tagWidgets);
@@ -100,7 +84,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
 
   Widget _buildTopInfoView() {
     var createDateStr = "未知";
-    if (productDetail.createdTime != null) {
+    if (productDetail?.createdTime != null) {
       var format = new DateFormat('yyyy-MM-dd HH:mm');
       var date = DateTime.fromMillisecondsSinceEpoch(productDetail.createdTime);
       createDateStr = format.format(date);
@@ -111,7 +95,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(productDetail.productTitle,
+          Text(productDetail?.productTitle ?? "",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
@@ -133,7 +117,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
       child: Padding(
         padding: EdgeInsets.only(bottom: 8),
         child: Text(
-          productDetail.productDesc,
+          productDetail?.productDesc?.trim() ?? "",
           textAlign: TextAlign.left,
           style: TextStyle(fontSize: 16),
         ),
@@ -144,7 +128,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
   Widget _buildImgsView() {
     List<Widget> imgWidgets = [];
 
-    if (productDetail.imgUrls != null && productDetail.imgUrls.isNotEmpty) {
+    if (productDetail?.imgUrls != null) {
       List<String> imgUrls = productDetail.imgUrls.split(',');
       imgWidgets = imgUrls.map((imgUrl) {
         return Container(
@@ -219,17 +203,15 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
 
   Widget _buildResourceView() {
     List<Widget> itemWidgets = [Divider(color: AppColors.DividerColor)];
-    if (productDetail.productAddressUrl != null &&
-        productDetail.productAddressUrl.isNotEmpty) {
+    if (productDetail?.productAddressUrl != null) {
       itemWidgets.add(
-          _buildResourceItemView("资源地址:", productDetail.productAddressUrl));
+          _buildResourceItemView("资源地址:", productDetail?.productAddressUrl ?? ""));
       itemWidgets.add(SizedBox(height: 10));
     }
 
-    if (productDetail.productAddressPassword != null &&
-        productDetail.productAddressPassword.isNotEmpty) {
+    if (productDetail?.productAddressPassword != null) {
       itemWidgets.add(_buildResourceItemView(
-          "资源密码:", productDetail.productAddressPassword));
+          "资源密码:", productDetail?.productAddressPassword ?? ""));
       itemWidgets.add(SizedBox(height: 6));
     }
 
@@ -275,23 +257,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget contentBody;
-    if (_showLoading) {
-      contentBody = _loadingContainer;
-    } else {
-      contentBody = SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            _buildTopInfoView(),
-            _buildGoodsDescTextView(),
-            _buildImgsView(),
-            _buildResourceView(),
-            SizedBox(height: MediaQuery.of(context).padding.bottom)
-          ],
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -304,7 +269,26 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
           color: Colors.white,
         ),
       ),
-      body: contentBody,
+      body: LoadStateLayout(
+        state: _layoutState,
+        errorRetry: () {
+          setState(() {
+            _layoutState = LoadState.State_Loading;
+          });
+          this.loadData();
+        },
+        successWidget: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              _buildTopInfoView(),
+              _buildGoodsDescTextView(),
+              _buildImgsView(),
+              _buildResourceView(),
+              SizedBox(height: MediaQuery.of(context).padding.bottom)
+            ],
+          ),
+        ),
+      ),
       // bottomNavigationBar: _buildBottomBar(),
     );
   }
