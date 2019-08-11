@@ -5,8 +5,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../model/home_info.dart';
 import 'package:intl/intl.dart';
 
-class GoodsItemView extends StatelessWidget {
-  const GoodsItemView({Key key, this.recomendProduct, this.onPressed})
+class ClassifyItemView extends StatelessWidget {
+  const ClassifyItemView({Key key, this.recomendProduct, this.onPressed})
       : assert(recomendProduct != null),
         super(key: key);
 
@@ -42,8 +42,7 @@ class GoodsItemView extends StatelessWidget {
                       padding: EdgeInsets.only(top: 10.0),
                       child: Text(
                         recomendProduct.productTitle,
-                        style: TextStyle(
-                            fontSize: 15.0, color: AppColors.DarkTextColor),
+                        style: TextStyle(fontSize: 15.0, color: AppColors.DarkTextColor),
                       ),
                     ),
                     Container(
@@ -51,14 +50,24 @@ class GoodsItemView extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(recomendProduct?.cateTitle ?? '',
-                              style: TextStyle(
-                                  color: AppColors.LightTextColor,
-                                  fontSize: 12.0)),
                           Text(createDateStr,
                               style: TextStyle(
                                   color: AppColors.LightTextColor,
                                   fontSize: 12.0)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              // Text(
+                              //   '0',
+                              //   style: TextStyle(
+                              //       color: AppColors.LightTextColor,
+                              //       fontSize: 12.0),
+                              // ),
+                              // SizedBox(width: 5.0),
+                              Image.asset('./assets/imgs/ic_comment.png',
+                                  width: 16.0, height: 16.0),
+                            ],
+                          ),
                         ],
                       ),
                     )
@@ -71,8 +80,7 @@ class GoodsItemView extends StatelessWidget {
                 height: 80.0,
                 child: CachedNetworkImage(
                   imageUrl: recomendProduct.coverUrl,
-                  placeholder: (context, url) =>
-                      Image.asset('./assets/imgs/img_default.png'),
+                  placeholder: (context, url) => Image.asset('./assets/imgs/img_default.png'),
                   fit: BoxFit.cover,
                 ),
               ),

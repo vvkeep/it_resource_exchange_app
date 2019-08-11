@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:it_resource_exchange_app/widgets/indicator_factory.dart';
-import 'package:it_resource_exchange_app/pages/home/goods_item_view.dart';
+import 'package:it_resource_exchange_app/pages/classify/classify_item_view.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/page_result.dart';
@@ -55,7 +55,7 @@ class _ClassifyListViewState extends State<ClassifyListView>
       child: ListView.builder(
         itemCount: productList.length,
         itemBuilder: (context, index) {
-          return GoodsItemView(
+          return ClassifyItemView(
             recomendProduct: productList[index],
             onPressed: () {
               int productId = productList[index].productId;
