@@ -326,7 +326,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
           this.saveProductAction(fileNameList);
         }
       } else {
-        imgVo.asset.requestOriginal(quality: 50).then((ByteData data) {
+        imgVo.asset.requestOriginal(quality: 45).then((ByteData data) {
           return data.buffer.asUint8List();
         }).then((List<int> data) async {
           BaseResult result = await NetworkUtils.onUpload(data);
