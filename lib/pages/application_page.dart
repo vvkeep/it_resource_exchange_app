@@ -53,6 +53,7 @@ class _ApplicationPageState extends State<ApplicationPage> with SingleTickerProv
         appBar: AppBar(
           title: Text(this.title, style: TextStyle(color: Colors.white),),
           elevation: 0.0,
+          brightness: Brightness.light,
         ),
         body: PageView(
           physics: NeverScrollableScrollPhysics(), /// 去除滑动手势

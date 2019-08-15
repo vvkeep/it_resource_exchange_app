@@ -30,7 +30,7 @@ dependencies:
   flutter_spinkit: "^3.1.0"
   oktoast: ^2.1.9
   image_picker: ^0.6.0+10
-  multi_image_picker: ^4.3.5  
+  multi_image_picker: ^4.5.0+2
   flutter_webview_plugin: ^0.3.5
   flutter_swiper : ^1.1.6
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
 import './pages/application_page.dart';
 import 'package:oktoast/oktoast.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       radius: 6.0,
       child: MaterialApp(
         title: 'IT换换',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: AppColors.PrimaryColor,
           backgroundColor: Colors.white

@@ -420,6 +420,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
             style: TextStyle(color: Colors.white),
           ),
           elevation: 0.0,
+          brightness: Brightness.light,
           iconTheme: IconThemeData(
             color: Colors.white,
           ),

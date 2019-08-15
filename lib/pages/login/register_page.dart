@@ -173,6 +173,7 @@ class _RegisterPageState extends State<RegisterPage> {
         appBar: AppBar(
             title: Text("账号注册", style: TextStyle(color: Colors.white)),
             elevation: 0.0,
+            brightness: Brightness.light,
             iconTheme: IconThemeData(
               color: Colors.white,
             )),

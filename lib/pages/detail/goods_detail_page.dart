@@ -265,6 +265,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
           style: TextStyle(color: Colors.white),
         ),
         elevation: 0.0,
+        brightness: Brightness.light,
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
