@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// 颜色
 class AppColors {
-  static const PrimaryColor = Color(0xff092045);
+  static const PrimaryColor = Color(0xff2944CC);
   static const DividerColor = Color(0xffd9d9d9);
   static const ArrowNormalColor = Color(0xff999999);
   static const BackgroundColor = Color(0xffebebeb);
