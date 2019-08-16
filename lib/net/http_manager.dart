@@ -32,21 +32,26 @@ class HttpManager {
         ? ContentType.parse(ContentTypeURLEncoded)
         : contentType;
     if (UserUtils.isLogin()) {
-        header  = {'token': UserUtils.getUserInfo().token ?? ""};
+      header = {'token': UserUtils.getUserInfo().token ?? ""};
     }
-    
+
     if (method == HttpMethod.GET) {
-      _options =
-          Options(method: HTTPMethodValues[method.index], contentType: type, headers: header);
+      _options = Options(
+          method: HTTPMethodValues[method.index],
+          contentType: type,
+          headers: header);
     } else {
-      _options =
-          Options(method: HTTPMethodValues[method.index], contentType: type, headers: header);
+      _options = Options(
+          method: HTTPMethodValues[method.index],
+          contentType: type,
+          headers: header);
     }
 
     Response response;
     try {
       if (method == HttpMethod.GET) {
-        response = await _dio.get(url, queryParameters: params, options: _options);
+        response =
+            await _dio.get(url, queryParameters: params, options: _options);
       } else {
         response = await _dio.post(url, data: params, options: _options);
       }
@@ -73,9 +78,14 @@ class HttpManager {
     UploadFileInfo file = UploadFileInfo.fromBytes(data, 'fileName');
     FormData formData = FormData.from({'file': file});
 
+    Map<String, dynamic> header = {
+      'token': UserUtils.getUserInfo().token ?? ""
+    };
+
     Response response;
     try {
-      response = await _dio.put(url, data: formData);
+      response = await _dio.put(url,
+          data: formData, options: Options(headers: header));
     } on DioError catch (e) {
       if (e.response != null) {
         response = e.response;
@@ -89,7 +99,7 @@ class HttpManager {
         response.statusMessage = "请求超时,请稍后再试!";
       }
       response.data =
-          BaseResult(null, response.statusCode, response.statusMessage);
+          BaseResult(null, response.statusCode, response.data.message);
     }
 
     return response.data;

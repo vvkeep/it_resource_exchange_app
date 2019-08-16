@@ -75,7 +75,6 @@ class _MyProductListPageState extends State<MyProductListPage> {
           style: TextStyle(color: Colors.white),
         ),
         elevation: 0.0,
-        brightness: Brightness.light,
         iconTheme: IconThemeData(
           color: Colors.white,
         ),

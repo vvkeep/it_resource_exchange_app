@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 /// 颜色
 class AppColors {
-  static const PrimaryColor = Colors.cyan;
+  static const PrimaryColor = Color(0xff092045);
   static const DividerColor = Color(0xffd9d9d9);
   static const ArrowNormalColor = Color(0xff999999);
   static const BackgroundColor = Color(0xffebebeb);
   static const DarkTextColor = Color(0xFF333333);
   static const MidTextColor = Color(0xFF666666);
   static const LightTextColor = Color(0xFF999999);
+  static const DisableTextColor = Color(0xFFDCDCDC);
 }
 
 class AppSize {

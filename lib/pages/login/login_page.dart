@@ -98,13 +98,9 @@ class _LoginPageState extends State<LoginPage> {
         padding: new EdgeInsets.fromLTRB(150.0, 15.0, 150.0, 15.0),
         color: AppColors.PrimaryColor,
         textColor: Colors.white,
-        disabledColor: AppColors.PrimaryColor[100],
-        onPressed: () {
-          if (_accountNum.isEmpty || _password.isEmpty) {
-            showToast("请输入用户名和密码");
-          }else {
+        disabledColor: AppColors.DisableTextColor,
+        onPressed: (_accountNum.isEmpty || _password.isEmpty) ? null : (){
             login();
-          }
         },
         child: new Text(
           '登 录',
@@ -141,9 +137,9 @@ class _LoginPageState extends State<LoginPage> {
         mainAxisAlignment: MainAxisAlignment.center, //子组件的排列方式为主轴两端对齐
         children: <Widget>[
           new Image.asset(
-            'assets/imgs/ic_collections.png',
-            width: 60.0,
-            height: 60.0,
+            './assets/imgs/app_icon.png',
+            width: 88.0,
+            height: 88.0,
           ),
         ],
       ),

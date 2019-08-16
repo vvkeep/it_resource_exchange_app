@@ -47,13 +47,10 @@ class _ApplicationPageState extends State<ApplicationPage> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(primaryColor: AppColors.PrimaryColor),
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text(this.title, style: TextStyle(color: Colors.white),),
           elevation: 0.0,
-          brightness: Brightness.light,
         ),
         body: PageView(
           physics: NeverScrollableScrollPhysics(), /// 去除滑动手势
@@ -77,8 +74,7 @@ class _ApplicationPageState extends State<ApplicationPage> with SingleTickerProv
            onTap(index);
          },
        ), 
-      ),
-    );
+      );
   }
 
   void onTap(int index) {

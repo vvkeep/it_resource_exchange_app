@@ -35,7 +35,6 @@ class _WebviewPageState extends State<WebviewPage> {
       appBar: AppBar(
         title: Text(this.widget.title, style: TextStyle(color: Colors.white)),
         elevation: 0.0,
-        brightness: Brightness.light,
         iconTheme: IconThemeData(
           color: Colors.white,
         ),

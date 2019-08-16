@@ -37,9 +37,9 @@ class _RegisterPageState extends State<RegisterPage> {
         mainAxisAlignment: MainAxisAlignment.center, //子组件的排列方式为主轴两端对齐
         children: <Widget>[
           new Image.asset(
-            'assets/imgs/ic_collections.png',
-            width: 60.0,
-            height: 60.0,
+            './assets/imgs/app_icon.png',
+            width: 88.0,
+            height: 88.0,
           ),
         ],
       ),
@@ -146,7 +146,7 @@ class _RegisterPageState extends State<RegisterPage> {
         padding: new EdgeInsets.fromLTRB(150.0, 15.0, 150.0, 15.0),
         color: AppColors.PrimaryColor,
         textColor: Colors.white,
-        disabledColor: AppColors.PrimaryColor[100],
+        disabledColor: AppColors.DisableTextColor,
         onPressed:
             (_accountNum.isEmpty || _password.isEmpty || _password2.isEmpty)
                 ? null
@@ -173,7 +173,6 @@ class _RegisterPageState extends State<RegisterPage> {
         appBar: AppBar(
             title: Text("账号注册", style: TextStyle(color: Colors.white)),
             elevation: 0.0,
-            brightness: Brightness.light,
             iconTheme: IconThemeData(
               color: Colors.white,
             )),

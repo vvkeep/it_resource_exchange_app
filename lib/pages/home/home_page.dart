@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage>
               onTap: (index) {
                 AdvertiseList asvertise = homeInfo.advertiseList[index];
                 if (asvertise.adType == 1) {
-                  String productId = homeInfo.advertiseList[i].adProductId;
+                  String productId = homeInfo.advertiseList[index].adProductId;
                   Navigator.push(
                       context,
                       MaterialPageRoute(

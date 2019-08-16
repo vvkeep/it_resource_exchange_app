@@ -41,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: EdgeInsets.symmetric(vertical: 12),
         color: AppColors.PrimaryColor,
         textColor: Colors.white,
-        disabledColor: AppColors.PrimaryColor[100],
+        disabledColor: AppColors.DisableTextColor,
         onPressed: () {
           showDialog<Null>(
             context: context,
