@@ -3,6 +3,7 @@ import 'package:it_resource_exchange_app/model/cate_info.dart';
 
 class NewProductImgVo extends Object {
   String url;
+  String path;
   Asset asset;
 
   NewProductImgVo({this.url, this.asset});

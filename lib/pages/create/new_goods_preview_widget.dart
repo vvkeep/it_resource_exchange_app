@@ -75,31 +75,29 @@ class _NewGoodsPreviewWidgetState extends State<NewGoodsPreviewWidget> {
 
       Widget imgWidget;
       if (imgVo.url == null) {
-        imgWidget = AssetThumb(
-            asset: imgVo.asset,
-            width: itemWidth.toInt(),
-            height: itemWidth.toInt());
+        imgWidget = Image.memory(imgVo.asset.thumbData.buffer.asUint8List(),
+            fit: BoxFit.cover, gaplessPlayback: true);
       } else {
         imgWidget = CachedNetworkImage(
           imageUrl: imgVo.url,
           placeholder: (context, url) {
             return Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: AppColors.BackgroundColor,
-                        width: AppSize.DividerWidth),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                  width: itemWidth.toInt().toDouble(),
-                  height: itemWidth.toInt().toDouble(),
-                  child: Center(
-                    child: Icon(
-                      APPIcons.AddImgData,
-                      color: AppColors.PrimaryColor,
-                      size: 25,
-                    ),
-                  ),
-                );
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: AppColors.BackgroundColor,
+                    width: AppSize.DividerWidth),
+                borderRadius: BorderRadius.circular(2),
+              ),
+              width: itemWidth.toInt().toDouble(),
+              height: itemWidth.toInt().toDouble(),
+              child: Center(
+                child: Icon(
+                  APPIcons.AddImgData,
+                  color: AppColors.PrimaryColor,
+                  size: 25,
+                ),
+              ),
+            );
           },
           fit: BoxFit.cover,
           height: itemWidth.toInt().toDouble(),

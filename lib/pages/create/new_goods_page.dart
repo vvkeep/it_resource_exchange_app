@@ -7,6 +7,7 @@ import 'package:it_resource_exchange_app/common/constant.dart'
 import 'package:it_resource_exchange_app/model/base_result.dart';
 import 'package:it_resource_exchange_app/model/product_detail.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+
 import 'new_goods_text_field.dart';
 import 'new_goods_preview_widget.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
@@ -326,7 +327,7 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
           this.saveProductAction(fileNameList);
         }
       } else {
-        imgVo.asset.requestOriginal(quality: 45).then((ByteData data) {
+        imgVo.asset.getByteData(quality: 40).then((ByteData data) {
           return data.buffer.asUint8List();
         }).then((List<int> data) async {
           BaseResult result = await NetworkUtils.onUpload(data);
