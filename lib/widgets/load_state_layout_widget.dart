@@ -1,9 +1,10 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:it_resource_exchange_app/route/it_router.dart';
+import 'package:it_resource_exchange_app/route/routes.dart';
 import './loading_dialog.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppColors, APPIcons;
-import 'package:it_resource_exchange_app/pages/login/login_page.dart';
-
 
 //四种视图状态
 enum LoadState { State_Success, State_Error, State_Loading, State_Empty, State_Max_Api_Times, State_Token_Exprie }
@@ -128,7 +129,7 @@ class _LoadStateLayoutState extends State<LoadStateLayout> {
             color: Color(0xffbc2929),
             onPressed: () {
               // token 过期 重新登录
-              Navigator.pushReplacement(this.context, MaterialPageRoute(builder: (context) => LoginPage()));
+              ITRouter.push(context, Routes.loginPage, {}, transition:TransitionType.nativeModal);
             },
             child: Text(
               '登录',

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/pages/create/new_goods_page.dart';
+import 'package:it_resource_exchange_app/route/it_router.dart';
+import 'package:it_resource_exchange_app/route/routes.dart';
 import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'package:it_resource_exchange_app/model/product_detail.dart';
 import './my_product_item_view.dart';
@@ -46,19 +48,14 @@ class _MyProductListPageState extends State<MyProductListPage> {
           product: productList[index],
           onPressed: () {
             ProductDetail product = productList[index];
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => NewGoodsPage(
-                  productId: product.productId,
-                  completeCallback: () {
-                    this.loadData();
-                    setState(() {
-                      _layoutState = LoadState.State_Loading;
-                    });
-                  },
-                ),
-              ),
-            );
+            ITRouter.push(context, Routes.newProductPage,{'productId': product.productId}).then((res) {
+              if (res) {
+                this.loadData();
+                setState(() {
+                  _layoutState = LoadState.State_Loading;
+                });
+              }
+            });
           },
         );
       },

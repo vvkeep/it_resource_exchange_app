@@ -28,11 +28,11 @@ class NewGoodsPreviewWidget extends StatefulWidget {
 class _NewGoodsPreviewWidgetState extends State<NewGoodsPreviewWidget> {
   @override
   Widget build(BuildContext context) {
-    final ScreenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     var itemSpace = 8.0;
 
-    var itemWidth = ((ScreenWidth - 2 * 30.0) - 4 * itemSpace) / 3.0;
+    var itemWidth = ((screenWidth - 2 * 30.0) - 4 * itemSpace) / 3.0;
 
     Widget addWidget = GestureDetector(
       child: Container(

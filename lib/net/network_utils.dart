@@ -1,9 +1,8 @@
 import 'dart:io';
-
+import 'dart:async';
 import 'package:it_resource_exchange_app/common/constant.dart' show APPConfig;
 import 'http_manager.dart';
 import 'package:it_resource_exchange_app/model/base_result.dart';
-
 import 'dart:typed_data';
 
 class NetworkUtils {

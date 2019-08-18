@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:it_resource_exchange_app/route/it_router.dart';
+import 'package:it_resource_exchange_app/route/routes.dart';
 
 import './full_width_button.dart';
 import './profile_header_info.dart';
@@ -10,7 +12,6 @@ import '../../model/user_info.dart';
 import '../../utils/user_utils.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:it_resource_exchange_app/pages/create/new_goods_page.dart';
-import '../../pages/my_product_list/my_product_list_page.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show APPIcons;
 
 class ProfilePage extends StatefulWidget {
@@ -95,8 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
         title: '资源列表',
         showDivider: true,
         onPressed: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => MyProductListPage()));
+          ITRouter.push(context, Routes.myProductListPage, {});
         },
       ),
       FullWidthButton(

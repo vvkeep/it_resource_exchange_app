@@ -3,7 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
 
 class LoadingDialog extends StatefulWidget {
-  Function dismissDialog;
+  final Function dismissDialog;
 
   LoadingDialog({Key key, this.dismissDialog}) : super(key: key);
 

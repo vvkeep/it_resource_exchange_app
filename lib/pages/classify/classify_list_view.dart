@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:it_resource_exchange_app/route/it_router.dart';
+import 'package:it_resource_exchange_app/route/routes.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:it_resource_exchange_app/widgets/indicator_factory.dart';
 import 'package:it_resource_exchange_app/pages/classify/classify_item_view.dart';
@@ -7,7 +9,6 @@ import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/page_result.dart';
 import "package:it_resource_exchange_app/model/home_info.dart";
-import '../detail/goods_detail_page.dart';
 import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
 
 class ClassifyListView extends StatefulWidget {
@@ -59,21 +60,11 @@ class _ClassifyListViewState extends State<ClassifyListView>
             recomendProduct: productList[index],
             onPressed: () {
               int productId = productList[index].productId;
-              Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) =>
-                          GoodsDetailPage(productId: productId)));
+              ITRouter.push(context, Routes.productDetailPage, {'productId': productId});
             },
           );
         },
       ),
-    );
-  }
-
-  Center _buildListLoadingView() {
-    return Center(
-      child: CupertinoActivityIndicator(),
     );
   }
 
@@ -103,6 +94,9 @@ class _ClassifyListViewState extends State<ClassifyListView>
         .then((res) {
       if (res.status == 200) {
         pageResult = PageResult.fromJson(res.data);
+        if (!this.mounted) {
+          return;
+        }
         if (loadMore) {
           if (pageResult.items.length > 0) {
             var tempList = pageResult.items

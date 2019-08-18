@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
@@ -20,11 +20,10 @@ import 'package:it_resource_exchange_app/vo/new_product_vo.dart';
 import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
 
 class NewGoodsPage extends StatefulWidget {
-  NewGoodsPage({Key key, this.productId, this.completeCallback})
+  NewGoodsPage({Key key, this.productId})
       : super(key: key);
 
-  int productId;
-  VoidCallback completeCallback;
+  final int productId;
 
   @override
   _NewGoodsPageState createState() => _NewGoodsPageState();
@@ -372,9 +371,8 @@ class _NewGoodsPageState extends State<NewGoodsPage> {
       _callBackFunction();
       if (res.status == 200) {
         showToast('发布成功,等待管理员审核', duration: Duration(seconds: 3));
-        this.widget.completeCallback();
         Future.delayed(Duration(seconds: 3), () {
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(true);
         });
       } else {
         showToast('发布失败,${res.message}', duration: Duration(seconds: 3));

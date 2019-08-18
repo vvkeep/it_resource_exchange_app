@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:it_resource_exchange_app/route/it_router.dart';
+import 'package:it_resource_exchange_app/route/routes.dart';
 import './goods_item_view.dart';
-import 'package:it_resource_exchange_app/pages/detail/goods_detail_page.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/home_info.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppColors, AppSize, APPIcons;
-import 'package:it_resource_exchange_app/pages/web/webview_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
 
@@ -87,19 +87,12 @@ class _HomePageState extends State<HomePage>
               pagination: SwiperPagination(builder: SwiperPagination.dots),
               control: null,
               onTap: (index) {
-                AdvertiseList asvertise = homeInfo.advertiseList[index];
-                if (asvertise.adType == 1) {
+                AdvertiseList advertise = homeInfo.advertiseList[index];
+                if (advertise.adType == 1) {
                   String productId = homeInfo.advertiseList[index].adProductId;
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => GoodsDetailPage(
-                              productId: int.parse(productId))));
+                  ITRouter.push(context, Routes.productDetailPage, {'productId': productId});
                 } else {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => WebviewPage(
-                          title: asvertise.adTitle,
-                          url: asvertise.adDetailUrl)));
+                  ITRouter.push(context, Routes.webPage, {'title': advertise.adTitle, 'url': advertise.adDetailUrl});
                 }
               },
             ),
@@ -109,11 +102,7 @@ class _HomePageState extends State<HomePage>
             recomendProduct: homeInfo.recommendProductList[i - 1],
             onPressed: () {
               int productId = homeInfo.recommendProductList[i - 1].productId;
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          GoodsDetailPage(productId: productId)));
+              ITRouter.push(context, Routes.productDetailPage, {'productId': productId});
             },
           );
         }

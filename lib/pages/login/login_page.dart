@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
+import 'package:it_resource_exchange_app/route/it_router.dart';
+import 'package:it_resource_exchange_app/route/routes.dart';
 import 'register_page.dart';
 import '../../net/network_utils.dart';
 import '../../model/user_info.dart';
 import '../../utils/user_utils.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:it_resource_exchange_app/pages/application_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -25,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
         UserInfo userInfo = UserInfo.fromJson(res.data);
         UserUtils.saveUserInfo(userInfo);
         // 保存成功，跳转到首页
-        Navigator.pushReplacement(this.context, MaterialPageRoute(builder: (context) => ApplicationPage()));
+        ITRouter.push(context, Routes.mainPage, {});
       }else {
         showToast(res.message, duration: Duration(milliseconds: 1500));
       }

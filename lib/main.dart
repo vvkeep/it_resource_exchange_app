@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
-import './pages/application_page.dart';
-import 'package:oktoast/oktoast.dart';
-import './utils/user_utils.dart';
-import './pages/login/login_page.dart';
+import 'package:it_resource_exchange_app/route/it_router.dart';
 import './utils/local_storage_utils.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:flutter/services.dart';
+import 'package:fluro/fluro.dart';
+import './route/routes.dart';
 
 void main() async {
   await LocalStorage.getInstance();
@@ -13,11 +13,15 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  MyApp() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    final router = new Router();
+    Routes.configureRoutes(router);
+    ITRouter.initWithRouter(router);
+  }
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Colors.white,
-    ));
     return OKToast(
       textStyle: TextStyle(fontSize: 16.0, color: Colors.white),
       backgroundColor: Colors.black87,
@@ -28,7 +32,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             primaryColor: AppColors.PrimaryColor,
             backgroundColor: Colors.white),
-        home: UserUtils.isLogin() ? ApplicationPage() : LoginPage(),
+        onGenerateRoute: ITRouter.router().generator,
       ),
     );
   }
