@@ -1,6 +1,6 @@
-# it_resource_exchange_app
+# IT换换（官方客户端）
 
-A new Flutter project.
+IT换换致力于打造一个资源共享社区
 
 ## Getting Started
 
