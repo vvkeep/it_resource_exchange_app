@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
-import 'package:it_resource_exchange_app/pages/create/new_goods_page.dart';
 import 'package:it_resource_exchange_app/route/it_router.dart';
 import 'package:it_resource_exchange_app/route/routes.dart';
 import 'package:it_resource_exchange_app/utils/user_utils.dart';

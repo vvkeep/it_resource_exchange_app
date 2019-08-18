@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:it_resource_exchange_app/pages/login/register_page.dart';
 import 'package:it_resource_exchange_app/pages/web/webview_page.dart';
 
 import '../utils/user_utils.dart';
@@ -22,6 +23,10 @@ var mainHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<S
 
 var loginHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return LoginPage();
+});
+
+var registerHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return RegisterPage();
 });
 
 var productDetailHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {

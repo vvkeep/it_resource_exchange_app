@@ -15,7 +15,7 @@ class ITRouter {
     return _router;
   }
 
-  static push(BuildContext context, String path, Map<String, dynamic> params, {TransitionType transition = TransitionType.inFromRight}) {
+  static push(BuildContext context, String path, Map<String, dynamic> params, {bool clearStack = false, TransitionType transition = TransitionType.inFromRight}) {
     String query =  "";
     int index = 0;
     for (var key in params.keys) {
@@ -36,7 +36,7 @@ class ITRouter {
       index++;
     }
     path = path + query;
-    return _router.navigateTo(context, path, transition:transition);
+    return _router.navigateTo(context, path, clearStack: clearStack, transition:transition);
   }
 
   static pop(BuildContext context) {

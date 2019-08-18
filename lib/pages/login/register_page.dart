@@ -21,7 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
         // 注册成功，跳转回登录页面
         showToast("注册成功", duration: Duration(milliseconds: 1500));
         Future.delayed(Duration(milliseconds: 1500), () {
-          Navigator.pop(this.context);
+          Navigator.pop(this.context, this._accountNum);
         });
       } else {
         showToast(res.message, duration: Duration(milliseconds: 1500));
@@ -84,6 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
           hintStyle: new TextStyle(fontSize: 12.0, color: Colors.grey)),
       maxLines: 1,
       maxLength: 6,
+      obscureText: true,
       //键盘展示为数字
       keyboardType: TextInputType.number,
       //只能输入数字
@@ -118,6 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
           hintStyle: new TextStyle(fontSize: 12.0, color: Colors.grey)),
       maxLines: 1,
       maxLength: 6,
+      obscureText: true,
       //键盘展示为数字
       keyboardType: TextInputType.number,
       //只能输入数字

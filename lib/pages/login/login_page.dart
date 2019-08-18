@@ -1,9 +1,9 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
 import 'package:it_resource_exchange_app/route/it_router.dart';
 import 'package:it_resource_exchange_app/route/routes.dart';
-import 'register_page.dart';
 import '../../net/network_utils.dart';
 import '../../model/user_info.dart';
 import '../../utils/user_utils.dart';
@@ -17,7 +17,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   GlobalKey<ScaffoldState> registKey = new GlobalKey();
 
-  String _accountNum = '';
+  String _accountNum =
+      UserUtils.getUserName().isEmpty ? "" : UserUtils.getUserName();
   String _password = '';
 
   login() {
@@ -25,9 +26,13 @@ class _LoginPageState extends State<LoginPage> {
       if (res.status == 200) {
         UserInfo userInfo = UserInfo.fromJson(res.data);
         UserUtils.saveUserInfo(userInfo);
+        // 保存用户名
+        UserUtils.saveUserName(this._accountNum);
+
         // 保存成功，跳转到首页
-        ITRouter.push(context, Routes.mainPage, {});
-      }else {
+        ITRouter.push(context, Routes.mainPage, {},
+            clearStack: true, transition: TransitionType.fadeIn);
+      } else {
         showToast(res.message, duration: Duration(milliseconds: 1500));
       }
     });
@@ -38,14 +43,15 @@ class _LoginPageState extends State<LoginPage> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 40.0),
       child: TextField(
+        controller: TextEditingController(text: _accountNum),
         onChanged: (value) {
           _accountNum = value;
         },
         decoration: InputDecoration(
           hintText: '请输入邮箱地址作为用户名',
           labelText: '账号',
-          hintStyle: TextStyle(
-              fontSize: 12.0, color: AppColors.ArrowNormalColor),
+          hintStyle:
+              TextStyle(fontSize: 12.0, color: AppColors.ArrowNormalColor),
         ),
         maxLines: 1,
         maxLength: 30,
@@ -73,6 +79,7 @@ class _LoginPageState extends State<LoginPage> {
       maxLength: 6,
       //键盘展示为数字
       keyboardType: TextInputType.number,
+      obscureText: true,
       //只能输入数字
       inputFormatters: <TextInputFormatter>[
         WhitelistingTextInputFormatter.digitsOnly,
@@ -100,9 +107,11 @@ class _LoginPageState extends State<LoginPage> {
         color: AppColors.PrimaryColor,
         textColor: Colors.white,
         disabledColor: AppColors.DisableTextColor,
-        onPressed: (_accountNum.isEmpty || _password.isEmpty) ? null : (){
-            login();
-        },
+        onPressed: (_accountNum.isEmpty || _password.isEmpty)
+            ? null
+            : () {
+                login();
+              },
         child: new Text(
           '登 录',
           style: new TextStyle(fontSize: 16.0, color: Colors.white),
@@ -123,8 +132,13 @@ class _LoginPageState extends State<LoginPage> {
         child: Text("注册",
             style: TextStyle(fontSize: 16.0, color: AppColors.PrimaryColor)),
         onPressed: () {
-          Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => RegisterPage()));
+          ITRouter.push(context, Routes.registerPage, {}).then((res) {
+            if (res != null) {
+              setState(() {
+                this._accountNum = res;
+              });
+            }
+          });
         },
       ),
     );
@@ -151,32 +165,31 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return new Material(
       child: new Scaffold(
-        key: registKey,
-        backgroundColor: Colors.white,
-        appBar: new AppBar(
-            title: new Text('账号登录', style: TextStyle(color: Colors.white)),
-            elevation: 0.0,
-            iconTheme: IconThemeData(
-              color: Colors.white,
-            )),
-        body: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              _buildTipIcon(),
-              _buldAccountEdit(),
-              _bulidPasswordEdit(),
-              _buildLoginBtn(),
-              _buildRegisterBtn()
-            ],
-          ),
-        ),
-        )
-      ),
+          key: registKey,
+          backgroundColor: Colors.white,
+          appBar: new AppBar(
+              title: new Text('账号登录', style: TextStyle(color: Colors.white)),
+              elevation: 0.0,
+              iconTheme: IconThemeData(
+                color: Colors.white,
+              )),
+          body: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  _buildTipIcon(),
+                  _buldAccountEdit(),
+                  _bulidPasswordEdit(),
+                  _buildLoginBtn(),
+                  _buildRegisterBtn()
+                ],
+              ),
+            ),
+          )),
     );
   }
 }

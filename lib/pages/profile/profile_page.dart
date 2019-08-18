@@ -1,3 +1,4 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:it_resource_exchange_app/route/it_router.dart';
@@ -5,7 +6,6 @@ import 'package:it_resource_exchange_app/route/routes.dart';
 
 import './full_width_button.dart';
 import './profile_header_info.dart';
-import '../login/login_page.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
 import '../../net/network_utils.dart';
 import '../../model/user_info.dart';
@@ -27,8 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (res.status == 200) {
         UserUtils.removeUserInfo();
         // 保存成功，跳转到登录页面
-        Navigator.pushReplacement(
-            this.context, MaterialPageRoute(builder: (context) => LoginPage()));
+        ITRouter.push(context, Routes.loginPage, {}, clearStack: true, transition: TransitionType.nativeModal);
       } else {
         showToast(res.message, duration: Duration(milliseconds: 1500));
       }
