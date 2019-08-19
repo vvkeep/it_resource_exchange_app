@@ -1,5 +1,4 @@
-致力于打造，
-《IT换换》采用免费开源且跨平台的移动应用开发引擎Flutter开发，是一款完全开源、跨平台的一个资源共享社区APP，目前项目还是初期阶段，项目搜集全网的精品资源教程，进行筛选分类，让用户可以快速找到自己中意的教程。（可以快速导出android版本、iOS版本）
+《IT换换》基于Flutter开发，是一款完全开源、跨平台的一个资源共享社区APP，目前项目还是初期阶段，项目搜集全网的精品资源教程，进行筛选分类，让用户可以快速找到自己中意的教程。（可以快速导出android版本、iOS版本）
 
 ## 先上图
 ![1.png](screenshots/1.jpg)
@@ -59,11 +58,36 @@ JSONConverter 是MAC上iOS开发的辅助小工具，可以快速的把JSON数�
 *  fluro: "^1.5.1"
 
 感谢以上库开发者的分享
+## 注意
+* 源码仅作学习，接口进行进行的次数限制，
+## 开源协议
+```
+BSD License
 
-## 开源协议说明
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
+Copyright (c) 2018-present, Alibaba Group Holding Limited. All rights reserved.
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+ * Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+ * Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+ * Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific
+   prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
+```
