@@ -39,6 +39,8 @@ JSONConverter 是MAC上iOS开发的辅助小工具，可以快速的把JSON数�
 2. 资源评论功能
 3. 基于微信的资源详情H5分享
 4. 收藏功能
+5. 搜索功能
+6. 。。。
 
 ## 第三方声明
 *  cached_network_image: ^1.1.0
@@ -57,9 +59,9 @@ JSONConverter 是MAC上iOS开发的辅助小工具，可以快速的把JSON数�
 *  flutter_swiper : ^1.1.6
 *  fluro: "^1.5.1"
 
-感谢以上库开发者的分享
 ## 注意
-* 源码仅作学习，接口进行进行的次数限制，
+* 源码仅作学习，接口进行进行的次数限制.
+
 ## 开源协议
 ```
 BSD License
