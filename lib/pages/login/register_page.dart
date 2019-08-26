@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
+import 'package:it_resource_exchange_app/utils/regex_utils.dart';
 import '../../net/network_utils.dart';
 import 'package:oktoast/oktoast.dart';
 import 'dart:async';
@@ -14,9 +15,38 @@ class _RegisterPageState extends State<RegisterPage> {
   String _accountNum = '';
   String _password = '';
   String _password2 = '';
+  String _verityCode = '';
+
+  bool isVerifyBtnEnable = false; //按钮状态 是否可点击
+  String buttonText = '发送验证码'; //初始文本
+  int count = 60; //初始倒计时时间
+  Timer timer; //倒计时的计时器
+
+  void _initTimer() {
+    timer = new Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      count--;
+      setState(() {
+        if (count == 0) {
+          timer.cancel(); //倒计时结束取消定时器
+          isVerifyBtnEnable = true; //按钮可点击
+          count = 60; //重置时间
+          buttonText = '发送验证码'; //重置按钮文本
+        } else {
+          buttonText = '重新发送($count)'; //更新文本内容
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel(); //销毁计时器
+    timer = null;
+    super.dispose();
+  }
 
   register() {
-    NetworkUtils.register(this._accountNum, this._password).then((res) {
+    NetworkUtils.register(this._accountNum, this._password, this._verityCode).then((res) {
       if (res.status == 200) {
         // 注册成功，跳转回登录页面
         showToast("注册成功", duration: Duration(milliseconds: 1500));
@@ -29,10 +59,30 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
+  sendVerityCode() {
+    NetworkUtils.sendCodeForRegister(this._accountNum).then((res) {
+      if (res.status == 200) {
+        // 注册成功，跳转回登录页面
+        showToast("验证码发送成功", duration: Duration(milliseconds: 1500));
+
+        //开始倒计时
+        setState(() {
+          if (isVerifyBtnEnable) {
+            //当按钮可点击时
+            isVerifyBtnEnable = false; //按钮状态标记
+            _initTimer();
+          } 
+        });
+      } else {
+        showToast(res.message, duration: Duration(milliseconds: 1500));
+      }
+    });
+  }
+
   Widget _buildTipIcon() {
     return new Padding(
       padding: const EdgeInsets.only(
-          left: 40.0, right: 40.0, top: 50.0, bottom: 50.0),
+          left: 40.0, right: 40.0, top: 30.0, bottom: 50.0),
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.center, //子组件的排列方式为主轴两端对齐
         children: <Widget>[
@@ -53,12 +103,17 @@ class _RegisterPageState extends State<RegisterPage> {
       child: TextField(
         onChanged: (value) {
           _accountNum = value;
+          if (this.count == 60) {
+            setState(() {
+              this.isVerifyBtnEnable = RegexUtils.isEmail(value);
+            });
+          }
         },
         decoration: InputDecoration(
           hintText: '请输入邮箱地址作为用户名',
           labelText: '账号',
-          hintStyle: TextStyle(
-              fontSize: 12.0, color: AppColors.ArrowNormalColor),
+          hintStyle:
+              TextStyle(fontSize: 12.0, color: AppColors.ArrowNormalColor),
         ),
         maxLines: 1,
         maxLength: 30,
@@ -80,7 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
       },
       decoration: new InputDecoration(
           hintText: '请输入至少6位密码',
-          labelText: '密码',
+          labelText: '输入密码',
           hintStyle: new TextStyle(fontSize: 12.0, color: Colors.grey)),
       maxLines: 1,
       maxLength: 6,
@@ -114,8 +169,8 @@ class _RegisterPageState extends State<RegisterPage> {
         setState(() {});
       },
       decoration: new InputDecoration(
-          hintText: '请输入至少6位密码',
-          labelText: '密码',
+          hintText: '请再次输入至少6位密码',
+          labelText: '确认密码',
           hintStyle: new TextStyle(fontSize: 12.0, color: Colors.grey)),
       maxLines: 1,
       maxLength: 6,
@@ -141,6 +196,67 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  Widget _buildVerifyCodeBtn() {
+    var node = new FocusNode();
+    Widget passwordEdit = new TextField(
+      onChanged: (str) {
+        _verityCode = str;
+        setState(() {});
+      },
+      decoration: new InputDecoration(
+        hintText: '请输入验证码',
+        labelText: '验证码',
+        hintStyle: new TextStyle(fontSize: 12.0, color: Colors.grey),
+      ),
+      maxLines: 1,
+      maxLength: 6,
+      //键盘展示为数字
+      keyboardType: TextInputType.number,
+      //只能输入数字
+      inputFormatters: <TextInputFormatter>[
+        WhitelistingTextInputFormatter.digitsOnly,
+      ],
+      onSubmitted: (text) {
+        FocusScope.of(context).requestFocus(node);
+      },
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: passwordEdit,
+          ),
+          SizedBox(
+            width: 25,
+          ),
+          Container(
+            width: 120,
+            child: OutlineButton(
+              borderSide: BorderSide(
+                color: AppColors.PrimaryColor,
+                width: 1,
+              ),
+              disabledBorderColor: AppColors.ArrowNormalColor,
+              disabledTextColor: AppColors.ArrowNormalColor,
+              textColor: AppColors.PrimaryColor,
+              child: Text(
+                '$buttonText',
+                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400),
+              ),
+              onPressed: this.isVerifyBtnEnable
+                  ? () {
+                      this.sendVerityCode();
+                    }
+                  : null,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _buildSubmitBtn() {
     return new Padding(
       padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
@@ -150,7 +266,7 @@ class _RegisterPageState extends State<RegisterPage> {
         textColor: Colors.white,
         disabledColor: AppColors.DisableTextColor,
         onPressed:
-            (_accountNum.isEmpty || _password.isEmpty || _password2.isEmpty)
+            (_accountNum.isEmpty || _password.isEmpty || _password2.isEmpty || _verityCode.isEmpty)
                 ? null
                 : () {
                     if (_password != _password2) {
@@ -190,6 +306,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 _buldAccountEdit(),
                 _bulidPasswordEdit(),
                 _bulidPasswordEdit2(),
+                _buildVerifyCodeBtn(),
                 _buildSubmitBtn()
               ],
             ),

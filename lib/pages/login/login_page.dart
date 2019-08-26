@@ -161,35 +161,70 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Widget _forgetPasswordTipBtn() {
+    return Padding(
+      padding: EdgeInsets.only(top: 20, left: 40, right: 40),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              ITRouter.push(context, Routes.resetPasswordVerityPage, {'account': this._accountNum});
+            },
+            child: Stack(
+              alignment: AlignmentDirectional.centerEnd,
+              children: <Widget>[
+                Container(
+                  color: Colors.white,
+                  width: 100,
+                  height: 40,
+                ),
+                Text(
+                  '忘记密码',
+                  style: TextStyle(
+                      color: AppColors.PrimaryColor,
+                      fontSize: 15,
+                      decoration: TextDecoration.underline),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Material(
       child: new Scaffold(
-          key: registKey,
-          backgroundColor: Colors.white,
-          appBar: new AppBar(
-              title: new Text('账号登录', style: TextStyle(color: Colors.white)),
-              elevation: 0.0,
-              iconTheme: IconThemeData(
-                color: Colors.white,
-              )),
-          body: GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: () {
-              FocusScope.of(context).requestFocus(FocusNode());
-            },
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  _buildTipIcon(),
-                  _buldAccountEdit(),
-                  _bulidPasswordEdit(),
-                  _buildLoginBtn(),
-                  _buildRegisterBtn()
-                ],
-              ),
+        key: registKey,
+        backgroundColor: Colors.white,
+        appBar: new AppBar(
+            title: new Text('账号登录', style: TextStyle(color: Colors.white)),
+            elevation: 0.0,
+            iconTheme: IconThemeData(
+              color: Colors.white,
+            )),
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                _buildTipIcon(),
+                _buldAccountEdit(),
+                _bulidPasswordEdit(),
+                _forgetPasswordTipBtn(),
+                _buildLoginBtn(),
+                _buildRegisterBtn()
+              ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

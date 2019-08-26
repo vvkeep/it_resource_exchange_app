@@ -20,7 +20,7 @@ class NetworkUtils {
 
   static requestProductListByCateId(int cateId, int currentPage) async {
     String url = APPConfig.Server + "/product/pageListByCateId";
-    
+
     var params = {"currentPage": currentPage, "pageSize": 20};
     if (cateId != null) {
       params["cateId"] = cateId;
@@ -29,7 +29,8 @@ class NetworkUtils {
     return result;
   }
 
-  static Future<BaseResult> requestProductDetailByProductId(int productId) async {
+  static Future<BaseResult> requestProductDetailByProductId(
+      int productId) async {
     String url = APPConfig.Server + "/product/detail";
     var params = {"productId": productId};
     BaseResult result = await httpManager.request(HttpMethod.GET, url, params);
@@ -43,9 +44,9 @@ class NetworkUtils {
     return result;
   }
 
-  static register(String account, String password) async {
-    String url = APPConfig.Server + "/user/register";
-    var params = {"account": account, "password": password};
+  static register(String account, String password, String code) async {
+    String url = APPConfig.Server + "/user/verifyRegister";
+    var params = {"account": account, "password": password, "code": code};
     BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
     return result;
   }
@@ -71,14 +72,37 @@ class NetworkUtils {
 
   static submitProduct(Map<String, dynamic> params) async {
     String url = APPConfig.Server + "/product/submit";
-    BaseResult result = await httpManager.request(HttpMethod.POST, url, params, contentType: ContentType.json);
+    BaseResult result = await httpManager.request(HttpMethod.POST, url, params,
+        contentType: ContentType.json);
     return result;
   }
 
   static requestMyProductListData(int userId) async {
     String url = APPConfig.Server + "/product/pageListByCreateUserId";
     var params = {"userId": userId};
-    BaseResult result = await httpManager.request(HttpMethod.GET, url, params, contentType: ContentType.json);
+    BaseResult result = await httpManager.request(HttpMethod.GET, url, params);
     return result;
   }
+
+  static sendCodeForRegister(String account) async {
+    String url = APPConfig.Server + "/user/sendCodeForRegister";
+    var params = {"account": account};
+    BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
+    return result;
+  }
+
+  static sendCodeForReset(String account) async {
+    String url = APPConfig.Server + "/user/sendCodeForReset";
+    var params = {"account": account};
+    BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
+    return result;
+  }
+
+    static resetPassword(String account, String password, String code) async {
+    String url = APPConfig.Server + "/user/verifyReset";
+    var params = {"account": account, "password": password, "code": code};
+    BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
+    return result;
+  }
+
 }

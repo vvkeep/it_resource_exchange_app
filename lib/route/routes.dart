@@ -12,6 +12,10 @@ class Routes {
 
   static String registerPage = "/registerPage";
 
+  static String resetPasswordVerityPage = "/resetPasswordVerityPage";
+  
+  static String resetPasswordPage = "/resetPasswordPage";
+
   static String productDetailPage = "/productDetailPage";
 
   static String webPage = "/webPage";
@@ -32,8 +36,11 @@ class Routes {
     router.define(webPage, handler: webHandler);
     router.define(myProductListPage, handler: myProductListHandler);
     router.define(newProductPage, handler: newProductHandler);
-     router.define(loginPage, handler:loginHandler);
+    router.define(loginPage, handler:loginHandler);
     router.define(registerPage, handler:registerHandler);
+    router.define(resetPasswordVerityPage, handler:resetPassworVerityHandler);
+    router.define(resetPasswordPage, handler:resetPassworHandler);
+
   }
 
 }

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/pages/login/register_page.dart';
+import '../pages/login/user_verify_code_page.dart';
+import '../pages/login/reset_password_page.dart';
 import 'package:it_resource_exchange_app/pages/web/webview_page.dart';
 
 import '../utils/user_utils.dart';
@@ -28,6 +30,17 @@ var loginHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<
 var registerHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return RegisterPage();
 });
+
+var resetPassworVerityHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return UserVerifyCodePage();
+});
+
+var resetPassworHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    String account = params['account']?.first;
+    String verityCode = params['verityCode']?.first;
+  return RestPasswordPage(account: account, verityCode: verityCode,);
+});
+
 
 var productDetailHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   String productId = params['productId']?.first;
