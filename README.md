@@ -6,7 +6,8 @@
 * 因为苹果审核不可抗力的原因，暂不上线
 
 ## 版本更新记录
-* 1[注册增加验证码和忘记密码流程](https://www.jianshu.com/p/84393a45935f)
+**1.** [注册增加验证码和忘记密码流程](https://www.jianshu.com/p/84393a45935f)
+
 ## 先上图
 ![1.png](screenshots/1.jpg)
 
