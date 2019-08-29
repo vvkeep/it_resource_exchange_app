@@ -36,6 +36,11 @@ class APPIcons {
     color: AppColors.ArrowNormalColor,
   );
 
+   static const AvatarData = IconData(
+      0xe642,
+      fontFamily: Constant.IconFontFamily,
+    );
+
   static const AddImgData = IconData(
     0xe70a,
     fontFamily: Constant.IconFontFamily,

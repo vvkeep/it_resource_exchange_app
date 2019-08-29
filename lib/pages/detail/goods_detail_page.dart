@@ -16,10 +16,17 @@ class GoodsDetailPage extends StatefulWidget {
 }
 
 class _GoodsDetailPageState extends State<GoodsDetailPage> {
+  ScrollController _commentController = ScrollController();
+  TextEditingController _inputController = TextEditingController();
+
   //页面加载状态，默认为加载中
   LoadState _layoutState = LoadState.State_Loading;
 
   ProductDetail productDetail;
+
+  TextStyle subtitleStyle =
+      TextStyle(fontSize: 12.0, color: const Color(0xFFB5BDC0));
+  TextStyle contentStyle = TextStyle(fontSize: 15.0, color: Colors.black);
 
   void initState() {
     super.initState();
@@ -204,8 +211,8 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
   Widget _buildResourceView() {
     List<Widget> itemWidgets = [Divider(color: AppColors.DividerColor)];
     if (productDetail?.productAddressUrl != null) {
-      itemWidgets.add(
-          _buildResourceItemView("资源地址:", productDetail?.productAddressUrl ?? ""));
+      itemWidgets.add(_buildResourceItemView(
+          "资源地址:", productDetail?.productAddressUrl ?? ""));
       itemWidgets.add(SizedBox(height: 10));
     }
 
@@ -255,6 +262,170 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
     );
   }
 
+  Widget _commentView() {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: 3,
+      itemBuilder: renderListItem,
+      controller: _commentController,
+    );
+  }
+
+  Widget renderListItem(BuildContext context, int i) {
+    String avatarUrl;
+    String author = '小恶魔';
+    String date = "2018-04-12";
+    String content = "这是$i" + "条评论,这条评论不错发送到发神所发生的发家史经风口浪尖哈哈哈哈哈哈哈哈哈哈阿就快放假啊开发就阿卡；发";
+
+    Widget avatar;
+    if (avatarUrl != null) {
+      avatar = CachedNetworkImage(
+        imageUrl: avatarUrl,
+        placeholder: (context, url) => APPIcons.PlaceHolderAvatar,
+        fit: BoxFit.cover,
+        height: 35.0,
+        width: 35.0,
+        errorWidget: (context, url, error) => new Icon(Icons.error),
+      );
+    } else {
+      avatar = Icon(APPIcons.AvatarData,size: 35.0, color: AppColors.ArrowNormalColor,);
+    }
+
+    var row = Row(
+      children: <Widget>[
+        Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: avatar),
+        Expanded(
+            child: Container(
+          margin: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      author,
+                      style: TextStyle(color: const Color(0xFF63CA6C)),
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                      child: Text(
+                        date,
+                        style: subtitleStyle,
+                      ))
+                ],
+              ),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: Text(
+                        content,
+                        style: contentStyle,
+                      ))
+                    ],
+                  ))
+            ],
+          ),
+        ))
+      ],
+    );
+    return Builder(
+      builder: (ctx) {
+        return InkWell(
+          onTap: () {
+            showReplyBottomView(ctx, false, data: null);
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  width: AppSize.DividerWidth,
+                  color: AppColors.DividerColor,
+                ),
+              ),
+            ),
+            child: row,
+          ),
+        );
+      },
+    );
+  }
+
+  showReplyBottomView(ctx, bool isMainFloor, {data}) {
+    String title;
+    String authorId;
+    if (isMainFloor) {
+      title = "什么鬼标题";
+      authorId = "${12313}";
+    } else {
+      title = "@${'小恶魔'}";
+      authorId = "${1231231}";
+    }
+    print("authorId = $authorId");
+    showModalBottomSheet(
+        context: ctx,
+        builder: (sheetCtx) {
+          return Container(
+              height: 230.0,
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Text(isMainFloor ? "回复楼主" : "回复"),
+                      Expanded(
+                          child: Text(
+                        title,
+                        style: TextStyle(color: const Color(0xFF63CA6C)),
+                      )),
+                      InkWell(
+                        child: Container(
+                          padding:
+                              const EdgeInsets.fromLTRB(10.0, 6.0, 10.0, 6.0),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color(0xFF63CA6C),
+                                width: 1.0,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.0))),
+                          child: Text(
+                            "发送",
+                            style: TextStyle(color: const Color(0xFF63CA6C)),
+                          ),
+                        ),
+                        onTap: () {
+                          // 发送回复
+                          print("发送回复~~~~~~");
+                        },
+                      )
+                    ],
+                  ),
+                  Container(
+                    height: 10.0,
+                  ),
+                  TextField(
+                    maxLines: 5,
+                    controller: _inputController,
+                    decoration: InputDecoration(
+                        hintText: "说点啥～",
+                        hintStyle: TextStyle(color: const Color(0xFF808080)),
+                        border: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                              const Radius.circular(10.0)),
+                        )),
+                  )
+                ],
+              ));
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -284,6 +455,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
               _buildGoodsDescTextView(),
               _buildImgsView(),
               _buildResourceView(),
+              _commentView(),
               SizedBox(height: MediaQuery.of(context).padding.bottom)
             ],
           ),
