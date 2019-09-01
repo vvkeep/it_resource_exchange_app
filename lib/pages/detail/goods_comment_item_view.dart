@@ -29,7 +29,7 @@ class GoodsCommentItemView extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
+          top: BorderSide(
             width: AppSize.DividerWidth,
             color: AppColors.DividerColor,
           ),
@@ -39,8 +39,8 @@ class GoodsCommentItemView extends StatelessWidget {
         children: <Widget>[
           Padding(padding: const EdgeInsets.all(10.0), child: avatar),
           Expanded(
-              child: Container(
-            margin: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+            child: Container(
+            margin: EdgeInsets.symmetric(vertical: 10.0),
             child: Column(
               children: <Widget>[
                 Row(
@@ -61,16 +61,14 @@ class GoodsCommentItemView extends StatelessWidget {
                     ),
                   ],
                 ),
+                SizedBox(
+                  height: 5,
+                ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                          child: Text(
-                        '按实际发建安费肯德基房卡的荆防颗粒打卡了房间；打客服大开发了；阿达开始的放假啊；离开的房间啊',
-                        style: TextStyle(fontSize: 15.0, color: Colors.black),
-                      ))
-                    ],
+                  child: Text(
+                    '按实际发ddd建安费肯德基房卡的荆防颗粒打卡了房间；打客服大开发了；阿达开始的放假啊；离开的房间啊',
+                    style: TextStyle(fontSize: 15.0, color: Colors.black),
                   ),
                 ),
               ],

@@ -10,6 +10,8 @@ import 'package:it_resource_exchange_app/common/constant.dart';
 import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
 import 'goods_detail_content_view.dart';
 import 'goods_comment_item_view.dart';
+import 'goods_comment_reply_view.dart';
+import 'goods_comment_header_view.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
 
 class GoodsDetailPage extends StatefulWidget {
@@ -84,75 +86,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
     );
   }
 
-  showReplyBottomView(ctx, bool isMainFloor, {data}) {
-    String title;
-    String authorId;
-    if (isMainFloor) {
-      title = "什么鬼标题";
-      authorId = "${12313}";
-    } else {
-      title = "@${'小恶魔'}";
-      authorId = "${1231231}";
-    }
-    print("authorId = $authorId");
-    showModalBottomSheet(
-        context: ctx,
-        builder: (sheetCtx) {
-          return Container(
-              height: 230.0,
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text(isMainFloor ? "回复楼主" : "回复"),
-                      Expanded(
-                          child: Text(
-                        title,
-                        style: TextStyle(color: const Color(0xFF63CA6C)),
-                      )),
-                      InkWell(
-                        child: Container(
-                          padding:
-                              const EdgeInsets.fromLTRB(10.0, 6.0, 10.0, 6.0),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color(0xFF63CA6C),
-                                width: 1.0,
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(6.0))),
-                          child: Text(
-                            "发送",
-                            style: TextStyle(color: const Color(0xFF63CA6C)),
-                          ),
-                        ),
-                        onTap: () {
-                          // 发送回复
-                          print("发送回复~~~~~~");
-                        },
-                      )
-                    ],
-                  ),
-                  Container(
-                    height: 10.0,
-                  ),
-                  TextField(
-                    maxLines: 5,
-                    controller: _inputController,
-                    decoration: InputDecoration(
-                        hintText: "说点啥～",
-                        hintStyle: TextStyle(color: const Color(0xFF808080)),
-                        border: OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                              const Radius.circular(10.0)),
-                        )),
-                  )
-                ],
-              ));
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -189,37 +122,16 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
               ),
             ),
             SliverToBoxAdapter(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      width: AppSize.DividerWidth,
-                      color: AppColors.DividerColor,
-                    ),
-                  ),
-                ),
-                height: 45,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 15),
-                  child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      '共 888 条评论',
-                      style: TextStyle(
-                          color: AppColors.DarkTextColor,
-                          fontWeight: FontWeight.w700),
-                    )
-                  ],
-                ),
-                ),
-              ),
+              child: GoodsCommentHeaderView(),
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, int index) {
-                  return GoodsCommentItemView();
+                  if (index % 2 == 0) {
+                    return GoodsCommentItemView();
+                  } else {
+                    return GoodsCommentReplyView();
+                  }
                 },
                 childCount: 5,
               ),
