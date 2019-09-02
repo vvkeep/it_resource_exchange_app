@@ -8,6 +8,8 @@ import 'package:oktoast/oktoast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
 import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
+import 'goods_comment_end_tip_view.dart';
+import 'goods_detail_bottom_bar.dart';
 import 'goods_detail_content_view.dart';
 import 'goods_comment_item_view.dart';
 import 'goods_comment_reply_view.dart';
@@ -53,37 +55,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
         });
       }
     });
-  }
-
-  Widget _buildBottomBar() {
-    FlatButton favoriteBtn = FlatButton.icon(
-      icon: Icon(
-        Icons.favorite_border,
-        color: Colors.grey[800],
-      ),
-      label: Text("喜欢"),
-      onPressed: () {
-        print("喜欢");
-      },
-    );
-
-    Widget buyView = Container(
-      child: RaisedButton(
-        textColor: Colors.white,
-        color: Colors.red[500],
-        child: Text("立即换购"),
-        onPressed: () {},
-      ),
-    );
-
-    return BottomAppBar(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8),
-        child: Row(
-          children: <Widget>[favoriteBtn, Expanded(child: SizedBox()), buyView],
-        ),
-      ),
-    );
   }
 
   @override
@@ -133,16 +104,16 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
                     return GoodsCommentReplyView();
                   }
                 },
-                childCount: 5,
+                childCount: 10,
               ),
             ),
             SliverToBoxAdapter(
-              child: SizedBox(height: MediaQuery.of(context).padding.bottom),
+              child: GoodsCommentEndTipView(),
             ),
           ],
         ),
       ),
-      // bottomNavigationBar: _buildBottomBar(),
+      bottomNavigationBar: GoodsCommentBottomBar(),
     );
   }
 }

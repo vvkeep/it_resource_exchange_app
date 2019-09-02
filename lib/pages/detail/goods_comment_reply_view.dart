@@ -26,7 +26,7 @@ class GoodsCommentReplyView extends StatelessWidget {
     }
 
     return Container(
-      margin: EdgeInsets.fromLTRB(55.0, 10, 0, 10),
+      margin: EdgeInsets.fromLTRB(55.0, 0, 0, 10),
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
@@ -43,6 +43,7 @@ class GoodsCommentReplyView extends StatelessWidget {
           Row(
             children: <Widget>[
               avatar,
+              SizedBox(width: 5,),
               Expanded(
                 child: Text(
                 '回复者',

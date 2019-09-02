@@ -36,6 +36,7 @@ class GoodsCommentItemView extends StatelessWidget {
         ),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(padding: const EdgeInsets.all(10.0), child: avatar),
           Expanded(
@@ -65,7 +66,7 @@ class GoodsCommentItemView extends StatelessWidget {
                   height: 5,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                  padding: const EdgeInsets.only(right: 10.0),
                   child: Text(
                     '按实际发ddd建安费肯德基房卡的荆防颗粒打卡了房间；打客服大开发了；阿达开始的放假啊；离开的房间啊',
                     style: TextStyle(fontSize: 15.0, color: Colors.black),
