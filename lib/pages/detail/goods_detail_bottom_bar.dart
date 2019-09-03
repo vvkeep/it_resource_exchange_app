@@ -3,6 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
 
 class GoodsCommentBottomBar extends StatelessWidget {
+
+  final ValueChanged<int> btnActionCallback;
+
+  const GoodsCommentBottomBar({Key key, this.btnActionCallback}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     FlatButton favoriteBtn = FlatButton.icon(
@@ -12,11 +17,15 @@ class GoodsCommentBottomBar extends StatelessWidget {
       ),
       label: Text("收藏"),
       onPressed: () {
+        this.btnActionCallback(100);
         print("喜欢");
       },
     );
 
     Widget commentBtn = GestureDetector(
+      onTap: () {
+        this.btnActionCallback(200);
+      },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Container(

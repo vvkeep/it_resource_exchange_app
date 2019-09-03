@@ -8,13 +8,13 @@ import 'package:oktoast/oktoast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
 import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
-import 'goods_comment_end_tip_view.dart';
+import 'comment_view/goods_comment_content_view.dart';
+import 'comment_view/goods_comment_end_tip_view.dart';
 import 'goods_detail_bottom_bar.dart';
 import 'goods_detail_content_view.dart';
-import 'goods_comment_item_view.dart';
-import 'goods_comment_reply_view.dart';
-import 'goods_comment_header_view.dart';
-import 'package:it_resource_exchange_app/common/constant.dart';
+import 'comment_view/goods_comment_header_view.dart';
+import 'input_dialog/bottom_input_dialog.dart';
+import 'input_dialog/pop_bottom_input_dialog_route.dart';
 
 class GoodsDetailPage extends StatefulWidget {
   GoodsDetailPage({Key key, this.productId}) : super(key: key);
@@ -98,11 +98,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, int index) {
-                  if (index % 2 == 0) {
-                    return GoodsCommentItemView();
-                  } else {
-                    return GoodsCommentReplyView();
-                  }
+                  return GoodsCommentContentView();
                 },
                 childCount: 10,
               ),
@@ -113,7 +109,16 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
           ],
         ),
       ),
-      bottomNavigationBar: GoodsCommentBottomBar(),
+      bottomNavigationBar: GoodsCommentBottomBar(
+        btnActionCallback: ((tag) {
+          if (tag == 100) { //喜欢
+            
+          }else if (tag == 200) { //评论
+            print("评论了~");
+            Navigator.push(context, PopBottomInputDialogRoute(child: BottomInputDialog()));
+          }
+        }),
+      ),
     );
   }
 }
