@@ -20,8 +20,10 @@ class BottomInputDialog extends StatelessWidget {
           ),
           new Container(
               height: 80,
-              color: AppColors.LightTextColor,
-              child: Row(
+              color: AppColors.MidTextColor,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical:10),
+                child: Row(
                 children: <Widget>[
                   Expanded(
                     child: TextField(
@@ -33,9 +35,15 @@ class BottomInputDialog extends StatelessWidget {
                     ),
                     maxLines: 100,
                     autofocus: true,
+                    textInputAction: TextInputAction.send,
+                    onSubmitted: (value) {
+                      print("$value");
+                      Navigator.of(context).pop();
+                    },
                   ),
                   )
                 ],
+              ),
               )
           )
         ],
