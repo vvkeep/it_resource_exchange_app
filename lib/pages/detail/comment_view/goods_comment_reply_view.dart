@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
+import 'package:it_resource_exchange_app/model/comment_model.dart';
 
 class GoodsCommentReplyView extends StatelessWidget {
+  final CommentModel commentModel;
+
+  const GoodsCommentReplyView({Key key, this.commentModel}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     String avatarUrl;
@@ -25,6 +31,13 @@ class GoodsCommentReplyView extends StatelessWidget {
       );
     }
 
+    var createDateStr = "未知";
+    if (commentModel?.createdTime != null) {
+      var format = new DateFormat('yyyy-MM-dd HH:mm');
+      var date = DateTime.fromMillisecondsSinceEpoch(commentModel.createdTime);
+      createDateStr = format.format(date);
+    }
+
     return Container(
       margin: EdgeInsets.fromLTRB(55.0, 0, 0, 10),
       decoration: BoxDecoration(
@@ -36,6 +49,7 @@ class GoodsCommentReplyView extends StatelessWidget {
         ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(
             height: 10,
@@ -43,26 +57,29 @@ class GoodsCommentReplyView extends StatelessWidget {
           Row(
             children: <Widget>[
               avatar,
-              SizedBox(width: 5,),
+              SizedBox(
+                width: 5,
+              ),
               Expanded(
                 child: Text(
-                '回复者',
-                style: TextStyle(color: const Color(0xFF63CA6C)),
-              ),
+                  this.commentModel?.nickname ?? "未知",
+                  style: TextStyle(color: const Color(0xFF63CA6C)),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.only(right: 10.0),
                 child: Text(
-                '08.12 15:49',
-                style:
-                    TextStyle(fontSize: 12.0, color: const Color(0xFFB5BDC0)),
-              ),)
+                  createDateStr,
+                  style:
+                      TextStyle(fontSize: 12.0, color: const Color(0xFFB5BDC0)),
+                ),
+              )
             ],
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(25.0, 5.0, 10.0, 0.0),
             child: Text(
-              '@小魔王:按发结案发生的空间实际发ddd建安费肯德基房卡的荆防颗粒打卡了房间；打客服大开发了；阿达开始的放假啊；离开的房间啊',
+              this.commentModel.content ?? '',
               style: TextStyle(fontSize: 15.0, color: Colors.black),
             ),
           )

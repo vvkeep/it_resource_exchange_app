@@ -98,10 +98,24 @@ class NetworkUtils {
     return result;
   }
 
-    static resetPassword(String account, String password, String code) async {
+  static resetPassword(String account, String password, String code) async {
     String url = APPConfig.Server + "/user/verifyReset";
     var params = {"account": account, "password": password, "code": code};
     BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
+    return result;
+  }
+
+  static remarkProduct(int productId, int parentCommentId, String content) async {
+    String url = APPConfig.Server + "/productComment/remark";
+    var params = {"productId": productId, "parentCommentId": parentCommentId ?? 0, "content": content};
+    BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
+    return result;
+  }
+
+  static Future<BaseResult> requstProductCommentList(int productId, int startCommentId) async {
+    String url = APPConfig.Server + "/productComment/getList";
+    var params = {"productId": productId, "startCommentId": startCommentId, "parentCommentId":0, "count": 20};
+    BaseResult result = await httpManager.request(HttpMethod.GET, url, params);
     return result;
   }
 
