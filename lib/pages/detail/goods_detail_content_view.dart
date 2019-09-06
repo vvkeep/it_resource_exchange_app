@@ -7,9 +7,7 @@ import 'package:it_resource_exchange_app/common/constant.dart';
 import 'package:oktoast/oktoast.dart';
 
 class GoodsDetailContentView extends StatelessWidget {
-
-  GoodsDetailContentView({Key key, this.productDetail})
-        :super(key: key);
+  GoodsDetailContentView({Key key, this.productDetail}) : super(key: key);
 
   final ProductDetail productDetail;
 
@@ -195,19 +193,19 @@ class GoodsDetailContentView extends StatelessWidget {
     );
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Column(
-            children: <Widget>[
-              _buildTopInfoView(),
-              _buildGoodsDescTextView(),
-              _buildImgsView(),
-              _buildResourceView(),
-              SizedBox(height: MediaQuery.of(context).padding.bottom)
-            ],
-          );
+      children: <Widget>[
+        _buildTopInfoView(),
+        _buildGoodsDescTextView(),
+        _buildImgsView(),
+        _buildResourceView(),
+        Container(
+          color: AppColors.DividerColor,
+          height: 5,
+        )
+      ],
+    );
   }
 }

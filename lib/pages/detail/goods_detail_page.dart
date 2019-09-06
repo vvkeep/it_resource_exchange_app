@@ -6,13 +6,14 @@ import 'package:it_resource_exchange_app/model/base_result.dart';
 import 'package:it_resource_exchange_app/model/comment_model.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/pages/home/goods_item_view.dart';
+import 'package:it_resource_exchange_app/widgets/indicator_factory.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../model/product_detail.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
 import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
 import 'comment_view/goods_comment_content_view.dart';
-import 'comment_view/goods_comment_end_tip_view.dart';
 import 'goods_detail_bottom_bar.dart';
 import 'goods_detail_content_view.dart';
 import 'comment_view/goods_comment_header_view.dart';
@@ -34,14 +35,14 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
 
   List<CommentModel> commentList = [];
 
-  TextStyle subtitleStyle =
-      TextStyle(fontSize: 12.0, color: const Color(0xFFB5BDC0));
-  TextStyle contentStyle = TextStyle(fontSize: 15.0, color: Colors.black);
-
   var currentCommentId;
+
+  RefreshController _refreshController;
+
 
   void initState() {
     super.initState();
+    _refreshController = RefreshController();
     loadData();
   }
 
@@ -57,6 +58,11 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
         commentList = (commentListRes.data as List)
             .map((m) => CommentModel.fromJson(m))
             .toList();
+        if (commentList.length < 20) {
+          this._refreshController.loadNoData();
+        } else {
+          this._refreshController.loadComplete();
+        }
         setState(() {
           _layoutState = LoadState.State_Success;
         });
@@ -73,11 +79,22 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
   }
 
   loadProductCommentListData() async {
-    NetworkUtils.requstProductCommentList(this.widget.productId, 0).then((res) {
+    int startCommentId = this.commentList.last?.commentList ?? 0;
+    NetworkUtils.requstProductCommentList(this.widget.productId, startCommentId).then((res) {
       if (res.status == 200) {
-        commentList =
+        var tempList =
             (res.data as List).map((m) => CommentModel.fromJson(m)).toList();
+        
+        if (tempList.length < 20) {
+          this._refreshController.loadNoData();
+        } else {
+          this._refreshController.loadComplete();
+        }
+        if (tempList.length > 0) {
+          this.commentList.addAll(tempList);
+        }
         setState(() {
+          
         });
       }
     });
@@ -115,6 +132,45 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
     );
   }
 
+  _buildBodyView() {
+    return SmartRefresher(
+      controller: _refreshController,
+      enablePullUp: true,
+      enablePullDown: false,
+      footer: buildDefaultFooter(),
+      onLoading: () {
+        this.loadProductCommentListData();
+      },
+      child: CustomScrollView(
+          slivers: <Widget>[
+            SliverToBoxAdapter(
+              child: GoodsDetailContentView(
+                productDetail: productDetail,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: GoodsCommentHeaderView(),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, int index) {
+                  return GoodsCommentContentView(
+                    commentModel: this.commentList[index],
+                    tapCallback: ((comment) {
+                      this.currentCommentId = comment.commentId;
+                      //评论
+                      this.showCommentDialog();
+                    }),
+                  );
+                },
+                childCount: this.commentList.length,
+              ),
+            ),
+          ],
+        ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,42 +193,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
           });
           this.loadData();
         },
-        successWidget: CustomScrollView(
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: GoodsDetailContentView(
-                productDetail: productDetail,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                color: AppColors.DividerColor,
-                height: 5,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: GoodsCommentHeaderView(),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, int index) {
-                  return GoodsCommentContentView(
-                    commentModel: this.commentList[index],
-                    tapCallback: ((comment) {
-                      this.currentCommentId = comment.commentId;
-                      //评论
-                      this.showCommentDialog();
-                    }),
-                  );
-                },
-                childCount: this.commentList.length,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: GoodsCommentEndTipView(),
-            ),
-          ],
-        ),
+        successWidget: _buildBodyView()
       ),
       bottomNavigationBar: GoodsCommentBottomBar(
         btnActionCallback: ((tag) {

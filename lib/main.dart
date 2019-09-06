@@ -28,7 +28,6 @@ class MyApp extends StatelessWidget {
       radius: 6.0,
       child: MaterialApp(
         title: 'IT换换',
-        debugShowCheckedModeBanner: false,
         theme: ThemeData(
             primaryColor: AppColors.PrimaryColor,
             backgroundColor: Colors.white),
