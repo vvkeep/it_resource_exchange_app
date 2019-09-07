@@ -11,11 +11,23 @@ class CommentModel extends Object {
 	@JsonKey(name: 'createdTime')
 	int createdTime;
 
-	@JsonKey(name: 'userId')
-	int userId;
+	@JsonKey(name: 'createUserId')
+	int createUserId;
 
-	@JsonKey(name: 'nickname')
-	String nickname;
+  @JsonKey(name: 'createUserName')
+	String createUserName;
+
+  @JsonKey(name: 'createUserAvatar')
+	String createUserAvatar;
+
+	@JsonKey(name: 'parentUserId')
+	int parentUserId;
+
+  @JsonKey(name: 'parentUserName')
+	String parentUserName;
+
+  @JsonKey(name: 'parentUserAvatar')
+	String parentUserAvatar;
 
 	@JsonKey(name: 'productId')
 	int productId;
@@ -29,7 +41,7 @@ class CommentModel extends Object {
 	@JsonKey(name: 'parentCommentId')
 	int parentCommentId;
 
-	CommentModel(this.content,this.createdTime,this.userId,this.nickname,this.productId,this.commentList,this.commentId,this.parentCommentId,);
+	CommentModel(this.content,this.createdTime,this.createUserId,this.createUserName,this.createUserAvatar,this.parentUserId,this.parentUserName,this.parentUserAvatar,this.productId,this.commentList,this.commentId,this.parentCommentId,);
 
 	factory CommentModel.fromJson(Map<String, dynamic> srcJson) => _$CommentModelFromJson(srcJson);
 

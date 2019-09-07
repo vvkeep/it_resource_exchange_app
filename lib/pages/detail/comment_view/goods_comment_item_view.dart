@@ -64,7 +64,7 @@ class GoodsCommentItemView extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        commentModel.nickname ?? "未知",
+                        commentModel.createUserName ?? "未知",
                         style: TextStyle(color: const Color(0xFF63CA6C)),
                       ),
                     ),

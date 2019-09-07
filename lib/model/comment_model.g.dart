@@ -10,8 +10,12 @@ CommentModel _$CommentModelFromJson(Map<String, dynamic> json) {
   return CommentModel(
       json['content'] as String,
       json['createdTime'] as int,
-      json['userId'] as int,
-      json['nickname'] as String,
+      json['createUserId'] as int,
+      json['createUserName'] as String,
+      json['createUserAvatar'] as String,
+      json['parentUserId'] as int,
+      json['parentUserName'] as String,
+      json['parentUserAvatar'] as String,
       json['productId'] as int,
       (json['commentList'] as List)
           ?.map((e) => e == null
@@ -26,8 +30,12 @@ Map<String, dynamic> _$CommentModelToJson(CommentModel instance) =>
     <String, dynamic>{
       'content': instance.content,
       'createdTime': instance.createdTime,
-      'userId': instance.userId,
-      'nickname': instance.nickname,
+      'createUserId': instance.createUserId,
+      'createUserName': instance.createUserName,
+      'createUserAvatar': instance.createUserAvatar,
+      'parentUserId': instance.parentUserId,
+      'parentUserName': instance.parentUserName,
+      'parentUserAvatar': instance.parentUserAvatar,
       'productId': instance.productId,
       'commentList': instance.commentList,
       'commentId': instance.commentId,

@@ -105,16 +105,19 @@ class NetworkUtils {
     return result;
   }
 
-  static remarkProduct(int productId, int parentCommentId, String content) async {
+  static remarkProduct(int productId, String content, {int parentCommentId, int parentUserId}) async {
     String url = APPConfig.Server + "/productComment/remark";
-    var params = {"productId": productId, "parentCommentId": parentCommentId ?? 0, "content": content};
+    var params = {"productId": productId, "content": content};
+    if (parentCommentId != null && parentUserId != null) {
+      params.addAll({"parentCommentId": parentCommentId, "parentUserId": parentUserId});
+    }
     BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
     return result;
   }
 
   static Future<BaseResult> requstProductCommentList(int productId, int startCommentId) async {
     String url = APPConfig.Server + "/productComment/getList";
-    var params = {"productId": productId, "startCommentId": startCommentId, "parentCommentId":0, "count": 20};
+    var params = {"productId": productId, "startCommentId": startCommentId, "count": 20};
     BaseResult result = await httpManager.request(HttpMethod.GET, url, params);
     return result;
   }

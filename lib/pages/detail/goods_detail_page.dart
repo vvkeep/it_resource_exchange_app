@@ -6,6 +6,8 @@ import 'package:it_resource_exchange_app/model/base_result.dart';
 import 'package:it_resource_exchange_app/model/comment_model.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/pages/home/goods_item_view.dart';
+import 'package:it_resource_exchange_app/utils/user_utils.dart';
+import 'package:it_resource_exchange_app/vo/comment_vo.dart';
 import 'package:it_resource_exchange_app/widgets/indicator_factory.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../model/product_detail.dart';
@@ -35,10 +37,9 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
 
   List<CommentModel> commentList = [];
 
-  var currentCommentId;
+  CommentVO _commentVO;
 
   RefreshController _refreshController;
-
 
   void initState() {
     super.initState();
@@ -80,11 +81,12 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
 
   loadProductCommentListData() async {
     int startCommentId = this.commentList.last?.commentList ?? 0;
-    NetworkUtils.requstProductCommentList(this.widget.productId, startCommentId).then((res) {
+    NetworkUtils.requstProductCommentList(this.widget.productId, startCommentId)
+        .then((res) {
       if (res.status == 200) {
         var tempList =
             (res.data as List).map((m) => CommentModel.fromJson(m)).toList();
-        
+
         if (tempList.length < 20) {
           this._refreshController.loadNoData();
         } else {
@@ -93,26 +95,43 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
         if (tempList.length > 0) {
           this.commentList.addAll(tempList);
         }
-        setState(() {
-          
-        });
+        setState(() {});
       }
     });
   }
 
   remarkProduct(String content) async {
-    NetworkUtils.remarkProduct(
-            this.widget.productId, this.currentCommentId, content)
+    var parentCommentId;
+    var parentUserId;
+
+    // 点击的是评论
+    if (_commentVO != null && _commentVO.index == -1) {
+      CommentModel parentComment = _commentVO.commentModel;
+      parentCommentId = parentComment.commentId;
+      parentUserId = parentComment.createUserId;
+    } else {}
+    if (_commentVO != null && _commentVO.index != -1) {
+      CommentModel parentComment =
+          _commentVO.commentModel.commentList[_commentVO.index];
+      parentCommentId = parentComment.parentCommentId;
+      parentUserId = parentComment.createUserId;
+    }
+
+    NetworkUtils.remarkProduct(this.widget.productId, content,
+            parentCommentId: parentCommentId, parentUserId: parentUserId)
         .then((res) {
       if (res.status == 200) {
-        //评论成功
-        if (this.currentCommentId == null) {
-          showToast('回复成功');
+       CommentModel temp = CommentModel.fromJson(res.data);
+        // 构建一个评论模型
+        if (parentCommentId == null) {
+          //添加评论
+          showToast('评论成功', duration: Duration(milliseconds: 1500));
+          this.commentList.add(temp);
         } else {
-          showToast('评论成功');
+          showToast('回复成功', duration: Duration(milliseconds: 1500));
+          this._commentVO.commentModel.commentList.add(temp);
         }
-
-        this.loadProductCommentListData();
+        setState(() {});
       } else {
         showToast('发送失败');
       }
@@ -142,32 +161,32 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
         this.loadProductCommentListData();
       },
       child: CustomScrollView(
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: GoodsDetailContentView(
-                productDetail: productDetail,
-              ),
+        slivers: <Widget>[
+          SliverToBoxAdapter(
+            child: GoodsDetailContentView(
+              productDetail: productDetail,
             ),
-            SliverToBoxAdapter(
-              child: GoodsCommentHeaderView(),
+          ),
+          SliverToBoxAdapter(
+            child: GoodsCommentHeaderView(),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, int index) {
+                return GoodsCommentContentView(
+                  commentModel: this.commentList[index],
+                  tapCallback: ((commentVO) {
+                    this._commentVO = commentVO;
+                    //评论
+                    this.showCommentDialog();
+                  }),
+                );
+              },
+              childCount: this.commentList.length,
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, int index) {
-                  return GoodsCommentContentView(
-                    commentModel: this.commentList[index],
-                    tapCallback: ((comment) {
-                      this.currentCommentId = comment.commentId;
-                      //评论
-                      this.showCommentDialog();
-                    }),
-                  );
-                },
-                childCount: this.commentList.length,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -186,22 +205,21 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
         ),
       ),
       body: LoadStateLayout(
-        state: _layoutState,
-        errorRetry: () {
-          setState(() {
-            _layoutState = LoadState.State_Loading;
-          });
-          this.loadData();
-        },
-        successWidget: _buildBodyView()
-      ),
+          state: _layoutState,
+          errorRetry: () {
+            setState(() {
+              _layoutState = LoadState.State_Loading;
+            });
+            this.loadData();
+          },
+          successWidget: _buildBodyView()),
       bottomNavigationBar: GoodsCommentBottomBar(
         btnActionCallback: ((tag) {
           if (tag == 100) {
             //喜欢
 
           } else if (tag == 200) {
-            this.currentCommentId = null;
+            this._commentVO = null;
             //评论
             this.showCommentDialog();
           }

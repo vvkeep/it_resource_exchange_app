@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/model/comment_model.dart';
 import 'package:it_resource_exchange_app/utils/user_utils.dart';
+import 'package:it_resource_exchange_app/vo/comment_vo.dart';
 
 import 'goods_comment_item_view.dart';
 import 'goods_comment_reply_view.dart';
@@ -8,7 +9,7 @@ import 'goods_comment_reply_view.dart';
 class GoodsCommentContentView extends StatelessWidget {
   final CommentModel commentModel;
 
-  final ValueChanged<CommentModel> tapCallback;
+  final ValueChanged<CommentVO> tapCallback;
 
   const GoodsCommentContentView({Key key, this.commentModel, this.tapCallback})
       : super(key: key);
@@ -24,8 +25,8 @@ class GoodsCommentContentView extends StatelessWidget {
             child: GoodsCommentItemView(
               commentModel: commentModel,
             ),
-            onTap: UserUtils.getUserInfo().userId != this.commentModel.userId ?  () {
-              this.tapCallback(this.commentModel);
+            onTap: UserUtils.getUserInfo().userId != this.commentModel.createUserId ?  () {
+              this.tapCallback(CommentVO(index: -1, commentModel: commentModel));
             } : null,
           ),
         ),
@@ -34,8 +35,8 @@ class GoodsCommentContentView extends StatelessWidget {
             (context, int index) {
               return GestureDetector(
                 child: GoodsCommentReplyView(commentModel: this.commentModel.commentList[index],),
-                onTap: UserUtils.getUserInfo().userId != this.commentModel.commentList[index].userId ? () {
-                  this.tapCallback(this.commentModel.commentList[index]);
+                onTap: UserUtils.getUserInfo().userId != this.commentModel.commentList[index].createUserId ? () {
+                  this.tapCallback(CommentVO(index: index, commentModel: commentModel));
                 } : null,
               );
             },

@@ -62,7 +62,7 @@ class GoodsCommentReplyView extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  this.commentModel?.nickname ?? "未知",
+                  this.commentModel?.createUserName ?? "未知",
                   style: TextStyle(color: const Color(0xFF63CA6C)),
                 ),
               ),
