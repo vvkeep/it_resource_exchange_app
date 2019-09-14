@@ -8,36 +8,44 @@ part of 'product_detail.dart';
 
 ProductDetail _$ProductDetailFromJson(Map<String, dynamic> json) {
   return ProductDetail(
-      json['productId'] as int,
-      json['cateId'] as String,
-      json['cateTitle'] as String,
-      json['keywords'] as String,
-      json['imgUrls'] as String,
-      json['coverUrl'] as String,
-      (json['price'] as num)?.toDouble(),
-      json['productTitle'] as String,
+      json['commentCount'] as int,
       json['productDesc'] as String,
-      json['productStatus'] as int,
       json['tradeCount'] as int,
+      json['productTitle'] as String,
+      json['productStatus'] as int,
+      json['coverUrl'] as String,
       json['productAddressUrl'] as String,
+      json['updateTime'] as int,
       json['productAddressPassword'] as String,
-      json['createdTime'] as int);
+      json['keywords'] as String,
+      (json['price'] as num)?.toDouble(),
+      json['cateTitle'] as String,
+      json['isDelete'] as bool,
+      json['imgUrls'] as String,
+      json['createdTime'] as int,
+      json['createdBy'] as String,
+      json['productId'] as int,
+      json['cateId'] as String);
 }
 
 Map<String, dynamic> _$ProductDetailToJson(ProductDetail instance) =>
     <String, dynamic>{
-      'productId': instance.productId,
-      'cateId': instance.cateId,
-      'cateTitle': instance.cateTitle,
-      'keywords': instance.keywords,
-      'imgUrls': instance.imgUrls,
-      'coverUrl': instance.coverUrl,
-      'price': instance.price,
-      'productTitle': instance.productTitle,
+      'commentCount': instance.commentCount,
       'productDesc': instance.productDesc,
-      'productStatus': instance.productStatus,
       'tradeCount': instance.tradeCount,
+      'productTitle': instance.productTitle,
+      'productStatus': instance.productStatus,
+      'coverUrl': instance.coverUrl,
       'productAddressUrl': instance.productAddressUrl,
+      'updateTime': instance.updateTime,
       'productAddressPassword': instance.productAddressPassword,
-      'createdTime': instance.createdTime
+      'keywords': instance.keywords,
+      'price': instance.price,
+      'cateTitle': instance.cateTitle,
+      'isDelete': instance.isDelete,
+      'imgUrls': instance.imgUrls,
+      'createdTime': instance.createdTime,
+      'createdBy': instance.createdBy,
+      'productId': instance.productId,
+      'cateId': instance.cateId
     };

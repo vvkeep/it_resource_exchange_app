@@ -109,7 +109,8 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
       CommentModel parentComment = _commentVO.commentModel;
       parentCommentId = parentComment.commentId;
       parentUserId = parentComment.createUserId;
-    } else {}
+    }
+
     if (_commentVO != null && _commentVO.index != -1) {
       CommentModel parentComment =
           _commentVO.commentModel.commentList[_commentVO.index];
@@ -127,6 +128,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
           //添加评论
           showToast('评论成功', duration: Duration(milliseconds: 1500));
           this.commentList.add(temp);
+          this.productDetail.commentCount += 1;
         } else {
           showToast('回复成功', duration: Duration(milliseconds: 1500));
           this._commentVO.commentModel.commentList.add(temp);
@@ -168,7 +170,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
             ),
           ),
           SliverToBoxAdapter(
-            child: GoodsCommentHeaderView(),
+            child: GoodsCommentHeaderView(commentCount: this.productDetail?.commentCount ?? 0,),
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
