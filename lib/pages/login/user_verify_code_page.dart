@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
-import 'package:it_resource_exchange_app/route/it_router.dart';
-import 'package:it_resource_exchange_app/route/routes.dart';
+import 'package:it_resource_exchange_app/routes/it_router.dart';
+import 'package:it_resource_exchange_app/routes/routes.dart';
 import 'package:it_resource_exchange_app/utils/regex_utils.dart';
 import '../../net/network_utils.dart';
 import 'package:oktoast/oktoast.dart';

@@ -22,6 +22,8 @@ class Routes {
 
   static String myProductListPage = "/myProductList";
 
+  static String myCollectionListPage = "/myCollectionListPage";
+
   static String newProductPage = "/newProductPage";
 
   static void configureRoutes(Router router) {
@@ -35,6 +37,7 @@ class Routes {
     router.define(productDetailPage, handler: productDetailHandler);
     router.define(webPage, handler: webHandler);
     router.define(myProductListPage, handler: myProductListHandler);
+    router.define(myCollectionListPage, handler: myCollectionListHandler);
     router.define(newProductPage, handler: newProductHandler);
     router.define(loginPage, handler:loginHandler);
     router.define(registerPage, handler:registerHandler);

@@ -14,6 +14,7 @@ import '../pages/application_page.dart';
 import '../pages/detail/goods_detail_page.dart';
 import '../pages/my_product_list/my_product_list_page.dart';
 import '../pages/create/new_goods_page.dart';
+import '../pages/collection/my_collection_list_page.dart';
 
 var rootHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return UserUtils.isLogin() ? ApplicationPage() : LoginPage();
@@ -58,6 +59,10 @@ var webHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<St
 
 var myProductListHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return MyProductListPage();
+});
+
+var myCollectionListHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return MyCollectionListPage();
 });
 
 var newProductHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {

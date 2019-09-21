@@ -70,4 +70,9 @@ class APPIcons {
     0xe86e,
     fontFamily: Constant.IconFontFamily,
   );
+
+  static const CollectionData =  IconData(
+    0xe616,
+    fontFamily: Constant.IconFontFamily,
+  );
 }

@@ -84,6 +84,12 @@ class NetworkUtils {
     return result;
   }
 
+  static requestMyCollectionListData() async {
+    String url = APPConfig.Server + "/collectProduct/list";
+    BaseResult result = await httpManager.request(HttpMethod.GET, url, null);
+    return result;
+  }
+
   static sendCodeForRegister(String account) async {
     String url = APPConfig.Server + "/user/sendCodeForRegister";
     var params = {"account": account};
