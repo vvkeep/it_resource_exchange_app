@@ -9,7 +9,7 @@
 .buildlog/
 .history
 .svn/
-
+release.sh
 # IntelliJ related
 *.iml
 *.ipr
@@ -62,7 +62,7 @@ build/
 **/ios/Flutter/flutter_assets/
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
-**/IPADir/
+**/ios/IPADir/
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
