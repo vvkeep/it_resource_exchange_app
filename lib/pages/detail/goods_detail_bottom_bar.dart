@@ -3,17 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:it_resource_exchange_app/common/constant.dart';
 
 class GoodsCommentBottomBar extends StatelessWidget {
-
   final ValueChanged<int> btnActionCallback;
   final isCollect;
 
-  const GoodsCommentBottomBar({Key key, this.isCollect,this.btnActionCallback}) : super(key: key);
+  const GoodsCommentBottomBar({Key key, this.isCollect, this.btnActionCallback})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var collectIcon;
     if (isCollect) {
-     collectIcon = Icon(
+      collectIcon = Icon(
         APPIcons.CollectSelectData,
         color: AppColors.PrimaryColor,
       );
@@ -24,9 +24,9 @@ class GoodsCommentBottomBar extends StatelessWidget {
       );
     }
 
-    FlatButton favoriteBtn = FlatButton.icon(
+    IconButton favoriteBtn = IconButton(
+      color: Colors.red,
       icon: collectIcon,
-      label: Text("收藏"),
       onPressed: () {
         this.btnActionCallback(100);
       },
@@ -44,7 +44,9 @@ class GoodsCommentBottomBar extends StatelessWidget {
           color: AppColors.DividerColor,
           child: Row(
             children: <Widget>[
-              SizedBox(width: 20,),
+              SizedBox(
+                width: 20,
+              ),
               Text('说点什么吧',
                   style:
                       TextStyle(fontSize: 13, color: AppColors.LightTextColor)),
