@@ -25,7 +25,6 @@ class GoodsCommentBottomBar extends StatelessWidget {
     }
 
     IconButton favoriteBtn = IconButton(
-      color: Colors.red,
       icon: collectIcon,
       onPressed: () {
         this.btnActionCallback(100);
