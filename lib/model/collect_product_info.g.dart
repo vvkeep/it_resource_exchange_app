@@ -8,7 +8,7 @@ part of 'collect_product_info.dart';
 
 CollectProductInfo _$CollectProductInfoFromJson(Map<String, dynamic> json) {
   return CollectProductInfo(
-      json['price'] as double,
+      (json['price'] as num)?.toDouble(),
       json['cateId'] as String,
       json['coverUrl'] as String,
       json['updateTime'] as int,

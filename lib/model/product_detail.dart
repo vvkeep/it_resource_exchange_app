@@ -59,7 +59,11 @@ class ProductDetail extends Object {
 	@JsonKey(name: 'cateId')
 	String cateId;
 
-	ProductDetail(this.commentCount,this.productDesc,this.tradeCount,this.productTitle,this.productStatus,this.coverUrl,this.productAddressUrl,this.updateTime,this.productAddressPassword,this.keywords,this.price,this.cateTitle,this.isDelete,this.imgUrls,this.createdTime,this.createdBy,this.productId,this.cateId,);
+  @JsonKey(name: 'collectId')
+	int collectId;
+
+
+	ProductDetail(this.commentCount,this.productDesc,this.tradeCount,this.productTitle,this.productStatus,this.coverUrl,this.productAddressUrl,this.updateTime,this.productAddressPassword,this.keywords,this.price,this.cateTitle,this.isDelete,this.imgUrls,this.createdTime,this.createdBy,this.productId,this.cateId,this.collectId);
 
 	factory ProductDetail.fromJson(Map<String, dynamic> srcJson) => _$ProductDetailFromJson(srcJson);
 

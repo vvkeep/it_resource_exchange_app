@@ -5,20 +5,30 @@ import 'package:it_resource_exchange_app/common/constant.dart';
 class GoodsCommentBottomBar extends StatelessWidget {
 
   final ValueChanged<int> btnActionCallback;
+  final isCollect;
 
-  const GoodsCommentBottomBar({Key key, this.btnActionCallback}) : super(key: key);
+  const GoodsCommentBottomBar({Key key, this.isCollect,this.btnActionCallback}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var collectIcon;
+    if (isCollect) {
+     collectIcon = Icon(
+        APPIcons.CollectSelectData,
+        color: AppColors.PrimaryColor,
+      );
+    } else {
+      collectIcon = Icon(
+        APPIcons.CollectionData,
+        color: AppColors.ArrowNormalColor,
+      );
+    }
+
     FlatButton favoriteBtn = FlatButton.icon(
-      icon: Icon(
-        Icons.favorite_border,
-        color: Colors.grey[800],
-      ),
+      icon: collectIcon,
       label: Text("收藏"),
       onPressed: () {
         this.btnActionCallback(100);
-        print("喜欢");
       },
     );
 

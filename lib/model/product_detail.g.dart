@@ -25,7 +25,8 @@ ProductDetail _$ProductDetailFromJson(Map<String, dynamic> json) {
       json['createdTime'] as int,
       json['createdBy'] as String,
       json['productId'] as int,
-      json['cateId'] as String);
+      json['cateId'] as String,
+      json['collectId'] as int);
 }
 
 Map<String, dynamic> _$ProductDetailToJson(ProductDetail instance) =>
@@ -47,5 +48,6 @@ Map<String, dynamic> _$ProductDetailToJson(ProductDetail instance) =>
       'createdTime': instance.createdTime,
       'createdBy': instance.createdBy,
       'productId': instance.productId,
-      'cateId': instance.cateId
+      'cateId': instance.cateId,
+      'collectId': instance.collectId
     };

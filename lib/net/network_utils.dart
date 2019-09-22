@@ -90,6 +90,20 @@ class NetworkUtils {
     return result;
   }
 
+  static addCollectProduct(int cateId, int productId) async {
+    String url = APPConfig.Server + "/collectProduct/add";
+    var params = {"cateId": cateId, "productId": productId};
+    BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
+    return result;
+  }
+
+  static deleteCollectProcut(int collectId) async {
+    String url = APPConfig.Server + "/collectProduct/delete";
+    var params = {"collectId": collectId};
+    BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
+    return result;
+  }
+
   static sendCodeForRegister(String account) async {
     String url = APPConfig.Server + "/user/sendCodeForRegister";
     var params = {"account": account};

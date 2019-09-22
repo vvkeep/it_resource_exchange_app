@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -5,15 +7,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:it_resource_exchange_app/model/base_result.dart';
 import 'package:it_resource_exchange_app/model/comment_model.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
-import 'package:it_resource_exchange_app/pages/home/goods_item_view.dart';
 import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'package:it_resource_exchange_app/vo/comment_vo.dart';
 import 'package:it_resource_exchange_app/widgets/indicator_factory.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../model/product_detail.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:it_resource_exchange_app/common/constant.dart';
 import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
 import 'comment_view/goods_comment_content_view.dart';
 import 'goods_detail_bottom_bar.dart';
@@ -140,6 +139,34 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
     });
   }
 
+  addCollectProduct() {
+    int cateId =  int.parse(this.productDetail.cateId);
+    NetworkUtils.addCollectProduct(cateId, this.productDetail.productId).then((res) {
+      if (res.status == 200) {
+        var collectId = (res.data as Map)['collectId'];
+        setState(() {
+          this.productDetail.collectId = collectId;
+        });
+        showToast('收藏成功');
+      }else {
+        showToast('收藏失败');
+      }
+    });
+  }
+
+  deleteCollect() {
+    NetworkUtils.deleteCollectProcut(this.productDetail.collectId)..then((res) {
+      if (res.status == 200) {
+        setState(() {
+          this.productDetail.collectId = null;
+        });
+        showToast('取消收藏成功');
+      }else {
+        showToast('取消收藏失败');
+      }
+    });
+  }
+
   showCommentDialog() {
     Navigator.push(
       context,
@@ -216,10 +243,15 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
           },
           successWidget: _buildBodyView()),
       bottomNavigationBar: GoodsCommentBottomBar(
+        isCollect: this.productDetail?.collectId == null ? false : true,
         btnActionCallback: ((tag) {
           if (tag == 100) {
-            //喜欢
-
+            //收藏
+            if (this.productDetail.collectId == null) {
+              this.addCollectProduct();
+            } else {
+              this.deleteCollect();
+            }
           } else if (tag == 200) {
             this._commentVO = null;
             //评论

@@ -21,9 +21,9 @@ class Constant {
 }
 
 class APPConfig {
-  static const DEBUG = true;
-  // static const Server = "http://47.107.231.54:8090";
-  static const Server = "http://localhost:8090";
+  static const DEBUG = false;
+  static const Server = "http://47.107.231.54:8090";
+  // static const Server = "http://localhost:8090";
 }
 
 class APPIcons {
@@ -71,8 +71,13 @@ class APPIcons {
     fontFamily: Constant.IconFontFamily,
   );
 
-  static const CollectionData =  IconData(
+  static const CollectionData = IconData(
     0xe616,
+    fontFamily: Constant.IconFontFamily,
+  );
+
+  static const CollectSelectData = IconData(
+    0xe600,
     fontFamily: Constant.IconFontFamily,
   );
 }
