@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:it_resource_exchange_app/route/it_router.dart';
-import 'package:it_resource_exchange_app/route/routes.dart';
+import 'package:it_resource_exchange_app/routes/it_router.dart';
+import 'package:it_resource_exchange_app/routes/routes.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:it_resource_exchange_app/widgets/indicator_factory.dart';
 import 'package:it_resource_exchange_app/pages/classify/classify_item_view.dart';

@@ -1,12 +1,25 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:it_resource_exchange_app/model/base_result.dart';
+import 'package:it_resource_exchange_app/model/comment_model.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
+import 'package:it_resource_exchange_app/utils/user_utils.dart';
+import 'package:it_resource_exchange_app/vo/comment_vo.dart';
+import 'package:it_resource_exchange_app/widgets/indicator_factory.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../model/product_detail.dart';
-import 'package:intl/intl.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:it_resource_exchange_app/common/constant.dart';
 import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
+import 'comment_view/goods_comment_content_view.dart';
+import 'goods_detail_bottom_bar.dart';
+import 'goods_detail_content_view.dart';
+import 'comment_view/goods_comment_header_view.dart';
+import 'input_dialog/bottom_input_dialog.dart';
+import 'input_dialog/pop_bottom_input_dialog_route.dart';
 
 class GoodsDetailPage extends StatefulWidget {
   GoodsDetailPage({Key key, this.productId}) : super(key: key);
@@ -21,236 +34,187 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
 
   ProductDetail productDetail;
 
+  List<CommentModel> commentList = [];
+
+  CommentVO _commentVO;
+
+  RefreshController _refreshController;
+
   void initState() {
     super.initState();
+    _refreshController = RefreshController();
     loadData();
   }
 
   loadData() async {
-    NetworkUtils.requestProductDetailByProductId(this.widget.productId)
-        .then((res) {
-      if (res.status == 200) {
-        productDetail = ProductDetail.fromJson(res.data);
+    Future.wait([
+      NetworkUtils.requestProductDetailByProductId(this.widget.productId),
+      NetworkUtils.requstProductCommentList(this.widget.productId, 0)
+    ]).then((res) {
+      BaseResult productDetailRes = res[0];
+      BaseResult commentListRes = res[1];
+      if (productDetailRes.status == 200 && commentListRes.status == 200) {
+        productDetail = ProductDetail.fromJson(productDetailRes.data);
+        commentList = (commentListRes.data as List)
+            .map((m) => CommentModel.fromJson(m))
+            .toList();
+        if (commentList.length < 20) {
+          this._refreshController.loadNoData();
+        } else {
+          this._refreshController.loadComplete();
+        }
         setState(() {
           _layoutState = LoadState.State_Success;
         });
       } else {
+        BaseResult res =
+            productDetailRes.status != 200 ? productDetailRes : commentListRes;
         setState(() {
           _layoutState = loadStateByErrorCode(res.status);
         });
       }
+    }).catchError((error) {
+      print('${error.toString()}');
     });
   }
 
-  Widget _buildTagView(String text) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      margin: EdgeInsets.only(left: 8),
-      child: Text(text, style: TextStyle(fontSize: 10)),
-      decoration: BoxDecoration(
-          color: Colors.grey, borderRadius: BorderRadius.circular(3)),
-    );
+  loadProductCommentListData() async {
+    int startCommentId = this.commentList.last?.commentList ?? 0;
+    NetworkUtils.requstProductCommentList(this.widget.productId, startCommentId)
+        .then((res) {
+      if (res.status == 200) {
+        var tempList =
+            (res.data as List).map((m) => CommentModel.fromJson(m)).toList();
+
+        if (tempList.length < 20) {
+          this._refreshController.loadNoData();
+        } else {
+          this._refreshController.loadComplete();
+        }
+        if (tempList.length > 0) {
+          this.commentList.addAll(tempList);
+        }
+        setState(() {});
+      }
+    });
   }
 
-  Widget _buildPriceView() {
-    // 保留两位小数
-    String price = productDetail?.price?.toStringAsFixed(2) ?? "";
-    Row priceRow = Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Text("￥",
-            style: TextStyle(
-                color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold)),
-        Text(price,
-            style: TextStyle(
-                color: Colors.red, fontSize: 24, fontWeight: FontWeight.bold)),
-      ],
-    );
+  remarkProduct(String content) async {
+    var parentCommentId;
+    var parentUserId;
 
-    List<Widget> widgets = [priceRow];
-    if (productDetail?.keywords != null && productDetail.keywords.isNotEmpty) {
-      List<String> tags = productDetail.keywords.split(',');
-      List<Widget> tagWidgets = tags.map((tag) => _buildTagView(tag)).toList();
-      widgets.addAll(tagWidgets);
+    // 点击的是评论
+    if (_commentVO != null && _commentVO.index == -1) {
+      CommentModel parentComment = _commentVO.commentModel;
+      parentCommentId = parentComment.commentId;
+      parentUserId = parentComment.createUserId;
     }
 
-    return Padding(
-      padding: EdgeInsets.only(top: 8),
-      child: Row(
-        children: widgets,
-      ),
-    );
-  }
-
-  Widget _buildTopInfoView() {
-    var createDateStr = "未知";
-    if (productDetail?.createdTime != null) {
-      var format = new DateFormat('yyyy-MM-dd HH:mm');
-      var date = DateTime.fromMillisecondsSinceEpoch(productDetail.createdTime);
-      createDateStr = format.format(date);
+    if (_commentVO != null && _commentVO.index != -1) {
+      CommentModel parentComment =
+          _commentVO.commentModel.commentList[_commentVO.index];
+      parentCommentId = parentComment.parentCommentId;
+      parentUserId = parentComment.createUserId;
     }
 
-    return Container(
-      padding: EdgeInsets.fromLTRB(8, 16, 8, 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(productDetail?.productTitle ?? "",
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-          SizedBox(height: 5),
-          Text("发布时间: $createDateStr",
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: Colors.grey, fontSize: 12)),
-          Divider(color: AppColors.DividerColor),
-          _buildPriceView()
-        ],
-      ),
-    );
+    NetworkUtils.remarkProduct(this.widget.productId, content,
+            parentCommentId: parentCommentId, parentUserId: parentUserId)
+        .then((res) {
+      if (res.status == 200) {
+       CommentModel temp = CommentModel.fromJson(res.data);
+        // 构建一个评论模型
+        if (parentCommentId == null) {
+          //添加评论
+          showToast('评论成功', duration: Duration(milliseconds: 1500));
+          this.commentList.add(temp);
+          this.productDetail.commentCount += 1;
+        } else {
+          showToast('回复成功', duration: Duration(milliseconds: 1500));
+          this._commentVO.commentModel.commentList.add(temp);
+        }
+        setState(() {});
+      } else {
+        showToast('发送失败');
+      }
+    });
   }
 
-  Widget _buildGoodsDescTextView() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8),
-      child: Padding(
-        padding: EdgeInsets.only(bottom: 8),
-        child: Text(
-          productDetail?.productDesc?.trim() ?? "",
-          textAlign: TextAlign.left,
-          style: TextStyle(fontSize: 16),
+  addCollectProduct() {
+    int cateId =  int.parse(this.productDetail.cateId);
+    NetworkUtils.addCollectProduct(cateId, this.productDetail.productId).then((res) {
+      if (res.status == 200) {
+        var collectId = (res.data as Map)['collectId'];
+        setState(() {
+          this.productDetail.collectId = collectId;
+        });
+        showToast('收藏成功');
+      }else {
+        showToast('收藏失败');
+      }
+    });
+  }
+
+  deleteCollect() {
+    NetworkUtils.deleteCollectProcut(this.productDetail.collectId)..then((res) {
+      if (res.status == 200) {
+        setState(() {
+          this.productDetail.collectId = null;
+        });
+        showToast('取消收藏成功');
+      }else {
+        showToast('取消收藏失败');
+      }
+    });
+  }
+
+  showCommentDialog() {
+    Navigator.push(
+      context,
+      PopBottomInputDialogRoute(
+        child: BottomInputDialog(
+          callback: (text) {
+            this.remarkProduct(text);
+          },
         ),
       ),
     );
   }
 
-  Widget _buildImgsView() {
-    List<Widget> imgWidgets = [];
-
-    if (productDetail?.imgUrls != null) {
-      List<String> imgUrls = productDetail.imgUrls.split(',');
-      imgWidgets = imgUrls.map((imgUrl) {
-        return Container(
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(top: 8, left: 8, right: 8),
-          child: GestureDetector(
-            onTap: () {
-              print("URL = $imgUrl");
-            },
-            child: CachedNetworkImage(
-              width: MediaQuery.of(context).size.width,
-              fit: BoxFit.fill,
-              placeholder: (context, url) {
-                return Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: AppColors.BackgroundColor,
-                        width: AppSize.DividerWidth),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                  width: double.infinity,
-                  height: 250,
-                  child: Center(
-                    child: Icon(
-                      APPIcons.AddImgData,
-                      color: AppColors.PrimaryColor,
-                      size: 40,
-                    ),
-                  ),
-                );
-              },
-              imageUrl: imgUrl,
-              errorWidget: (context, url, error) => Icon(Icons.error),
+  _buildBodyView() {
+    return SmartRefresher(
+      controller: _refreshController,
+      enablePullUp: true,
+      enablePullDown: false,
+      footer: buildDefaultFooter(),
+      onLoading: () {
+        this.loadProductCommentListData();
+      },
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverToBoxAdapter(
+            child: GoodsDetailContentView(
+              productDetail: productDetail,
             ),
           ),
-        );
-      }).toList();
-    }
-
-    return new Column(
-      children: imgWidgets,
-    );
-  }
-
-  Widget _buildResourceItemView(String title, String value) {
-    var descWidget =
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-      Text(title, style: TextStyle(color: Colors.black, fontSize: 16)),
-      Text(value ?? "",
-          style: TextStyle(
-              color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold)),
-    ]);
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Expanded(child: descWidget),
-        SizedBox(width: 12),
-        IconButton(
-          icon: Icon(IconData(
-            0xe6e6,
-            fontFamily: Constant.IconFontFamily,
-          )),
-          onPressed: () {
-            Clipboard.setData(ClipboardData(text: value));
-            showToast("已复制到系统剪贴板");
-          },
-        )
-      ],
-    );
-  }
-
-  Widget _buildResourceView() {
-    List<Widget> itemWidgets = [Divider(color: AppColors.DividerColor)];
-    if (productDetail?.productAddressUrl != null) {
-      itemWidgets.add(
-          _buildResourceItemView("资源地址:", productDetail?.productAddressUrl ?? ""));
-      itemWidgets.add(SizedBox(height: 10));
-    }
-
-    if (productDetail?.productAddressPassword != null) {
-      itemWidgets.add(_buildResourceItemView(
-          "资源密码:", productDetail?.productAddressPassword ?? ""));
-      itemWidgets.add(SizedBox(height: 6));
-    }
-
-    return Container(
-      margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: itemWidgets,
-      ),
-    );
-  }
-
-  Widget _buildBottomBar() {
-    FlatButton favoriteBtn = FlatButton.icon(
-      icon: Icon(
-        Icons.favorite_border,
-        color: Colors.grey[800],
-      ),
-      label: Text("喜欢"),
-      onPressed: () {
-        print("喜欢");
-      },
-    );
-
-    Widget buyView = Container(
-      child: RaisedButton(
-        textColor: Colors.white,
-        color: Colors.red[500],
-        child: Text("立即换购"),
-        onPressed: () {},
-      ),
-    );
-
-    return BottomAppBar(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8),
-        child: Row(
-          children: <Widget>[favoriteBtn, Expanded(child: SizedBox()), buyView],
-        ),
+          SliverToBoxAdapter(
+            child: GoodsCommentHeaderView(commentCount: this.productDetail?.commentCount ?? 0,),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, int index) {
+                return GoodsCommentContentView(
+                  commentModel: this.commentList[index],
+                  tapCallback: ((commentVO) {
+                    this._commentVO = commentVO;
+                    //评论
+                    this.showCommentDialog();
+                  }),
+                );
+              },
+              childCount: this.commentList.length,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -270,26 +234,31 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> {
         ),
       ),
       body: LoadStateLayout(
-        state: _layoutState,
-        errorRetry: () {
-          setState(() {
-            _layoutState = LoadState.State_Loading;
-          });
-          this.loadData();
-        },
-        successWidget: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              _buildTopInfoView(),
-              _buildGoodsDescTextView(),
-              _buildImgsView(),
-              _buildResourceView(),
-              SizedBox(height: MediaQuery.of(context).padding.bottom)
-            ],
-          ),
-        ),
+          state: _layoutState,
+          errorRetry: () {
+            setState(() {
+              _layoutState = LoadState.State_Loading;
+            });
+            this.loadData();
+          },
+          successWidget: _buildBodyView()),
+      bottomNavigationBar: GoodsCommentBottomBar(
+        isCollect: this.productDetail?.collectId == null ? false : true,
+        btnActionCallback: ((tag) {
+          if (tag == 100) {
+            //收藏
+            if (this.productDetail.collectId == null) {
+              this.addCollectProduct();
+            } else {
+              this.deleteCollect();
+            }
+          } else if (tag == 200) {
+            this._commentVO = null;
+            //评论
+            this.showCommentDialog();
+          }
+        }),
       ),
-      // bottomNavigationBar: _buildBottomBar(),
     );
   }
 }

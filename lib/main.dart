@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
-import 'package:it_resource_exchange_app/route/it_router.dart';
+import 'package:it_resource_exchange_app/routes/it_router.dart';
 import './utils/local_storage_utils.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter/services.dart';
 import 'package:fluro/fluro.dart';
-import './route/routes.dart';
+import './routes/routes.dart';
 
 void main() async {
   await LocalStorage.getInstance();
@@ -27,8 +27,7 @@ class MyApp extends StatelessWidget {
       backgroundColor: Colors.black87,
       radius: 6.0,
       child: MaterialApp(
-        title: 'IT换换',
-        debugShowCheckedModeBanner: false,
+        title: '换换',
         theme: ThemeData(
             primaryColor: AppColors.PrimaryColor,
             backgroundColor: Colors.white),

@@ -84,6 +84,26 @@ class NetworkUtils {
     return result;
   }
 
+  static requestMyCollectionListData() async {
+    String url = APPConfig.Server + "/collectProduct/list";
+    BaseResult result = await httpManager.request(HttpMethod.GET, url, null);
+    return result;
+  }
+
+  static addCollectProduct(int cateId, int productId) async {
+    String url = APPConfig.Server + "/collectProduct/add";
+    var params = {"cateId": cateId, "productId": productId};
+    BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
+    return result;
+  }
+
+  static deleteCollectProcut(int collectId) async {
+    String url = APPConfig.Server + "/collectProduct/delete";
+    var params = {"collectId": collectId};
+    BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
+    return result;
+  }
+
   static sendCodeForRegister(String account) async {
     String url = APPConfig.Server + "/user/sendCodeForRegister";
     var params = {"account": account};
@@ -98,10 +118,27 @@ class NetworkUtils {
     return result;
   }
 
-    static resetPassword(String account, String password, String code) async {
+  static resetPassword(String account, String password, String code) async {
     String url = APPConfig.Server + "/user/verifyReset";
     var params = {"account": account, "password": password, "code": code};
     BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
+    return result;
+  }
+
+  static remarkProduct(int productId, String content, {int parentCommentId, int parentUserId}) async {
+    String url = APPConfig.Server + "/productComment/remark";
+    var params = {"productId": productId, "content": content};
+    if (parentCommentId != null && parentUserId != null) {
+      params.addAll({"parentCommentId": parentCommentId, "parentUserId": parentUserId});
+    }
+    BaseResult result = await httpManager.request(HttpMethod.POST, url, params);
+    return result;
+  }
+
+  static Future<BaseResult> requstProductCommentList(int productId, int startCommentId) async {
+    String url = APPConfig.Server + "/productComment/getList";
+    var params = {"productId": productId, "startCommentId": startCommentId, "count": 20};
+    BaseResult result = await httpManager.request(HttpMethod.GET, url, params);
     return result;
   }
 

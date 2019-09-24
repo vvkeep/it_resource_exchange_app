@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:it_resource_exchange_app/model/collect_product_info.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/routes/it_router.dart';
 import 'package:it_resource_exchange_app/routes/routes.dart';
-import 'package:it_resource_exchange_app/utils/user_utils.dart';
 import 'package:it_resource_exchange_app/model/product_detail.dart';
-import './my_product_item_view.dart';
+import '../my_product_list/my_product_item_view.dart';
 import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
 
-class MyProductListPage extends StatefulWidget {
+import 'my_collection_item_view.dart';
+
+class MyCollectionListPage extends StatefulWidget {
   @override
-  _MyProductListPageState createState() => _MyProductListPageState();
+  _MyCollectionListPageState createState() => _MyCollectionListPageState();
 }
 
-class _MyProductListPageState extends State<MyProductListPage> {
+class _MyCollectionListPageState extends State<MyCollectionListPage> {
   //页面加载状态，默认为加载中
   LoadState _layoutState = LoadState.State_Loading;
-  List<ProductDetail> productList = [];
+  List<CollectProductInfo> productList = [];
 
   void initState() {
     super.initState();
@@ -23,11 +25,11 @@ class _MyProductListPageState extends State<MyProductListPage> {
   }
 
   loadData() {
-    var userId = UserUtils.getUserInfo().userId;
-    NetworkUtils.requestMyProductListData(userId).then((res) {
+    NetworkUtils.requestMyCollectionListData().then((res) {
       if (res.status == 200) {
-        productList =
-            (res.data as List).map((m) => ProductDetail.fromJson(m)).toList();
+        productList = (res.data as List)
+            .map((m) => CollectProductInfo.fromJson(m))
+            .toList();
         setState(() {
           _layoutState = LoadState.State_Success;
         });
@@ -43,18 +45,13 @@ class _MyProductListPageState extends State<MyProductListPage> {
     return ListView.builder(
       itemCount: productList.length,
       itemBuilder: (context, index) {
-        return MyProductItemView(
+        return MyCollectionItemView(
           product: productList[index],
           onPressed: () {
-            ProductDetail product = productList[index];
-            ITRouter.push(context, Routes.newProductPage,{'productId': product.productId}).then((res) {
-              if (res) {
-                this.loadData();
-                setState(() {
-                  _layoutState = LoadState.State_Loading;
-                });
-              }
-            });
+            CollectProductInfo product = productList[index];
+            int productId = product.productId;
+            ITRouter.push(
+                context, Routes.productDetailPage, {'productId': productId});
           },
         );
       },
@@ -67,7 +64,7 @@ class _MyProductListPageState extends State<MyProductListPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          "我的资源",
+          "我的收藏",
           style: TextStyle(color: Colors.white),
         ),
         elevation: 0.0,

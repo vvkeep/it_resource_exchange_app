@@ -1,8 +1,8 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:it_resource_exchange_app/route/it_router.dart';
-import 'package:it_resource_exchange_app/route/routes.dart';
+import 'package:it_resource_exchange_app/routes/it_router.dart';
+import 'package:it_resource_exchange_app/routes/routes.dart';
 
 import './full_width_button.dart';
 import './profile_header_info.dart';
@@ -90,6 +90,16 @@ class _ProfilePageState extends State<ProfilePage> {
         //跳转到个人信息页面
       }),
       SizedBox(height: SEPARATE_SIZE),
+            FullWidthButton(
+        iconData: APPIcons.CollectionData,
+        title: '我的收藏',
+        showDivider: false,
+        onPressed: () {
+          ITRouter.push(context, Routes.myCollectionListPage, {});
+        },
+      ),
+      SizedBox(height: SEPARATE_SIZE),
+
       FullWidthButton(
         iconData: APPIcons.ProfileListImgData,
         title: '资源列表',

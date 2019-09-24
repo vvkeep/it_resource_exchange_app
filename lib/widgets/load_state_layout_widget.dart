@@ -1,13 +1,20 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:it_resource_exchange_app/route/it_router.dart';
-import 'package:it_resource_exchange_app/route/routes.dart';
+import 'package:it_resource_exchange_app/routes/it_router.dart';
+import 'package:it_resource_exchange_app/routes/routes.dart';
 import './loading_dialog.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppColors, APPIcons;
 
 //四种视图状态
-enum LoadState { State_Success, State_Error, State_Loading, State_Empty, State_Max_Api_Times, State_Token_Exprie }
+enum LoadState {
+  State_Success,
+  State_Error,
+  State_Loading,
+  State_Empty,
+  State_Max_Api_Times,
+  State_Token_Exprie
+}
 
 LoadState loadStateByErrorCode(int code) {
   LoadState state;
@@ -21,10 +28,11 @@ LoadState loadStateByErrorCode(int code) {
       break;
     case -1: //网络错误
     case -2:
+    case 999:
       state = LoadState.State_Error;
       break;
     default:
-      assert(false,"网络请求返回未知错误状态$code");
+      assert(false, "网络请求返回未知错误状态$code");
       break;
   }
   return state;
@@ -129,7 +137,8 @@ class _LoadStateLayoutState extends State<LoadStateLayout> {
             color: Color(0xffbc2929),
             onPressed: () {
               // token 过期 重新登录
-              ITRouter.push(context, Routes.loginPage, {}, transition:TransitionType.nativeModal);
+              ITRouter.push(context, Routes.loginPage, {},
+                  transition: TransitionType.nativeModal);
             },
             child: Text(
               '登录',
@@ -140,6 +149,7 @@ class _LoadStateLayoutState extends State<LoadStateLayout> {
       ),
     );
   }
+
   ///数据为空的视图
   Widget get _emptyView {
     return Container(

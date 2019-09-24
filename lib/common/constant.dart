@@ -36,6 +36,11 @@ class APPIcons {
     color: AppColors.ArrowNormalColor,
   );
 
+   static const AvatarData = IconData(
+      0xe642,
+      fontFamily: Constant.IconFontFamily,
+    );
+
   static const AddImgData = IconData(
     0xe70a,
     fontFamily: Constant.IconFontFamily,
@@ -63,6 +68,16 @@ class APPIcons {
 
   static const NetworkErrorData = IconData(
     0xe86e,
+    fontFamily: Constant.IconFontFamily,
+  );
+
+  static const CollectionData = IconData(
+    0xe616,
+    fontFamily: Constant.IconFontFamily,
+  );
+
+  static const CollectSelectData = IconData(
+    0xe600,
     fontFamily: Constant.IconFontFamily,
   );
 }
