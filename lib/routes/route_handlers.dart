@@ -15,9 +15,13 @@ import '../pages/detail/goods_detail_page.dart';
 import '../pages/my_product_list/my_product_list_page.dart';
 import '../pages/create/new_goods_page.dart';
 import '../pages/collection/my_collection_list_page.dart';
+import '../pages/login/perfect_info_page.dart';
+import '../pages/player/video_player_page.dart';
 
 var rootHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  return UserUtils.isLogin() ? ApplicationPage() : LoginPage();
+  // return UserUtils.isLogin() ? ApplicationPage() : LoginPage();
+    return UserUtils.isLogin() ? ApplicationPage() : VideoPlayerPage();
+
 });
 
 var mainHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -42,6 +46,9 @@ var resetPassworHandler = Handler(handlerFunc: (BuildContext context, Map<String
   return RestPasswordPage(account: account, verityCode: verityCode,);
 });
 
+var perfectInfoHander =  Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return PerfectInfoPage();
+});
 
 var productDetailHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   String productId = params['productId']?.first;
@@ -70,7 +77,9 @@ var newProductHandler = Handler(handlerFunc: (BuildContext context, Map<String, 
   return NewGoodsPage(productId: int.parse(productId));
 });
 
-
+var videoPlayerHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return VideoPlayerPage();
+});
 
 
 

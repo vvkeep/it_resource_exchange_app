@@ -7,6 +7,7 @@
 
 ## 版本更新记录
 **1.** [注册增加验证码和忘记密码流程](https://www.jianshu.com/p/84393a45935f)
+
 **2.** [新增收藏和评论功能](https://www.jianshu.com/p/d2768f0d20b8)
 
 ## 先上图

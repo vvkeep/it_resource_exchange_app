@@ -33,7 +33,11 @@ dependencies:
   multi_image_picker: ^4.5.1
   flutter_webview_plugin: ^0.3.5
   flutter_swiper : ^1.1.6
-  fluro: "^1.5.1"
+  fluro: ^1.5.1
+  chewie: ^0.9.8
+  video_player: ^0.10.2+1
+  auto_orientation: ^0.0.2
+
 
 
 dev_dependencies:
