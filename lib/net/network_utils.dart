@@ -142,4 +142,15 @@ class NetworkUtils {
     return result;
   }
 
+  static requestMovieListByCateId(int cateId, int currentPage) async {
+    String url = APPConfig.Server + "/movie/pageListByCateId";
+
+    var params = {"currentPage": currentPage, "pageSize": 20};
+    if (cateId != null) {
+      params["cateId"] = cateId;
+    }
+    BaseResult result = await httpManager.request(HttpMethod.GET, url, params);
+    return result;
+  }
+
 }

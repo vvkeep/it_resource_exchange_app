@@ -16,6 +16,8 @@ class Routes {
   
   static String resetPasswordPage = "/resetPasswordPage";
 
+  static String perfectInfoPage = "/perfectInfoPage";
+
   static String productDetailPage = "/productDetailPage";
 
   static String webPage = "/webPage";
@@ -25,6 +27,8 @@ class Routes {
   static String myCollectionListPage = "/myCollectionListPage";
 
   static String newProductPage = "/newProductPage";
+
+  static String moviePlayerPage = "/moviePlayerPage";
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -41,9 +45,10 @@ class Routes {
     router.define(newProductPage, handler: newProductHandler);
     router.define(loginPage, handler:loginHandler);
     router.define(registerPage, handler:registerHandler);
+    router.define(perfectInfoPage, handler:perfectInfoHander);
     router.define(resetPasswordVerityPage, handler:resetPassworVerityHandler);
     router.define(resetPasswordPage, handler:resetPassworHandler);
-
+    router.define(moviePlayerPage, handler:videoPlayerHandler);
   }
 
 }
