@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'movie_cate_list_view.dart';
-import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
-import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
-import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
+import 'package:it_resource_exchange_app/common/constant.dart';
 
 class MovieCateListPage extends StatefulWidget {
   @override
@@ -14,15 +12,12 @@ class _MovieCateListPageState extends State<MovieCateListPage> with SingleTicker
 
   TabController _tabController;
 
-  List<CateInfo> cateList = [];
-
-  //页面加载状态，默认为加载中
-  LoadState _layoutState = LoadState.State_Loading;
+  List<CateInfo> cateList = Constant.movieCateInfoList;
 
   @override
   void initState() {
     super.initState();
-    loadData();
+    _tabController = TabController(vsync: this, length: cateList.length);
   }
 
   @override
@@ -33,24 +28,6 @@ class _MovieCateListPageState extends State<MovieCateListPage> with SingleTicker
 
   @override
   bool get wantKeepAlive => true;
-
-  loadData() {
-    NetworkUtils.requestCategoryListData().then((res)  {
-      if (res.status == 200) {
-       cateList = (res.data as List).map((m) =>CateInfo.fromJson(m)).toList();
-      //添加全部分类
-      cateList.insert(0, CateInfo(null, 0, "全部", 0));
-       _tabController = TabController(vsync: this, length: cateList.length);
-       setState(() {
-          _layoutState = LoadState.State_Success;
-       });
-      }else {
-        setState(() {
-          _layoutState = loadStateByErrorCode(res.status);
-        });
-      }
-    });
-  }
 
   Widget _buildTabPageView() {
     return Column(
@@ -70,7 +47,7 @@ class _MovieCateListPageState extends State<MovieCateListPage> with SingleTicker
             isScrollable: true,
             labelColor: AppColors.PrimaryColor,
             indicatorColor: AppColors.PrimaryColor,
-            tabs: cateList.map<Widget>((cate){
+            tabs: Constant.movieCateInfoList.map<Widget>((cate){
               return Tab(text: cate.cateTitle);
             }).toList()
           ),
@@ -90,15 +67,6 @@ class _MovieCateListPageState extends State<MovieCateListPage> with SingleTicker
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return LoadStateLayout(
-      state: _layoutState,
-      errorRetry: () {
-        setState(() {
-          _layoutState = LoadState.State_Loading;
-        });
-        this.loadData();
-      },
-      successWidget: _buildTabPageView(),
-    );
+    return _buildTabPageView();
   }
 }

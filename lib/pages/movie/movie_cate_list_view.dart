@@ -8,8 +8,8 @@ import 'package:it_resource_exchange_app/pages/movie/movie_list_item_view.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
 import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/model/page_result.dart';
-import "package:it_resource_exchange_app/model/home_info.dart";
 import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
+import 'package:it_resource_exchange_app/model/movie_info.dart';
 
 class MovieCateListView extends StatefulWidget {
   final CateInfo cate;
@@ -28,7 +28,7 @@ class _MovieCateListViewState extends State<MovieCateListView>
   RefreshController _refreshController;
 
   PageResult pageResult;
-  List<RecommendProductList> productList = [];
+  List<MovieInfo> movieList = [];
 
   @override
   void initState() {
@@ -54,13 +54,13 @@ class _MovieCateListViewState extends State<MovieCateListView>
         loadData(loadMore: true);
       },
       child: ListView.builder(
-        itemCount: productList.length,
+        itemCount: movieList.length,
         itemBuilder: (context, index) {
           return MovieListItemView(
-            recomendProduct: productList[index],
+            moive: movieList[index],
             onPressed: () {
-              int productId = productList[index].productId;
-              ITRouter.push(context, Routes.productDetailPage, {'productId': productId});
+              MovieInfo movieInfo = movieList[index];
+              ITRouter.push(context, Routes.moviePlayerPage, movieInfo.toJson());
             },
           );
         },
@@ -90,7 +90,7 @@ class _MovieCateListViewState extends State<MovieCateListView>
     int page = (pageResult == null || loadMore == false)
         ? 1
         : pageResult.currentPage + 1;
-    NetworkUtils.requestProductListByCateId(this.widget.cate.cateId, page)
+    NetworkUtils.requestMovieListByCateId(this.widget.cate.cateId, page)
         .then((res) {
       if (res.status == 200) {
         pageResult = PageResult.fromJson(res.data);
@@ -100,9 +100,9 @@ class _MovieCateListViewState extends State<MovieCateListView>
         if (loadMore) {
           if (pageResult.items.length > 0) {
             var tempList = pageResult.items
-                .map((m) => RecommendProductList.fromJson(m))
+                .map((m) => MovieInfo.fromJson(m))
                 .toList();
-            productList.addAll(tempList);
+            movieList.addAll(tempList);
             _refreshController.loadComplete();
           } else {
             _refreshController.loadNoData();
@@ -114,8 +114,8 @@ class _MovieCateListViewState extends State<MovieCateListView>
               _layoutState = LoadState.State_Empty;
             });
           } else {
-            productList = pageResult.items
-                .map((m) => RecommendProductList.fromJson(m))
+            movieList = pageResult.items
+                .map((m) => MovieInfo.fromJson(m))
                 .toList();
             _refreshController.refreshCompleted();
             setState(() {

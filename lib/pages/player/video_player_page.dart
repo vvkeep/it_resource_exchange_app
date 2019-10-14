@@ -1,127 +1,59 @@
-import 'package:auto_orientation/auto_orientation.dart';
-import 'package:chewie/chewie.dart';
-import 'package:chewie/src/chewie_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:it_resource_exchange_app/common/constant.dart';
+import 'package:it_resource_exchange_app/model/movie_info.dart';
 import 'package:video_player/video_player.dart';
-
+import 'video_player_widget.dart';
 class VideoPlayerPage extends StatefulWidget {
+
+  final MovieInfo movieInfo;
+
+  const VideoPlayerPage({Key key, this.movieInfo}) : super(key: key);
+
   @override
   _VideoPlayerPageState createState() => _VideoPlayerPageState();
 }
 
 class _VideoPlayerPageState extends State<VideoPlayerPage> {
   VideoPlayerController _videoPlayerController;
-  ChewieController _chewieController;
 
   @override
   void initState() {
     super.initState();
-    _videoPlayerController = VideoPlayerController.network(
-        'https://dbx5.tyswmp.com/20191001/TnbYv1WK/index.m3u8');
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      aspectRatio: 3 / 2,
-      autoPlay: true,
-      looping: true,
-      showControls: true,
-      cupertinoProgressColors: ChewieProgressColors(
-        playedColor: Colors.red,
-        handleColor: Colors.blue,
-        backgroundColor: Colors.grey,
-        bufferedColor: Colors.lightGreen,
-      ),
-      materialProgressColors: ChewieProgressColors(
-        playedColor: Colors.red,
-        handleColor: Colors.blue,
-        backgroundColor: Colors.grey,
-        bufferedColor: Colors.lightGreen,
-      ),
-      placeholder: Container(
-        color: Colors.black,
-      ),
-      autoInitialize: true,
-      routePageBuilder: (BuildContext context, Animation<double> animation,
-        Animation<double> secondAnimation, provider) {
-        return AnimatedBuilder(
-          animation: animation,
-          builder: (BuildContext context, Widget child) {
-            return VideoScaffold(
-              child: Scaffold(
-                resizeToAvoidBottomPadding: false,
-                body: Container(
-                  alignment: Alignment.center,
-                  color: Colors.grey,
-                  child: provider,
-                ),
-              ),
-            );
-          },
-        );
-    }
-    );  
+    _videoPlayerController = VideoPlayerController.network(this.widget.movieInfo.playUrl ?? "");
   }
 
-   @override
+  @override
   void dispose() {
-    _videoPlayerController.dispose();
-    _chewieController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('银河补习班'),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
+      appBar: AppBar(
+        title: Text(this.widget.movieInfo.movieName ?? ""),
+      ),
+      body: Column(
+      
+        children: <Widget>[
+          VideoPlayerWidget(videoPlayerController: _videoPlayerController,),
+          ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
             children: <Widget>[
-              Chewie(
-                  controller: _chewieController,
-                )
-            ],  
+              Text('导演:${this.widget.movieInfo.director}', style: TextStyle(color: AppColors.DarkTextColor, fontSize: 16)),
+              Text('演员:${this.widget.movieInfo.rolesNames}', style: TextStyle(color: AppColors.DarkTextColor, fontSize: 16)),
+              Text('上映时间:${this.widget.movieInfo.releaseYear}', style: TextStyle(color: AppColors.DarkTextColor, fontSize: 16)),
+              SizedBox(height: 20,),
+              Text('剧情描述:', style: TextStyle(color: AppColors.DarkTextColor, fontSize: 16)),
+              Text(this.widget.movieInfo.desc, style: TextStyle(color: AppColors.MidTextColor, fontSize: 14)) ,
+            ],
           ),
-        ),
+        ],
+      ),
     );
   }
 }
 
 
-class VideoScaffold extends StatefulWidget {
-  const VideoScaffold({Key key, this.child}) : super(key: key);
-
-  final Widget child;
-
-  @override
-  State<StatefulWidget> createState() => _VideoScaffoldState();
-}
-
-class _VideoScaffoldState extends State<VideoScaffold> {
-  @override
-  void initState() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
-    AutoOrientation.landscapeMode();
-    super.initState();
-  }
-
-  @override
-  dispose() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-    AutoOrientation.portraitMode();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
-  }
-}

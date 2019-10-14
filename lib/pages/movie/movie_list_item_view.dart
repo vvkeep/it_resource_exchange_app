@@ -2,24 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/constant.dart'
     show AppSize, AppColors;
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../model/home_info.dart';
-import 'package:intl/intl.dart';
+import 'package:it_resource_exchange_app/model/movie_info.dart';
 
 class MovieListItemView extends StatelessWidget {
- const MovieListItemView({Key key, this.recomendProduct, this.onPressed})
-      : assert(recomendProduct != null),
+ const MovieListItemView({Key key, this.moive, this.onPressed})
+      : assert(moive != null),
         super(key: key);
 
-  final RecommendProductList recomendProduct;
+  final MovieInfo moive;
 
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
-    var format = new DateFormat('yyyy-MM-dd HH:mm');
-    var date = DateTime.fromMillisecondsSinceEpoch(recomendProduct.createdTime);
-    var createDateStr = format.format(date);
-
     return GestureDetector(
       onTap: this.onPressed,
       child: Container(
@@ -41,7 +36,7 @@ class MovieListItemView extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.only(top: 10.0),
                       child: Text(
-                        recomendProduct.productTitle,
+                        moive.movieName ?? "",
                         style: TextStyle(fontSize: 15.0, color: AppColors.DarkTextColor),
                       ),
                     ),
@@ -50,7 +45,7 @@ class MovieListItemView extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(createDateStr,
+                          Text('上映日期:${moive.releaseYear}',
                               style: TextStyle(
                                   color: AppColors.LightTextColor,
                                   fontSize: 12.0)),
@@ -79,7 +74,7 @@ class MovieListItemView extends StatelessWidget {
                 width: 120.0,
                 height: 80.0,
                 child: CachedNetworkImage(
-                  imageUrl: recomendProduct.coverUrl,
+                  imageUrl: moive.coverUrl,
                   placeholder: (context, url) => Image.asset('./assets/imgs/img_default.png'),
                   fit: BoxFit.cover,
                 ),

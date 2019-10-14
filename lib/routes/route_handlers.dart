@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:it_resource_exchange_app/model/movie_info.dart';
 import 'package:it_resource_exchange_app/pages/login/register_page.dart';
 import '../pages/login/user_verify_code_page.dart';
 import '../pages/login/reset_password_page.dart';
@@ -18,44 +19,54 @@ import '../pages/collection/my_collection_list_page.dart';
 import '../pages/login/perfect_info_page.dart';
 import '../pages/player/video_player_page.dart';
 
-var rootHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  // return UserUtils.isLogin() ? ApplicationPage() : LoginPage();
-    return UserUtils.isLogin() ? ApplicationPage() : VideoPlayerPage();
-
+var rootHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return UserUtils.isLogin() ? ApplicationPage() : LoginPage();
 });
 
-var mainHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+var mainHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return ApplicationPage();
 });
 
-var loginHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+var loginHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return LoginPage();
 });
 
-var registerHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+var registerHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return RegisterPage();
 });
 
-var resetPassworVerityHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+var resetPassworVerityHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return UserVerifyCodePage();
 });
 
-var resetPassworHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    String account = params['account']?.first;
-    String verityCode = params['verityCode']?.first;
-  return RestPasswordPage(account: account, verityCode: verityCode,);
+var resetPassworHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  String account = params['account']?.first;
+  String verityCode = params['verityCode']?.first;
+  return RestPasswordPage(
+    account: account,
+    verityCode: verityCode,
+  );
 });
 
-var perfectInfoHander =  Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+var perfectInfoHander = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return PerfectInfoPage();
 });
 
-var productDetailHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+var productDetailHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   String productId = params['productId']?.first;
   return GoodsDetailPage(productId: int.parse(productId));
 });
 
-var webHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+var webHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   String title = params['title']?.first;
   var list = List<int>();
   jsonDecode(title).forEach(list.add);
@@ -64,27 +75,43 @@ var webHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<St
   return WebviewPage(title: title, url: url);
 });
 
-var myProductListHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+var myProductListHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return MyProductListPage();
 });
 
-var myCollectionListHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+var myCollectionListHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return MyCollectionListPage();
 });
 
-var newProductHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+var newProductHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   String productId = params['productId']?.first;
   return NewGoodsPage(productId: int.parse(productId));
 });
 
-var videoPlayerHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  return VideoPlayerPage();
+var videoPlayerHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  var result = Map<String, dynamic>();
+  params.keys.toList().forEach((String key) {
+    String value = (params[key]).first;
+    var val;
+    if (value.startsWith('[') && value.endsWith(']')) {
+      var list = List<int>();
+      jsonDecode(value).forEach(list.add);
+      val = Utf8Decoder().convert(list);
+    }else if(value.startsWith('http') || key == 'releaseYear' || key == 'cateId') {
+      val = value;
+    }else if(value == 'true') {
+      val = true;
+    }else if(value == 'false') {
+      val = false;
+    } else {
+      val = num.parse(value);
+    }
+    result[key] = val;
+  });
+  MovieInfo movieInfo = MovieInfo.fromJson(result);
+  return VideoPlayerPage(movieInfo: movieInfo,);
 });
-
-
-
-
-
-
-
-

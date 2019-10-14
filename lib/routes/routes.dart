@@ -28,6 +28,8 @@ class Routes {
 
   static String newProductPage = "/newProductPage";
 
+  static String moviePlayerPage = "/moviePlayerPage";
+
   static void configureRoutes(Router router) {
     router.notFoundHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
        print("ROUTE WAS NOT FOUND !!!");
@@ -46,7 +48,7 @@ class Routes {
     router.define(perfectInfoPage, handler:perfectInfoHander);
     router.define(resetPasswordVerityPage, handler:resetPassworVerityHandler);
     router.define(resetPasswordPage, handler:resetPassworHandler);
-
+    router.define(moviePlayerPage, handler:videoPlayerHandler);
   }
 
 }

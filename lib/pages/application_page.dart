@@ -24,7 +24,7 @@ class _ApplicationPageState extends State<ApplicationPage>
       backgroundColor: AppColors.PrimaryColor,
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.tune),
+      icon: Icon(Icons.video_library),
       title: Text('娱乐'),
       backgroundColor: AppColors.PrimaryColor,
     ),

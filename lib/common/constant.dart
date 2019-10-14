@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:it_resource_exchange_app/model/cate_info.dart';
 
 /// 颜色
 class AppColors {
@@ -18,6 +19,17 @@ class AppSize {
 
 class Constant {
   static const IconFontFamily = "appIconFont";
+  static final movieCateInfoList = [
+    CateInfo(1, 0, '动作', 0),
+    CateInfo(2, 0, '喜剧', 0),
+    CateInfo(3, 0, '爱情', 0),
+    CateInfo(4, 0, '科幻', 0),
+    CateInfo(5, 0, '恐怖', 0),
+    CateInfo(6, 0, '剧情', 0),
+    CateInfo(7, 0, '战争', 0),
+    CateInfo(8, 0, '伦理', 0),
+    CateInfo(9, 0, '奇幻', 0)
+  ];
 }
 
 class APPConfig {
@@ -36,10 +48,10 @@ class APPIcons {
     color: AppColors.ArrowNormalColor,
   );
 
-   static const AvatarData = IconData(
-      0xe642,
-      fontFamily: Constant.IconFontFamily,
-    );
+  static const AvatarData = IconData(
+    0xe642,
+    fontFamily: Constant.IconFontFamily,
+  );
 
   static const AddImgData = IconData(
     0xe70a,
@@ -78,6 +90,11 @@ class APPIcons {
 
   static const CollectSelectData = IconData(
     0xe600,
+    fontFamily: Constant.IconFontFamily,
+  );
+
+  static const VideoData = IconData(
+    0xe60d,
     fontFamily: Constant.IconFontFamily,
   );
 }
