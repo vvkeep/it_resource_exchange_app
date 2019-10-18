@@ -153,4 +153,12 @@ class NetworkUtils {
     return result;
   }
 
+  static requstMovieDetailData(int movieId) async {
+    String url = APPConfig.Server + "/movie/detail";
+    var params = {"movieId": movieId};
+    BaseResult result = await httpManager.request(HttpMethod.GET, url, params);
+    return result;
+
+  }
+
 }

@@ -59,8 +59,8 @@ class _MovieCateListViewState extends State<MovieCateListView>
           return MovieListItemView(
             moive: movieList[index],
             onPressed: () {
-              MovieInfo movieInfo = movieList[index];
-              ITRouter.push(context, Routes.moviePlayerPage, movieInfo.toJson());
+              int movieId = movieList[index].movieId;
+              ITRouter.push(context, Routes.moviePlayerPage, {'movieId': movieId});
             },
           );
         },

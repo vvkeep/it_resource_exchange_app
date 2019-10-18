@@ -93,25 +93,6 @@ var newProductHandler = Handler(
 
 var videoPlayerHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  var result = Map<String, dynamic>();
-  params.keys.toList().forEach((String key) {
-    String value = (params[key]).first;
-    var val;
-    if (value.startsWith('[') && value.endsWith(']')) {
-      var list = List<int>();
-      jsonDecode(value).forEach(list.add);
-      val = Utf8Decoder().convert(list);
-    }else if(value.startsWith('http') || key == 'releaseYear' || key == 'cateId') {
-      val = value;
-    }else if(value == 'true') {
-      val = true;
-    }else if(value == 'false') {
-      val = false;
-    } else {
-      val = num.parse(value);
-    }
-    result[key] = val;
-  });
-  MovieInfo movieInfo = MovieInfo.fromJson(result);
-  return VideoPlayerPage(movieInfo: movieInfo,);
+    String movieId = params['movieId']?.first;
+  return VideoPlayerPage(movieId: int.parse(movieId),);
 });
