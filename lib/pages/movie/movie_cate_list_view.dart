@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:it_resource_exchange_app/pages/movie/movie_item_view.dart';
 import 'package:it_resource_exchange_app/routes/it_router.dart';
 import 'package:it_resource_exchange_app/routes/routes.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -30,6 +31,9 @@ class _MovieCateListViewState extends State<MovieCateListView>
   PageResult pageResult;
   List<MovieInfo> movieList = [];
 
+  var itemW;
+  var childAspectRatio;
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +44,38 @@ class _MovieCateListViewState extends State<MovieCateListView>
   @override
   bool get wantKeepAlive => true;
 
+  // SmartRefresher _buildRefreshListView() {
+  //   return SmartRefresher(
+  //     controller: _refreshController,
+  //     enablePullUp: true,
+  //     enablePullDown: true,
+  //     header: buildDefaultHeader(),
+  //     footer: buildDefaultFooter(),
+  //     onRefresh: () {
+  //       loadData(loadMore: false);
+  //     },
+  //     onLoading: () {
+  //       loadData(loadMore: true);
+  //     },
+  //     child: ListView.builder(
+  //       itemCount: movieList.length,
+  //       itemBuilder: (context, index) {
+  //         return MovieListItemView(
+  //           moive: movieList[index],
+  //           onPressed: () {
+  //             int movieId = movieList[index].movieId;
+  //             ITRouter.push(context, Routes.moviePlayerPage, {'movieId': movieId});
+  //           },
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
+
   SmartRefresher _buildRefreshListView() {
+    itemW = (MediaQuery.of(context).size.width - 30.0 - 20.0) / 3;
+    childAspectRatio = (377.0 / 674.0);
+
     return SmartRefresher(
       controller: _refreshController,
       enablePullUp: true,
@@ -53,14 +88,19 @@ class _MovieCateListViewState extends State<MovieCateListView>
       onLoading: () {
         loadData(loadMore: true);
       },
-      child: ListView.builder(
-        itemCount: movieList.length,
-        itemBuilder: (context, index) {
-          return MovieListItemView(
-            moive: movieList[index],
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 10.0,
+            mainAxisSpacing: 0.0,
+            childAspectRatio: childAspectRatio),
+        itemBuilder: (BuildContext context, int index) {
+          return MovieItemView(
+            movieInfo: this.movieList[index],
             onPressed: () {
               int movieId = movieList[index].movieId;
-              ITRouter.push(context, Routes.moviePlayerPage, {'movieId': movieId});
+              ITRouter.push(
+                  context, Routes.moviePlayerPage, {'movieId': movieId});
             },
           );
         },
@@ -99,9 +139,8 @@ class _MovieCateListViewState extends State<MovieCateListView>
         }
         if (loadMore) {
           if (pageResult.items.length > 0) {
-            var tempList = pageResult.items
-                .map((m) => MovieInfo.fromJson(m))
-                .toList();
+            var tempList =
+                pageResult.items.map((m) => MovieInfo.fromJson(m)).toList();
             movieList.addAll(tempList);
             _refreshController.loadComplete();
           } else {
@@ -114,9 +153,8 @@ class _MovieCateListViewState extends State<MovieCateListView>
               _layoutState = LoadState.State_Empty;
             });
           } else {
-            movieList = pageResult.items
-                .map((m) => MovieInfo.fromJson(m))
-                .toList();
+            movieList =
+                pageResult.items.map((m) => MovieInfo.fromJson(m)).toList();
             _refreshController.refreshCompleted();
             setState(() {
               _layoutState = LoadState.State_Success;
