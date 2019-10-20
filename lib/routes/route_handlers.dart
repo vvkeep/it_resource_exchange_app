@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:it_resource_exchange_app/model/movie_info.dart';
 import 'package:it_resource_exchange_app/pages/login/register_page.dart';
 import '../pages/login/user_verify_code_page.dart';
 import '../pages/login/reset_password_page.dart';
@@ -18,6 +17,7 @@ import '../pages/create/new_goods_page.dart';
 import '../pages/collection/my_collection_list_page.dart';
 import '../pages/login/perfect_info_page.dart';
 import '../pages/player/video_player_page.dart';
+import '../pages/movie/movie_search_page.dart';
 
 var rootHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -93,25 +93,11 @@ var newProductHandler = Handler(
 
 var videoPlayerHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  var result = Map<String, dynamic>();
-  params.keys.toList().forEach((String key) {
-    String value = (params[key]).first;
-    var val;
-    if (value.startsWith('[') && value.endsWith(']')) {
-      var list = List<int>();
-      jsonDecode(value).forEach(list.add);
-      val = Utf8Decoder().convert(list);
-    }else if(value.startsWith('http') || key == 'releaseYear' || key == 'cateId') {
-      val = value;
-    }else if(value == 'true') {
-      val = true;
-    }else if(value == 'false') {
-      val = false;
-    } else {
-      val = num.parse(value);
-    }
-    result[key] = val;
-  });
-  MovieInfo movieInfo = MovieInfo.fromJson(result);
-  return VideoPlayerPage(movieInfo: movieInfo,);
+    String movieId = params['movieId']?.first;
+  return VideoPlayerPage(movieId: int.parse(movieId),);
+});
+
+var movieSearchHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return MovieSearchPage();
 });

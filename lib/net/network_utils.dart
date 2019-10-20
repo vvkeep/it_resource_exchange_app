@@ -153,4 +153,19 @@ class NetworkUtils {
     return result;
   }
 
+  static requstMovieDetailData(int movieId) async {
+    String url = APPConfig.Server + "/movie/detail";
+    var params = {"movieId": movieId};
+    BaseResult result = await httpManager.request(HttpMethod.GET, url, params);
+    return result;
+
+  }
+
+  static searchMovieListByKeywords(String keywords, int currentPage) async {
+    String url = APPConfig.Server + "/movie/search";
+    var params = {"currentPage": currentPage, "pageSize": 20, "keywords": keywords};
+    BaseResult result = await httpManager.request(HttpMethod.GET, url, params);
+    return result;
+  }
+
 }

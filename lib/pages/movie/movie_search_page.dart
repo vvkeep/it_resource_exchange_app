@@ -1,29 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:it_resource_exchange_app/pages/movie/movie_item_view.dart';
+import 'package:it_resource_exchange_app/common/constant.dart';
+import 'package:it_resource_exchange_app/model/movie_info.dart';
+import 'package:it_resource_exchange_app/model/page_result.dart';
+import 'package:it_resource_exchange_app/net/network_utils.dart';
 import 'package:it_resource_exchange_app/routes/it_router.dart';
 import 'package:it_resource_exchange_app/routes/routes.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:it_resource_exchange_app/widgets/indicator_factory.dart';
-import 'package:it_resource_exchange_app/pages/movie/movie_list_item_view.dart';
-import 'package:it_resource_exchange_app/model/cate_info.dart';
-import 'package:it_resource_exchange_app/net/network_utils.dart';
-import 'package:it_resource_exchange_app/model/page_result.dart';
 import 'package:it_resource_exchange_app/widgets/load_state_layout_widget.dart';
-import 'package:it_resource_exchange_app/model/movie_info.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class MovieCateListView extends StatefulWidget {
-  final CateInfo cate;
+import 'movie_list_item_view.dart';
 
-  MovieCateListView(this.cate);
-
+class MovieSearchPage extends StatefulWidget {
   @override
-  _MovieCateListViewState createState() => _MovieCateListViewState();
+  _MovieSearchPageState createState() => _MovieSearchPageState();
 }
 
-class _MovieCateListViewState extends State<MovieCateListView>
-    with AutomaticKeepAliveClientMixin {
-//页面加载状态，默认为加载中
+class _MovieSearchPageState extends State<MovieSearchPage> {
+
+  //页面加载状态，默认为加载中
   LoadState _layoutState = LoadState.State_Loading;
 
   RefreshController _refreshController;
@@ -31,23 +26,16 @@ class _MovieCateListViewState extends State<MovieCateListView>
   PageResult pageResult;
   List<MovieInfo> movieList = [];
 
-  var itemW;
-  var childAspectRatio;
+  var _keywords;
+  FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     _refreshController = RefreshController();
-    loadData();
   }
 
-  @override
-  bool get wantKeepAlive => true;
-
   SmartRefresher _buildRefreshListView() {
-    itemW = (MediaQuery.of(context).size.width - 30.0 - 20.0) / 3;
-    childAspectRatio = 0.60;
-
     return SmartRefresher(
       controller: _refreshController,
       enablePullUp: true,
@@ -60,20 +48,14 @@ class _MovieCateListViewState extends State<MovieCateListView>
       onLoading: () {
         loadData(loadMore: true);
       },
-      child: GridView.builder(
-        itemCount: this.movieList.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 10.0,
-            mainAxisSpacing: 0.0,
-            childAspectRatio: childAspectRatio),
-        itemBuilder: (BuildContext context, int index) {
-          return MovieItemView(
-            movieInfo: this.movieList[index],
+      child: ListView.builder(
+        itemCount: movieList.length,
+        itemBuilder: (context, index) {
+          return MovieListItemView(
+            moive: movieList[index],
             onPressed: () {
               int movieId = movieList[index].movieId;
-              ITRouter.push(
-                  context, Routes.moviePlayerPage, {'movieId': movieId});
+              ITRouter.push(context, Routes.moviePlayerPage, {'movieId': movieId});
             },
           );
         },
@@ -83,27 +65,55 @@ class _MovieCateListViewState extends State<MovieCateListView>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    return Container(
-      color: Colors.white,
-      child: LoadStateLayout(
-        state: _layoutState,
-        errorRetry: () {
-          setState(() {
-            _layoutState = LoadState.State_Loading;
-          });
-          this.loadData();
-        },
-        successWidget: _buildRefreshListView(),
-      ),
-    );
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Container(
+            height: 44,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: Color.fromRGBO(233, 233, 233, 0.8),
+                borderRadius: BorderRadius.circular(22)),
+            child: TextField(
+              focusNode: _focusNode,
+              autofocus: true,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderSide: BorderSide.none),
+              ),
+              textInputAction: TextInputAction.search,
+              onSubmitted: (value) {
+                this._keywords = value;
+                _focusNode.unfocus();
+                _layoutState = LoadState.State_Loading;
+                loadData(loadMore: false);
+              },
+            ),
+          ),
+          actions: <Widget>[
+            InkWell(
+              child: Container(
+                height: 44,
+                width: 60,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[Text('退出', style: TextStyle(color: Colors.white, fontSize: 16),)],
+                ),
+              ),
+              onTap: () {
+                ITRouter.pop(context);
+              },
+            )
+          ],
+        ),
+        body: _buildRefreshListView()
+        );
   }
 
-  void loadData({bool loadMore = false}) {
+   void loadData({bool loadMore = false}) {
     int page = (pageResult == null || loadMore == false)
         ? 1
         : pageResult.currentPage + 1;
-    NetworkUtils.requestMovieListByCateId(this.widget.cate.cateId, page)
+    NetworkUtils.searchMovieListByKeywords(this._keywords, page)
         .then((res) {
       if (res.status == 200) {
         pageResult = PageResult.fromJson(res.data);

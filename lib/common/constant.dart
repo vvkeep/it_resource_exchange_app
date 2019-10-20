@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/model/cate_info.dart';
+import 'dart:math';
 
 /// 颜色
 class AppColors {
@@ -11,6 +12,10 @@ class AppColors {
   static const MidTextColor = Color(0xFF666666);
   static const LightTextColor = Color(0xFF999999);
   static const DisableTextColor = Color(0xFFDCDCDC);
+  static randomColor() {
+    return Color.fromARGB(255, Random.secure().nextInt(255),
+        Random.secure().nextInt(255), Random.secure().nextInt(255));
+  }
 }
 
 class AppSize {
