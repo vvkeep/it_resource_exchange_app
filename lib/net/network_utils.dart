@@ -161,4 +161,11 @@ class NetworkUtils {
 
   }
 
+  static searchMovieListByKeywords(String keywords, int currentPage) async {
+    String url = APPConfig.Server + "/movie/search";
+    var params = {"currentPage": currentPage, "pageSize": 20, "keywords": keywords};
+    BaseResult result = await httpManager.request(HttpMethod.GET, url, params);
+    return result;
+  }
+
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:it_resource_exchange_app/common/constant.dart' show AppColors;
+import 'package:it_resource_exchange_app/routes/it_router.dart';
+import 'package:it_resource_exchange_app/routes/routes.dart';
 import 'classify/classify_page.dart';
 import 'home/home_page.dart';
 import 'profile/profile_page.dart';
@@ -15,6 +17,7 @@ class _ApplicationPageState extends State<ApplicationPage>
   int page = 0;
   String title = '首页';
   PageController pageController;
+  IconButton _searchBtn;
 
   //定义底部导航项目
   final List<BottomNavigationBarItem> _bottomTabs = <BottomNavigationBarItem>[
@@ -43,6 +46,12 @@ class _ApplicationPageState extends State<ApplicationPage>
   @override
   void initState() {
     super.initState();
+    _searchBtn = IconButton(
+      icon: Icon(Icons.search),
+      onPressed: () {
+        ITRouter.push(context, Routes.movieSearchPage, {});
+      },
+    );
     pageController = PageController(initialPage: this.page);
   }
 
@@ -54,6 +63,7 @@ class _ApplicationPageState extends State<ApplicationPage>
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> actions = this.page != 1 ? [] : [_searchBtn];
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -61,12 +71,18 @@ class _ApplicationPageState extends State<ApplicationPage>
           style: TextStyle(color: Colors.white),
         ),
         elevation: 0.0,
+        actions: actions,
       ),
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
 
         /// 去除滑动手势
-        children: <Widget>[HomePage(), MovieCateListPage(), ClassifyPage(), ProfilePage()],
+        children: <Widget>[
+          HomePage(),
+          MovieCateListPage(),
+          ClassifyPage(),
+          ProfilePage()
+        ],
         controller: pageController,
         onPageChanged: (int index) {
           onPageChanged(index);
