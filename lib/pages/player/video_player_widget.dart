@@ -38,6 +38,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   void initState() {
     super.initState();
     _chewieController = ChewieController(
+      allowedScreenSleep: false,
       videoPlayerController: widget.videoPlayerController,
       aspectRatio: 16 / 9,
       autoPlay: true,
